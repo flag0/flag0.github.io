@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
 <meta property="og:description" content="在上软件测试课时，使用XAMPP搭建testlink过程中出现了apache服务器启动不了的问题，上课时在本机并没有解决，临时用的phpstudy搭建环境安装，课后研究发现问题。">
 <meta property="og:locale" content="cn-zh">
-<meta property="og:updated_time" content="2018-03-17T10:27:53.032Z">
+<meta property="og:updated_time" content="2018-03-19T08:39:00.153Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="XAMPP Apache shutdown unexpectedly问题解决">
 <meta name="twitter:description" content="在上软件测试课时，使用XAMPP搭建testlink过程中出现了apache服务器启动不了的问题，上课时在本机并没有解决，临时用的phpstudy搭建环境安装，课后研究发现问题。">
@@ -123,9 +123,16 @@ TCP    [::]:443               [::]:0                 LISTENING       7460
 <pre><code>点击apache右面的Config按钮，打开httpd-ssl.conf 找到Listen 443修改为其他未被占用的端口,例如442等
 </code></pre><p>修改后再次问题解决，点击Start，成功启动。<br>apache服务器启动起来了，问题并没有完全解决。</p>
 <h2 id="0x04-Warning-strftime-未设置时区"><a href="#0x04-Warning-strftime-未设置时区" class="headerlink" title="0x04: Warning: strftime() 未设置时区"></a>0x04: Warning: strftime() 未设置时区</h2><p>安装完成后，页面未能正常显示，出现了php错误代码</p>
-<pre><code>Warning: strftime(): It is not safe to rely on the system&apos;s timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone &apos;UTC&apos; for now, but please set date.timezone to select your timezone. in C:\Apache24\htdocs\testlink\config.inc.php on line 781
+<pre><code>Warning: strftime(): It is not safe to rely on the system&apos;s timezone settings. You are 
+*required* to use the date.timezone setting or the date_default_timezone_set() function. 
+In case you used any of those methods and you are still getting this warning, you most 
+likely misspelled the timezone identifier. We selected the timezone &apos;UTC&apos; for now, but 
+please set date.timezone to select your timezone. in 
+C:\Apache24\htdocs\testlink\config.inc.php on line 781
 </code></pre><p>根据错误信息翻译得</p>
-<pre><code>依靠系统的时区设置是不安全的。你*需要*使用date.timezone设置或date_default_timezone_set()功能。如果你用那些方法，你仍然得到这样的警告，你最有可能拼错的时区标识符。我们选择的时区的UTC的现在，但请date.timezone选择您的时区。
+<pre><code>依靠系统的时区设置是不安全的。你*需要*使用date.timezone设置或date_default_timezone_set()功能。
+如果你用那些方法，你仍然得到这样的警告，你最有可能拼错的时区标识符。我们选择的时区的UTC的现在，
+但请date.timezone选择您的时区。
 </code></pre><p>php.ini中设置时区解决问题</p>
 <pre><code>打开php.ini找到date.timezone = &quot;&quot; 如有去掉前面的分号,并将&quot;&quot;内改为Asia/Shanghai 
 </code></pre>  
@@ -223,11 +230,7 @@ TCP    [::]:443               [::]:0                 LISTENING       7460
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
 			
 		
 			
@@ -243,7 +246,11 @@ TCP    [::]:443               [::]:0                 LISTENING       7460
 			
 		
 			
-				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
 			
 		
 			
