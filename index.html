@@ -44,7 +44,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -85,7 +85,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-03-19T08:00:03.000Z" itemprop="datePublished"> 发表于 2018-03-19</time>
+    <time datetime="2018-03-19T08:00:03.000Z" itemprop="datePublished"> Published 2018-03-19</time>
     
   </p>
 </header>
@@ -153,7 +153,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-03-17T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-03-17</time>
+    <time datetime="2018-03-17T14:00:03.000Z" itemprop="datePublished"> Published 2018-03-17</time>
     
   </p>
 </header>
@@ -214,7 +214,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-03-12T13:00:03.000Z" itemprop="datePublished"> 发表于 2018-03-12</time>
+    <time datetime="2018-03-12T13:00:03.000Z" itemprop="datePublished"> Published 2018-03-12</time>
     
   </p>
 </header>
@@ -275,7 +275,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-02-27T15:00:03.000Z" itemprop="datePublished"> 发表于 2018-02-27</time>
+    <time datetime="2018-02-27T15:00:03.000Z" itemprop="datePublished"> Published 2018-02-27</time>
     
   </p>
 </header>
@@ -329,6 +329,110 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2018/02/27/docker环境使用笔记/" title="docker 环境使用笔记" itemprop="url">docker 环境使用笔记</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2018-02-27T13:00:03.000Z" itemprop="datePublished"> Published 2018-02-27</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>寒假做了个兼职，给某安全公司平台写poc，用到docekr环境，之前没有接触过，一段时间学习后，发现了它的妙处，将自己用到的命令做个笔记，以备遗忘</p>
+<p>##docekr安装<br>ubuntu</p>
+<pre><code>$sudo apt-get update
+$sudo apt-get install docker
+</code></pre><p>使用以上命令即可搞定，但不一定是最新的docekr，不过对于我来说影响不大，可以正常使用。</p>
+<p>##导入镜像<br>将save命令保存的docekr镜像文件导入</p>
+<pre><code>$sudo docekr load --input docekr_images.tar
+或者
+$sudo docekr load &lt; docker_images.tar
+</code></pre><p>##运行镜像<br>1.后台运行镜像并映射80端口到宿主机的80端口(前面为宿主的端口，后面为虚拟机端口)</p>
+<pre><code>docekr run -d -p 80:80 docker_images:6.5 
+</code></pre><p>2.运行镜像进行交互命令行，在当前命令结束后，对应容器也会结束</p>
+<pre><code>docker run -it docker_images:6.5 /bin/bash
+</code></pre><p>##文件交互<br>1.宿主机向容器中发送文件</p>
+<pre><code>docekr cp ~/text.txt 容器id:/var/www/html/
+</code></pre><p>2.容器向宿主机发送文件</p>
+<pre><code>docker cp 容器id:/var/www/html/test.txt  /tmp/
+</code></pre><p>##关闭容器<br>1.停止容器，保存容器状态，docker start开始后内部状态不变，类似于虚拟机中的暂停</p>
+<pre><code>docker stop 容器ID
+</code></pre><p>2.终结容器，直接杀死当前容器，docker start 开始后内部为全新状态</p>
+<pre><code>docker kali 容器ID
+</code></pre><p>##查看容器<br>    docker ps 显示当前运行的容器<br>    docker ps -a 显示服务器内全部容器<br>    docker ps -aq 显示全部容器且只显示容器ID</p>
+<p>##查看镜像<br>    dcoekr images 显示本机docker镜像<br>    dcoekr images -a 显示本机全部镜像，包含中间镜像(多重构时常用)<br>    docekr images aq 显示全部镜像且只显示镜像ID</p>
+<p>##删除容器<br>    docekr rm 容器ID 强制处于关闭状态的容器<br>    docekr rm -f 容器ID 强制删除容器<br>    dcoekr rm $(docker ps -aq)删除本机所有处于关闭状态的容器</p>
+<p>##删除镜像<br>    dcoekr rmi 镜像名[:标签]    删除未被用作构建容器的镜像<br>    docker rmi -f 镜像名[:标签] 强制删除镜像</p>
+<p>##提交容器<br>    dcoekr commit [-a 作者信息] 容器ID 镜像名<br>    将容器保存为镜像</p>
+<p>##命令镜像<br>将一个镜像命名为另一个镜像名</p>
+<pre><code>docker tag 镜像名[:标签] 镜像名[:标签]
+</code></pre><p>##进入运行容器<br>1.docker exec -it 容器ID 执行命令</p>
+<pre><code>docker exec -it 容器ID /bin/bash
+</code></pre><p>阻塞当前容器运行命令并执行/bin/bash 进入容器命令行<br>2.dcoekr attach 容器id<br>阻塞当前容器，守护进程并执行默认终端</p>
+<pre><code>通过dcoekr inspect 容器ID 在 Entrypoint项查看
+</code></pre><p>##登陆仓库<br>登陆对应仓库，需要手动输入用户及密码</p>
+<pre><code>docker login 仓库地址
+</code></pre><p>指定用户名，密码登陆对应仓库</p>
+<pre><code>docker login -u 用户名 -p 密码 仓库地址
+</code></pre><p>##下拉镜像<br>默认从dockerhub下载镜像</p>
+<pre><code>docker pull 镜像名
+</code></pre><p>##上传镜像<br>默认向Dockerhub上传镜像</p>
+<pre><code>docekr push 镜像名
+</code></pre><p>##构建镜像<br>最后一个参数文件路径使用 . 含义为在当前目录下使用名字为Dockerfile的文件进行镜像构建。</p>
+<pre><code>docker build -t 镜像名 [--no-cache=true] Dockerfile文件绝对路径
+例 docker build -t php:5.5-apache-mysql-no-cache=true
+</code></pre><p>Dockerfile书写详细说明：</p>
+<pre><code>https://docs.docker.com/engine/reference/builder/#predefined-args
+</code></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/docker/">docker</a><a href="/tags/笔记/">笔记</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2018/02/18/AWD攻击脚本/" title="AWD攻击脚本(持续更新)" itemprop="url">AWD攻击脚本(持续更新)</a>
   </h1>
   <p class="article-author">By
@@ -336,7 +440,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-02-18T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-02-18</time>
+    <time datetime="2018-02-18T14:00:03.000Z" itemprop="datePublished"> Published 2018-02-18</time>
     
   </p>
 </header>
@@ -386,10 +490,10 @@
 
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
@@ -402,7 +506,7 @@
 		  
 		
 		  
-			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>2</sup></a></li>
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>3</sup></a></li>
 		  
 		
 		</ul>
@@ -415,19 +519,27 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
 			
 		
 			
@@ -605,7 +717,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
