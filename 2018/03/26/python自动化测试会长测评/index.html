@@ -11,19 +11,22 @@
     
 
     
-    <meta name="description" content="首先吐槽下学校，在学校带个信息安全社团，社团联合会那边经常很多形式主义的活动，没有实际意义，但是还得必须做，其中尤其这个会长测评，很是麻烦，于是写了个自动化工具，就是效率低点，不过挺实用的功能已经实现了，先贴代码，详细的日后再写">
+    <meta name="description" content="首先吐槽下学校，在学校带个信息安全社团，社团联合会那边经常很多形式主义的活动，没有实际意义，但是还得必须做，其中尤其这个会长测评，很是麻烦，于是写了个自动化工具，就是效率低点，不过挺实用的">
 <meta name="keywords" content="python,selenium,自动化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="python+selenium实现自动化会长测评">
 <meta property="og:url" content="http://flag0.com/2018/03/26/python自动化测试会长测评/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
-<meta property="og:description" content="首先吐槽下学校，在学校带个信息安全社团，社团联合会那边经常很多形式主义的活动，没有实际意义，但是还得必须做，其中尤其这个会长测评，很是麻烦，于是写了个自动化工具，就是效率低点，不过挺实用的功能已经实现了，先贴代码，详细的日后再写">
+<meta property="og:description" content="首先吐槽下学校，在学校带个信息安全社团，社团联合会那边经常很多形式主义的活动，没有实际意义，但是还得必须做，其中尤其这个会长测评，很是麻烦，于是写了个自动化工具，就是效率低点，不过挺实用的">
 <meta property="og:locale" content="cn-zh">
 <meta property="og:image" content="http://flag0.com/img/images/python自动化会长测评/001.gif">
-<meta property="og:updated_time" content="2018-04-09T11:57:20.276Z">
+<meta property="og:image" content="http://flag0.com/img/images/python自动化会长测评/002.png">
+<meta property="og:image" content="http://flag0.com/img/images/python自动化会长测评/003.png">
+<meta property="og:image" content="http://flag0.com/img/images/python自动化会长测评/004.png">
+<meta property="og:updated_time" content="2018-04-14T05:57:42.385Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="python+selenium实现自动化会长测评">
-<meta name="twitter:description" content="首先吐槽下学校，在学校带个信息安全社团，社团联合会那边经常很多形式主义的活动，没有实际意义，但是还得必须做，其中尤其这个会长测评，很是麻烦，于是写了个自动化工具，就是效率低点，不过挺实用的功能已经实现了，先贴代码，详细的日后再写">
+<meta name="twitter:description" content="首先吐槽下学校，在学校带个信息安全社团，社团联合会那边经常很多形式主义的活动，没有实际意义，但是还得必须做，其中尤其这个会长测评，很是麻烦，于是写了个自动化工具，就是效率低点，不过挺实用的">
 <meta name="twitter:image" content="http://flag0.com/img/images/python自动化会长测评/001.gif">
 
     
@@ -96,96 +99,61 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#运行效果"><span class="toc-number">1.</span> <span class="toc-text">运行效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#script-py"><span class="toc-number">2.</span> <span class="toc-text">script.py</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#user-py"><span class="toc-number">3.</span> <span class="toc-text">user.py</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#运行效果"><span class="toc-number">1.</span> <span class="toc-text">运行效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-Selenium"><span class="toc-number">2.</span> <span class="toc-text">0x01 Selenium</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-安装驱动"><span class="toc-number">3.</span> <span class="toc-text">0x02 安装驱动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-打开目标网站"><span class="toc-number">4.</span> <span class="toc-text">0x03 打开目标网站</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-分析url"><span class="toc-number">5.</span> <span class="toc-text">0x04 分析url</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05自动化操作"><span class="toc-number">6.</span> <span class="toc-text">0x05自动化操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06姓名和留言"><span class="toc-number">7.</span> <span class="toc-text">0x06姓名和留言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x07-翻页功能实现"><span class="toc-number">8.</span> <span class="toc-text">0x07 翻页功能实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x08完整代码"><span class="toc-number">9.</span> <span class="toc-text">0x08完整代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x09致谢"><span class="toc-number">10.</span> <span class="toc-text">0x09致谢</span></a></li></ol>
 		
 		</div>
 		
-		<p>首先吐槽下学校，在学校带个信息安全社团，社团联合会那边经常很多形式主义的活动，没有实际意义，但是还得必须做，其中尤其这个会长测评，很是麻烦，于是写了个自动化工具，就是效率低点，不过挺实用的<br>功能已经实现了，先贴代码，详细的日后再写</p>
+		<p>首先吐槽下学校，在学校带个信息安全社团，社团联合会那边经常很多形式主义的活动，没有实际意义，但是还得必须做，其中尤其这个会长测评，很是麻烦，于是写了个自动化工具，就是效率低点，不过挺实用的</p>
 <a id="more"></a>
 <h2 id="运行效果"><a href="#运行效果" class="headerlink" title="运行效果"></a>运行效果</h2><p><img src="\img\images\python自动化会长测评\001.gif" alt="images"></p>
-<h2 id="script-py"><a href="#script-py" class="headerlink" title="script.py"></a>script.py</h2><pre><code># coding=utf-8
-from selenium import webdriver
-import random,time
-import user
-
-def request_url(url):
-    options = webdriver.ChromeOptions()
-    options.add_argument(&apos;User-Agent=&quot;Mozilla/5.0 (Linux; U; Android 2.3.6; zh-cn; GT-S5660 Build/GINGERBREAD) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1 MicroMessenger/4.5.255&quot;&apos;)
-    drive=webdriver.Chrome(chrome_options=options)
-    drive.get(url)
-    try:
-        post_from(drive)
-    except:
-        drive.close()
-        return &apos;a&apos;
-
-def post_from(drive):
-    name = user.name().decode(&apos;utf-8&apos;)
-    advise = user.advice().decode(&apos;utf-8&apos;)
-    drive.find_element_by_id(&apos;5ab113d992beb51853e24996&apos;).send_keys(name)
-    time.sleep(3)
-    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498b&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
-    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498c&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
-    js = &quot;var q=document.documentElement.scrollTop=555&quot;
-    drive.execute_script(js)
-    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498d&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
-    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498e&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
-    js = &quot;var q=document.documentElement.scrollTop=1055&quot;
-    drive.execute_script(js)
-    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498e&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
-    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498f&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
-    js = &quot;var q=document.documentElement.scrollTop=1555&quot;
-    drive.execute_script(js)
-    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24990&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
-    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24991&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
-    js = &quot;var q=document.documentElement.scrollTop=2000&quot;
-    drive.execute_script(js)
-    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24992&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
-    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24993&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
-    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24994&apos;]/div[2]/ul/li[1]/div/span&quot;).click()
-    drive.find_element_by_id(&apos;5ab113da92beb51853e249c9&apos;).send_keys(advise)
-    drive.find_element_by_xpath(&quot;.//*[@id=&apos;next_button&apos;]&quot;).click()
-    time.sleep(3)
-    drive.close()
-
-def randoms():
-    seq = &apos;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789&apos;
-    randomlist = []
-    randomlist.append(&apos;obncMj&apos;+&apos;&apos;.join(random.sample(seq,22)))
-    randomlist.append(&apos;4_&apos; + &apos;&apos;.join(random.sample(seq,107)))
-    return randomlist
-if __name__ == &quot;__main__&quot;:
-    i = 0
-    while(i&lt;20):
-        url = &apos;https://www.wenjuan.in/s/eqe6Bn/?openid=&apos;+randoms()[0]+&apos;&amp;token=&apos;+randoms()[1]+&apos;&amp;bookid=default&apos;
-        if not request_url(url):
-            i=i+1
-            print &apos;成功做完第%d份测评问卷&apos;%i
-        else:
-            continue
-    print &apos;结束&apos;
-</code></pre><h2 id="user-py"><a href="#user-py" class="headerlink" title="user.py"></a>user.py</h2><pre><code># coding=utf-8
-import random
-s = &quot;&quot;&quot;
-张三
-...
-&quot;&quot;&quot;
-text = &quot;&quot;&quot;
-评论1
-评论2
-评论3
-评论4
-&quot;&quot;&quot;
-def name():
-    name = s.split(&apos;\n&apos;)
-    number = int(random.uniform(0,len(name)))
-    return name[number]
-
-def advice():
-    name = text.split(&apos;\n&apos;)
-    number = int(random.uniform(0,len(name)))
-    return name[number]
-</code></pre>  
+<h2 id="0x01-Selenium"><a href="#0x01-Selenium" class="headerlink" title="0x01 Selenium"></a>0x01 Selenium</h2><p>Selenium是一个用于Web应用程序测试的工具。Selenium测试直接运行在浏览器中，就像真正的用户在操作一样<br>多用于自动化测试</p>
+<p>安装 Selenium模块<br>命令提示符下输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install selenium</span><br></pre></td></tr></table></figure>
+<h2 id="0x02-安装驱动"><a href="#0x02-安装驱动" class="headerlink" title="0x02 安装驱动"></a>0x02 安装驱动</h2><p>这里我使用的是Chrome浏览器</p>
+<p>驱动下载地址<a href="">:</a><br><a href="https://chromedriver.storage.googleapis.com/index.html?path=2.26/" target="_blank" rel="noopener">https://chromedriver.storage.googleapis.com/index.html?path=2.26/</a></p>
+<p>将解压后的chromedriver.exe放到chrome浏览器的安装目录下。<br><img src="\img\images\python自动化会长测评\002.png" alt="image"></p>
+<p>这里要注意，一定要驱动和浏览器版本对应</p>
+<p>将Chrome浏览器安装路径添加环境变量</p>
+<p>测试是否配置成功<br>运行以下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">from selenium import webdriver</span><br><span class="line">browser = webdriver.Chrome()</span><br><span class="line">browser.get(&apos;http://www.baidu.com/&apos;)</span><br></pre></td></tr></table></figure>
+<p>如图所示，可以正常启动说明配置成功</p>
+<p><img src="\img\images\python自动化会长测评\003.png" alt="images"></p>
+<h2 id="0x03-打开目标网站"><a href="#0x03-打开目标网站" class="headerlink" title="0x03 打开目标网站"></a>0x03 打开目标网站</h2><p>投票系统为问卷网系统，并且设置了只能在微信中打开，通过检测user-agent头的方式来实现，所以要将chrome浏览器的user-agent头设置成微信的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">from selenium import webdriver</span><br><span class="line"></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line">options.add_argument(&apos;User-Agent=&quot;Mozilla/5.0 (Linux; U; Android 2.3.6; zh-cn; GT-S5660 Build/GINGERBREAD) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1 MicroMessenger/4.5.255&quot;&apos;)</span><br><span class="line">drive = webdriver.Chrome(chrome_options=options)</span><br></pre></td></tr></table></figure>
+<p>这样就可以打开网站了</p>
+<h2 id="0x04-分析url"><a href="#0x04-分析url" class="headerlink" title="0x04 分析url"></a>0x04 分析url</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.wenjuan.in/s/nquiae/?openid=obncMj4OuQkDB9zsyY_nDEQnydOo&amp;token=4_yKkaVVGiOQp525vOfDug_q9Gu4OigqoykF0_VAQ4_PPZkWmlTNk9CooYJV-VAJbsvorvcxkRRxGPp6abTDZFXcw2c4wKWFOCGhsS-0LGc00&amp;bookid=default</span><br></pre></td></tr></table></figure>
+<p>经过不断的尝试可以发现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.wenjuan.in/s/nquiae/</span><br></pre></td></tr></table></figure>
+<p>中的<code>nquiae</code>表示不同的问卷，每个社团的都不一样</p>
+<p>而</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?openid=obncMj4OuQkDB9zsyY_nDEQnydOo&amp;token=4_yKkaVVGiOQp525vOfDug_q9Gu4OigqoykF0_VAQ4_PPZkWmlTNk9CooYJV-VAJbsvorvcxkRRxGPp6abTDZFXcw2c4wKWFOCGhsS-0LGc00</span><br></pre></td></tr></table></figure>
+<p>中的<code>openid</code>和<code>tocken</code>可能代表每个填写答卷的用户id<br>分析发现<code>openid</code>参数的数值以<code>obncMj</code>开头的，长度为28的随机字符(也许是加密后的，我们这里用随机字符来模拟)，<code>tocken</code>是以<code>4_</code>开头的长度为109的随机字符(也许是加密后的，我们这里用随机字符来模拟)</p>
+<p>构造randome函数来模拟(<br> <code>random.sample</code>会从字符串中随机取出指定长度的字符)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def randoms():</span><br><span class="line">    seq = &apos;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789&apos;</span><br><span class="line">    randomlist = []</span><br><span class="line">    randomlist.append(&apos;obncMj&apos;+&apos;&apos;.join(random.sample(seq,22)))</span><br><span class="line">    randomlist.append(&apos;4_&apos; + &apos;&apos;.join(random.sample(seq,107)))</span><br><span class="line">    return randomlist</span><br></pre></td></tr></table></figure></p>
+<p>mian调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url = &apos;https://www.wenjuan.in/s/eqe6Bn/?openid=&apos;+randoms()[0]+&apos;&amp;token=&apos;+randoms()[1]+&apos;&amp;bookid=default&apos;</span><br></pre></td></tr></table></figure>
+<h2 id="0x05自动化操作"><a href="#0x05自动化操作" class="headerlink" title="0x05自动化操作"></a>0x05自动化操作</h2><p>利用selenium模块，来模拟人进行投票操作</p>
+<p>首先分析页面元素</p>
+<ul>
+<li>两个文本框</li>
+<li>若干个单选按钮</li>
+<li>一个提交按钮</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">find_element_by_xpath() 来进行定位元素位置</span><br><span class="line">send_keys(name)         来进行填写文本框内容</span><br><span class="line">click()                 来进行模拟点击操作，用来选择单选按钮和提交</span><br></pre></td></tr></table></figure>
+<p>xpath路径查找</p>
+<p>安装火狐浏览器中的firebug和firepath插件<br>成功后，按F12<br>选中元素即可看到其XPATH路径<br><img src="\img\images\python自动化会长测评\004.png" alt="images"></p>
+<h2 id="0x06姓名和留言"><a href="#0x06姓名和留言" class="headerlink" title="0x06姓名和留言"></a>0x06姓名和留言</h2><p>会长测评需要提交姓名和留言，姓名使用社团内的同学名字或者学校内的同学名字，留言在自己搜即可</p>
+<p>创建user.py来实现功能，由主程序直接调用，每调用一次返回一条姓名和留言</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">import random</span><br><span class="line">s = &quot;&quot;&quot;</span><br><span class="line">张三</span><br><span class="line">...</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">text = &quot;&quot;&quot;</span><br><span class="line">评论1</span><br><span class="line">评论2</span><br><span class="line">评论3</span><br><span class="line">评论4</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">def name():</span><br><span class="line">	name = s.split(&apos;\n&apos;)</span><br><span class="line">	number = int(random.uniform(0,len(name)))</span><br><span class="line">	return name[number]</span><br><span class="line"></span><br><span class="line">def advice():</span><br><span class="line">	name = text.split(&apos;\n&apos;)</span><br><span class="line">	number = int(random.uniform(0,len(name)))</span><br><span class="line">	return name[number]</span><br></pre></td></tr></table></figure>
+<p>调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import user</span><br><span class="line">user.name()    返回姓名</span><br><span class="line">user.advice()  返回留言</span><br></pre></td></tr></table></figure>
+<h2 id="0x07-翻页功能实现"><a href="#0x07-翻页功能实现" class="headerlink" title="0x07 翻页功能实现"></a>0x07 翻页功能实现</h2><p>经过之前的研究初步可以写出实现功能的代码，但是老是有报错，刚开始以为是页面未全部加载完，加入更多的等待时间后发现还是报错，最后发现，selenium寻找元素只能是在当前页内，对于下一页的元素即使设置好了xpath路径后也是不能够定位到，所以最后利用js做了一个翻页功能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">js = &quot;var q=document.documentElement.scrollTop=555&quot;</span><br><span class="line">    drive.execute_script(js)</span><br></pre></td></tr></table></figure>
+<p>至此，程序已经完全实现</p>
+<h2 id="0x08完整代码"><a href="#0x08完整代码" class="headerlink" title="0x08完整代码"></a>0x08完整代码</h2><p>script.py</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">from selenium import webdriver</span><br><span class="line">import random,time</span><br><span class="line">import user</span><br><span class="line"></span><br><span class="line">def request_url(url):</span><br><span class="line">    options = webdriver.ChromeOptions()</span><br><span class="line">    options.add_argument(&apos;User-Agent=&quot;Mozilla/5.0 (Linux; U; Android 2.3.6; zh-cn; GT-S5660 Build/GINGERBREAD) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1 MicroMessenger/4.5.255&quot;&apos;)</span><br><span class="line">    drive=webdriver.Chrome(chrome_options=options)</span><br><span class="line">    drive.get(url)</span><br><span class="line">    try:</span><br><span class="line">        post_from(drive)</span><br><span class="line">    except:</span><br><span class="line">        drive.close()</span><br><span class="line">        return &apos;a&apos;</span><br><span class="line"></span><br><span class="line">def post_from(drive):</span><br><span class="line">    name = user.name().decode(&apos;utf-8&apos;)</span><br><span class="line">    advise = user.advice().decode(&apos;utf-8&apos;)</span><br><span class="line">    drive.find_element_by_id(&apos;5ab113d992beb51853e24996&apos;).send_keys(name)</span><br><span class="line">    time.sleep(3)</span><br><span class="line">    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498b&apos;]/div[2]/ul/li[1]/div/span&quot;).click()</span><br><span class="line">    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498c&apos;]/div[2]/ul/li[1]/div/span&quot;).click()</span><br><span class="line">    js = &quot;var q=document.documentElement.scrollTop=555&quot;</span><br><span class="line">    drive.execute_script(js)</span><br><span class="line">    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_6ab113d992beb51853e2498d&apos;]/div[2]/ul/li[1]/div/span&quot;).click()</span><br><span class="line">    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498e&apos;]/div[2]/ul/li[1]/div/span&quot;).click()</span><br><span class="line">    js = &quot;var q=document.documentElement.scrollTop=1055&quot;</span><br><span class="line">    drive.execute_script(js)</span><br><span class="line">    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498e&apos;]/div[2]/ul/li[1]/div/span&quot;).click()</span><br><span class="line">    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e2498f&apos;]/div[2]/ul/li[1]/div/span&quot;).click()</span><br><span class="line">    js = &quot;var q=document.documentElement.scrollTop=1555&quot;</span><br><span class="line">    drive.execute_script(js)</span><br><span class="line">    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24990&apos;]/div[2]/ul/li[1]/div/span&quot;).click()</span><br><span class="line">    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24991&apos;]/div[2]/ul/li[1]/div/span&quot;).click()</span><br><span class="line">    js = &quot;var q=document.documentElement.scrollTop=2000&quot;</span><br><span class="line">    drive.execute_script(js)</span><br><span class="line">    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24992&apos;]/div[2]/ul/li[1]/div/span&quot;).click()</span><br><span class="line">    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24993&apos;]/div[2]/ul/li[1]/div/span&quot;).click()</span><br><span class="line">    drive.find_element_by_xpath(&quot;.//*[@id=&apos;question_5ab113d992beb51853e24994&apos;]/div[2]/ul/li[1]/div/span&quot;).click()</span><br><span class="line">    drive.find_element_by_id(&apos;5ab113da92beb51853e249c9&apos;).send_keys(advise)</span><br><span class="line">    drive.find_element_by_xpath(&quot;.//*[@id=&apos;next_button&apos;]&quot;).click()</span><br><span class="line">    time.sleep(3)</span><br><span class="line">    drive.close()</span><br><span class="line"></span><br><span class="line">def randoms():</span><br><span class="line">    seq = &apos;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789&apos;</span><br><span class="line">    randomlist = []</span><br><span class="line">    randomlist.append(&apos;obncMj&apos;+&apos;&apos;.join(random.sample(seq,22)))</span><br><span class="line">    randomlist.append(&apos;4_&apos; + &apos;&apos;.join(random.sample(seq,107)))</span><br><span class="line">    return randomlist</span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    i = 0</span><br><span class="line">    while(i&lt;20):</span><br><span class="line">        url = &apos;https://www.wenjuan.in/s/eqe6Bn/?openid=&apos;+randoms()[0]+&apos;&amp;token=&apos;+randoms()[1]+&apos;&amp;bookid=default&apos;</span><br><span class="line">        if not request_url(url):</span><br><span class="line">            i=i+1</span><br><span class="line">            print &apos;成功做完第%d份测评问卷&apos;%i</span><br><span class="line">        else:</span><br><span class="line">            continue</span><br><span class="line">    print &apos;结束&apos;</span><br></pre></td></tr></table></figure>
+<p>user.py<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">import random</span><br><span class="line">s = &quot;&quot;&quot;</span><br><span class="line">张三</span><br><span class="line">...</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">text = &quot;&quot;&quot;</span><br><span class="line">评论1</span><br><span class="line">评论2</span><br><span class="line">评论3</span><br><span class="line">评论4</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">def name():</span><br><span class="line">	name = s.split(&apos;\n&apos;)</span><br><span class="line">	number = int(random.uniform(0,len(name)))</span><br><span class="line">	return name[number]</span><br><span class="line"></span><br><span class="line">def advice():</span><br><span class="line">	name = text.split(&apos;\n&apos;)</span><br><span class="line">	number = int(random.uniform(0,len(name)))</span><br><span class="line">	return name[number]</span><br></pre></td></tr></table></figure></p>
+<h2 id="0x09致谢"><a href="#0x09致谢" class="headerlink" title="0x09致谢"></a>0x09致谢</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">寻找xpath</span><br><span class="line">https://blog.csdn.net/qiyueqinglian/article/details/49280221</span><br><span class="line">Selenium-Python 中文文档</span><br><span class="line">http://selenium-python-zh.readthedocs.io/en/latest/index.html</span><br></pre></td></tr></table></figure>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -249,7 +217,7 @@ def advice():
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#运行效果"><span class="toc-number">1.</span> <span class="toc-text">运行效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#script-py"><span class="toc-number">2.</span> <span class="toc-text">script.py</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#user-py"><span class="toc-number">3.</span> <span class="toc-text">user.py</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#运行效果"><span class="toc-number">1.</span> <span class="toc-text">运行效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-Selenium"><span class="toc-number">2.</span> <span class="toc-text">0x01 Selenium</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-安装驱动"><span class="toc-number">3.</span> <span class="toc-text">0x02 安装驱动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-打开目标网站"><span class="toc-number">4.</span> <span class="toc-text">0x03 打开目标网站</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-分析url"><span class="toc-number">5.</span> <span class="toc-text">0x04 分析url</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05自动化操作"><span class="toc-number">6.</span> <span class="toc-text">0x05自动化操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06姓名和留言"><span class="toc-number">7.</span> <span class="toc-text">0x06姓名和留言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x07-翻页功能实现"><span class="toc-number">8.</span> <span class="toc-text">0x07 翻页功能实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x08完整代码"><span class="toc-number">9.</span> <span class="toc-text">0x08完整代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x09致谢"><span class="toc-number">10.</span> <span class="toc-text">0x09致谢</span></a></li></ol>
  
   </div>
 
@@ -292,19 +260,11 @@ def advice():
 			
 		
 			
-				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
 			
 		
 			
@@ -312,7 +272,15 @@ def advice():
 			
 		
 			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>1</sup></a></li>
+				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
 			
 		
 			
@@ -324,6 +292,10 @@ def advice():
 			
 		
 			
+				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/培训总结/" title="培训总结">培训总结<sup>1</sup></a></li>
 			
 		
@@ -332,11 +304,7 @@ def advice():
 			
 		
 			
-				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>1</sup></a></li>
 			
 		
 			
