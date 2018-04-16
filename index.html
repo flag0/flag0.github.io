@@ -44,7 +44,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -78,6 +78,84 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2018/04/16/16位汇编实现helloworld！/" title="16位汇编实现hello world！" itemprop="url">16位汇编实现hello world！</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2018-04-16T02:00:03.000Z" itemprop="datePublished"> 发表于 2018-04-16</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>最近在学汇编，有一个实验是用16位汇编实现字符打印，记录下实验过程</p>
+<h2 id="0x01基础知识"><a href="#0x01基础知识" class="headerlink" title="0x01基础知识"></a>0x01基础知识</h2><p>输出打印，实际上就是往显存区写数据，将要显示的内容写入显存区空间</p>
+<p>内存地址中B8000H~BFFFFH共32KB空间，为80*25彩色字符模式的显示缓冲区，向这个地址空间写入数据，写入的内容将立刻出现在显示器上</p>
+<p>在80*25彩色字符模式下，显示器一屏可以显示25行，每行80个字符，分别存放字符的ASCII码和属性<br>一个字符在显示缓冲区中就要占用两个字节，一屏的内容在显示缓冲区总共占4000个字节</p>
+<p>偏移为</p>
+<p>000~9F              第一行</p>
+<p>0A0~13F             第二行</p>
+<p>140~1DF             第三行</p>
+<p>N<em>160~(N+1) </em>160-1  第N行</p>
+<p>在显存缓冲区中，偶地址存放字符，奇地址存放字符的颜色属性</p>
+<p>在一行中，一个字符占两个字节的存储空间(一个字)，低位字节存储字符的ASCII码，高位字节存储字符的属性。一行有80个字符，占160个字节</p>
+<p>在一行中：</p>
+<p>00~01单元对应显示器上的第1列<br>02~03单元对应显示器上的第2列<br>04~05单元对应显示器上的第3列</p>
+<p>一屏幕为25行，80列<br>在屏幕中间输出为，13行，40列，字符串长度为12，正中间输出为<br>(40*2)-(12)=</p>
+<p>要写入显存的偏移地址为<br>160*13+68=2148=864H</p>
+<p>B800:842H</p>
+<h2 id="0x02程序代码"><a href="#0x02程序代码" class="headerlink" title="0x02程序代码"></a>0x02程序代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">assume cs:code</span><br><span class="line">data segment</span><br><span class="line">	db &apos;Hello,World!&apos;</span><br><span class="line">	db 02H</span><br><span class="line">data ends</span><br><span class="line"></span><br><span class="line">code segment;向第13行写入数据</span><br><span class="line">	start:mov ax,data</span><br><span class="line">		  mov ds,ax</span><br><span class="line">		  mov ax,0b800h</span><br><span class="line">		  mov es,ax</span><br><span class="line">		  mov bp,0 ;设置数据偏移变量</span><br><span class="line">		  mov bx,864H ;设置显存偏移变量</span><br><span class="line">		  mov cx,12 ;</span><br><span class="line">		s:</span><br><span class="line">		  mov al,ds:[bp]</span><br><span class="line">		  mov es:[bx],al;写入字符</span><br><span class="line">		  mov al,ds:[12]</span><br><span class="line">		  mov es:[bx+1],al;写入字符颜色</span><br><span class="line">		  add bp,1</span><br><span class="line">		  add bx,2</span><br><span class="line">		loop s</span><br><span class="line">		mov ax,4c00h</span><br><span class="line">		int 21h</span><br><span class="line">code ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\16位汇编实现helloworld\001.png" alt="images"></p>
+<h2 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h2><p>汇编语言(第3版)王爽</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/汇编/">汇编</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2018/04/14/python-实现word文档内格式转换/" title="python 实现word文档内格式转换" itemprop="url">python 实现word文档内格式转换</a>
   </h1>
   <p class="article-author">By
@@ -85,7 +163,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-04-14T14:00:03.000Z" itemprop="datePublished"> Published 2018-04-14</time>
+    <time datetime="2018-04-14T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-04-14</time>
     
   </p>
 </header>
@@ -111,7 +189,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/python/">python</a><a href="/tags/自动化/">自动化</a>
+  <span></span> <a href="/tags/自动化/">自动化</a><a href="/tags/python/">python</a>
   </div>
 
 </div>
@@ -146,7 +224,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-04-04T14:00:03.000Z" itemprop="datePublished"> Published 2018-04-04</time>
+    <time datetime="2018-04-04T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-04-04</time>
     
   </p>
 </header>
@@ -207,7 +285,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-03-26T14:00:03.000Z" itemprop="datePublished"> Published 2018-03-26</time>
+    <time datetime="2018-03-26T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-03-26</time>
     
   </p>
 </header>
@@ -233,7 +311,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/python/">python</a><a href="/tags/自动化/">自动化</a><a href="/tags/selenium/">selenium</a>
+  <span></span> <a href="/tags/selenium/">selenium</a><a href="/tags/自动化/">自动化</a><a href="/tags/python/">python</a>
   </div>
 
 </div>
@@ -268,7 +346,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-03-22T08:00:00.000Z" itemprop="datePublished"> Published 2018-03-22</time>
+    <time datetime="2018-03-22T08:00:00.000Z" itemprop="datePublished"> 发表于 2018-03-22</time>
     
   </p>
 </header>
@@ -294,7 +372,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/综合渗透/">综合渗透</a><a href="/tags/铁人三项/">铁人三项</a><a href="/tags/Writeup/">Writeup</a>
+  <span></span> <a href="/tags/铁人三项/">铁人三项</a><a href="/tags/综合渗透/">综合渗透</a><a href="/tags/Writeup/">Writeup</a>
   </div>
 
 </div>
@@ -329,7 +407,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-03-19T08:00:03.000Z" itemprop="datePublished"> Published 2018-03-19</time>
+    <time datetime="2018-03-19T08:00:03.000Z" itemprop="datePublished"> 发表于 2018-03-19</time>
     
   </p>
 </header>
@@ -362,7 +440,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/综合渗透/">综合渗透</a><a href="/tags/铁人三项/">铁人三项</a>
+  <span></span> <a href="/tags/铁人三项/">铁人三项</a><a href="/tags/综合渗透/">综合渗透</a>
   </div>
 
 </div>
@@ -397,7 +475,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-03-17T14:00:03.000Z" itemprop="datePublished"> Published 2018-03-17</time>
+    <time datetime="2018-03-17T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-03-17</time>
     
   </p>
 </header>
@@ -458,7 +536,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-03-12T13:00:03.000Z" itemprop="datePublished"> Published 2018-03-12</time>
+    <time datetime="2018-03-12T13:00:03.000Z" itemprop="datePublished"> 发表于 2018-03-12</time>
     
   </p>
 </header>
@@ -519,7 +597,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-02-27T15:00:03.000Z" itemprop="datePublished"> Published 2018-02-27</time>
+    <time datetime="2018-02-27T15:00:03.000Z" itemprop="datePublished"> 发表于 2018-02-27</time>
     
   </p>
 </header>
@@ -580,7 +658,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-02-27T13:00:03.000Z" itemprop="datePublished"> Published 2018-02-27</time>
+    <time datetime="2018-02-27T13:00:03.000Z" itemprop="datePublished"> 发表于 2018-02-27</time>
     
   </p>
 </header>
@@ -628,73 +706,16 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/02/18/AWD攻击脚本/" title="AWD攻击脚本(持续更新)" itemprop="url">AWD攻击脚本(持续更新)</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-02-18T14:00:03.000Z" itemprop="datePublished"> Published 2018-02-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>一些很简单漏洞的利用脚本，慢慢积累，持久更新</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/02/18/AWD攻击脚本/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
 
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/AWD/">AWD</a><a href="/tags/python/">python</a><a href="/tags/攻击脚本/">攻击脚本</a>
-  </div>
+  <nav id="page-nav" class="clearfix">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+  </nav>
 
 </div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-
-</div>
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -707,7 +728,7 @@
 		  
 		
 		  
-			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>5</sup></a></li>
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>6</sup></a></li>
 		  
 		
 		</ul>
@@ -728,27 +749,19 @@
 			
 		
 			
-				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
 			
@@ -760,7 +773,35 @@
 			
 		
 			
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/selenium/" title="selenium">selenium<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/汇编/" title="汇编">汇编<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>1</sup></a></li>
 			
 		
 			
@@ -769,22 +810,6 @@
 		
 			
 				<li><a href="/tags/信息安全管理与评估/" title="信息安全管理与评估">信息安全管理与评估<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -944,7 +969,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

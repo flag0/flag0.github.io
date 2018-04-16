@@ -4,25 +4,27 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Wireshark 初接触 | GetFlag&#39;s Blog</title>
+    <title>16位汇编实现hello world！ | GetFlag&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="GetFlag">
     
 
     
-    <meta name="description" content="看了下，神码15国赛的web题，发现是有部分wireshark操作的，简单的接触学习下">
-<meta name="keywords" content="Wireshark">
+    <meta name="description" content="最近在学汇编，有一个实验是用16位汇编实现字符打印，记录下实验过程 0x01基础知识输出打印，实际上就是往显存区写数据，将要显示的内容写入显存区空间 内存地址中B8000H~BFFFFH共32KB空间，为80*25彩色字符模式的显示缓冲区，向这个地址空间写入数据，写入的内容将立刻出现在显示器上 在80*25彩色字符模式下，显示器一屏可以显示25行，每行80个字符，分别存放字符的ASCII码和属性一">
+<meta name="keywords" content="汇编">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Wireshark 初接触">
-<meta property="og:url" content="http://flag0.com/2018/03/17/wireshark-学习笔记/index.html">
+<meta property="og:title" content="16位汇编实现hello world！">
+<meta property="og:url" content="http://flag0.com/2018/04/16/16位汇编实现helloworld！/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
-<meta property="og:description" content="看了下，神码15国赛的web题，发现是有部分wireshark操作的，简单的接触学习下">
+<meta property="og:description" content="最近在学汇编，有一个实验是用16位汇编实现字符打印，记录下实验过程 0x01基础知识输出打印，实际上就是往显存区写数据，将要显示的内容写入显存区空间 内存地址中B8000H~BFFFFH共32KB空间，为80*25彩色字符模式的显示缓冲区，向这个地址空间写入数据，写入的内容将立刻出现在显示器上 在80*25彩色字符模式下，显示器一屏可以显示25行，每行80个字符，分别存放字符的ASCII码和属性一">
 <meta property="og:locale" content="cn-zh">
-<meta property="og:updated_time" content="2018-03-17T14:04:13.156Z">
+<meta property="og:image" content="http://flag0.com/img/images/16位汇编实现helloworld/001.png">
+<meta property="og:updated_time" content="2018-04-16T02:11:41.605Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Wireshark 初接触">
-<meta name="twitter:description" content="看了下，神码15国赛的web题，发现是有部分wireshark操作的，简单的接触学习下">
+<meta name="twitter:title" content="16位汇编实现hello world！">
+<meta name="twitter:description" content="最近在学汇编，有一个实验是用16位汇编实现字符打印，记录下实验过程 0x01基础知识输出打印，实际上就是往显存区写数据，将要显示的内容写入显存区空间 内存地址中B8000H~BFFFFH共32KB空间，为80*25彩色字符模式的显示缓冲区，向这个地址空间写入数据，写入的内容将立刻出现在显示器上 在80*25彩色字符模式下，显示器一屏可以显示25行，每行80个字符，分别存放字符的ASCII码和属性一">
+<meta name="twitter:image" content="http://flag0.com/img/images/16位汇编实现helloworld/001.png">
 
     
     <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
@@ -78,14 +80,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2018/03/17/wireshark-学习笔记/" title="Wireshark 初接触" itemprop="url">Wireshark 初接触</a>
+      <a href="/2018/04/16/16位汇编实现helloworld！/" title="16位汇编实现hello world！" itemprop="url">16位汇编实现hello world！</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-03-17T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-03-17</time>
+    <time datetime="2018-04-16T02:00:03.000Z" itemprop="datePublished"> 发表于 2018-04-16</time>
     
   </p>
 </header>
@@ -94,49 +96,43 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#显示过滤器语法"><span class="toc-number">1.</span> <span class="toc-text">显示过滤器语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#运算符-英文和符号都可"><span class="toc-number">1.1.</span> <span class="toc-text">运算符(英文和符号都可)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用关键字"><span class="toc-number">1.2.</span> <span class="toc-text">常用关键字</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01基础知识"><span class="toc-number">1.</span> <span class="toc-text">0x01基础知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02程序代码"><span class="toc-number">2.</span> <span class="toc-text">0x02程序代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#致谢"><span class="toc-number">3.</span> <span class="toc-text">致谢</span></a></li></ol>
 		
 		</div>
 		
-		<p>看了下，神码15国赛的web题，发现是有部分wireshark操作的，简单的接触学习下</p>
-<a id="more"></a>
-<h2 id="显示过滤器语法"><a href="#显示过滤器语法" class="headerlink" title="显示过滤器语法"></a>显示过滤器语法</h2><h3 id="运算符-英文和符号都可"><a href="#运算符-英文和符号都可" class="headerlink" title="运算符(英文和符号都可)"></a>运算符(英文和符号都可)</h3><p>过滤器的语法是正确的，表达式的背景呈绿色。如果呈红色，说明表达式是错误的。</p>
-<p>可以使用六种比较运算符</p>
-<pre><code>eq == 
-ne !=
-gt &gt;
-lt &lt;
-ge &gt;=
-le &lt;=
-</code></pre><p>四种逻辑</p>
-<pre><code>and &amp;&amp;
-or  ||
-xor ^^
-not !
-</code></pre><h3 id="常用关键字"><a href="#常用关键字" class="headerlink" title="常用关键字"></a>常用关键字</h3><pre><code>ip.addr 来源或目标ip
-ip.src  来源ip
-ip.dst  目标ip
-
-tcp.port==3306 显示来源或目的的端口号为3306的TCP封包
-tcp.src==127.0.0.1显示来源ip为127.0.0.1的tcp包
-tcp.dsport=3306 显示目标端口号为3306的TCP封包
-
-tcp.flags 显示包含tcp标志的封包
-tcp.flags.syn == 0x02 显示包含TCP SYN标志的封包
-</code></pre>  
+		<p>最近在学汇编，有一个实验是用16位汇编实现字符打印，记录下实验过程</p>
+<h2 id="0x01基础知识"><a href="#0x01基础知识" class="headerlink" title="0x01基础知识"></a>0x01基础知识</h2><p>输出打印，实际上就是往显存区写数据，将要显示的内容写入显存区空间</p>
+<p>内存地址中B8000H~BFFFFH共32KB空间，为80*25彩色字符模式的显示缓冲区，向这个地址空间写入数据，写入的内容将立刻出现在显示器上</p>
+<p>在80*25彩色字符模式下，显示器一屏可以显示25行，每行80个字符，分别存放字符的ASCII码和属性<br>一个字符在显示缓冲区中就要占用两个字节，一屏的内容在显示缓冲区总共占4000个字节</p>
+<p>偏移为</p>
+<p>000~9F              第一行</p>
+<p>0A0~13F             第二行</p>
+<p>140~1DF             第三行</p>
+<p>N<em>160~(N+1) </em>160-1  第N行</p>
+<p>在显存缓冲区中，偶地址存放字符，奇地址存放字符的颜色属性</p>
+<p>在一行中，一个字符占两个字节的存储空间(一个字)，低位字节存储字符的ASCII码，高位字节存储字符的属性。一行有80个字符，占160个字节</p>
+<p>在一行中：</p>
+<p>00~01单元对应显示器上的第1列<br>02~03单元对应显示器上的第2列<br>04~05单元对应显示器上的第3列</p>
+<p>一屏幕为25行，80列<br>在屏幕中间输出为，13行，40列，字符串长度为12，正中间输出为<br>(40*2)-(12)=</p>
+<p>要写入显存的偏移地址为<br>160*13+68=2148=864H</p>
+<p>B800:842H</p>
+<h2 id="0x02程序代码"><a href="#0x02程序代码" class="headerlink" title="0x02程序代码"></a>0x02程序代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">assume cs:code</span><br><span class="line">data segment</span><br><span class="line">	db &apos;Hello,World!&apos;</span><br><span class="line">	db 02H</span><br><span class="line">data ends</span><br><span class="line"></span><br><span class="line">code segment;向第13行写入数据</span><br><span class="line">	start:mov ax,data</span><br><span class="line">		  mov ds,ax</span><br><span class="line">		  mov ax,0b800h</span><br><span class="line">		  mov es,ax</span><br><span class="line">		  mov bp,0 ;设置数据偏移变量</span><br><span class="line">		  mov bx,864H ;设置显存偏移变量</span><br><span class="line">		  mov cx,12 ;</span><br><span class="line">		s:</span><br><span class="line">		  mov al,ds:[bp]</span><br><span class="line">		  mov es:[bx],al;写入字符</span><br><span class="line">		  mov al,ds:[12]</span><br><span class="line">		  mov es:[bx+1],al;写入字符颜色</span><br><span class="line">		  add bp,1</span><br><span class="line">		  add bx,2</span><br><span class="line">		loop s</span><br><span class="line">		mov ax,4c00h</span><br><span class="line">		int 21h</span><br><span class="line">code ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\16位汇编实现helloworld\001.png" alt="images"></p>
+<h2 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h2><p>汇编语言(第3版)王爽</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
+  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Wireshark/">Wireshark</a>
+  <span></span> <a href="/tags/汇编/">汇编</a>
   </div>
 
 </div>
@@ -145,7 +141,7 @@ tcp.flags.syn == 0x02 显示包含TCP SYN标志的封包
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://flag0.com/2018/03/17/wireshark-学习笔记/" data-title="Wireshark 初接触 | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  <div data-url="http://flag0.com/2018/04/16/16位汇编实现helloworld！/" data-title="16位汇编实现hello world！ | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -158,19 +154,11 @@ tcp.flags.syn == 0x02 显示包含TCP SYN标志的封包
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2018/03/19/综合渗透/" title="综合渗透笔记 (持续更新)">
-  <strong>上一篇：</strong><br/>
-  <span>
-  综合渗透笔记 (持续更新)</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2018/03/12/PHP-PDO技术/"  title="PHP PDO学习笔记">
+<a href="/2018/04/14/python-实现word文档内格式转换/"  title="python 实现word文档内格式转换">
  <strong>下一篇：</strong><br/> 
- <span>PHP PDO学习笔记
+ <span>python 实现word文档内格式转换
 </span>
 </a>
 </div>
@@ -187,7 +175,7 @@ tcp.flags.syn == 0x02 显示包含TCP SYN标志的封包
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#显示过滤器语法"><span class="toc-number">1.</span> <span class="toc-text">显示过滤器语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#运算符-英文和符号都可"><span class="toc-number">1.1.</span> <span class="toc-text">运算符(英文和符号都可)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用关键字"><span class="toc-number">1.2.</span> <span class="toc-text">常用关键字</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01基础知识"><span class="toc-number">1.</span> <span class="toc-text">0x01基础知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02程序代码"><span class="toc-number">2.</span> <span class="toc-text">0x02程序代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#致谢"><span class="toc-number">3.</span> <span class="toc-text">致谢</span></a></li></ol>
  
   </div>
 

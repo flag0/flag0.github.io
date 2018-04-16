@@ -12,7 +12,7 @@
 
     
     <meta name="description" content="打完了神码的国赛选拔赛，闲来无事去办公室溜达溜达，正好遇到老师在整理材料，其中最费时间的就是材料里面的格式转换，每个文档都需要转换一遍，大量的重复劳动，于是尝试用程序员的眼光去看待和解决问题，写个脚本去做。">
-<meta name="keywords" content="python,自动化">
+<meta name="keywords" content="自动化,python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="python 实现word文档内格式转换">
 <meta property="og:url" content="http://flag0.com/2018/04/14/python-实现word文档内格式转换/index.html">
@@ -48,7 +48,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -87,14 +87,14 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-04-14T14:00:03.000Z" itemprop="datePublished"> Published 2018-04-14</time>
+    <time datetime="2018-04-14T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-04-14</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目录</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01问题描述"><span class="toc-number">1.</span> <span class="toc-text">0x01问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02分析问题"><span class="toc-number">2.</span> <span class="toc-text">0x02分析问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03解决问题"><span class="toc-number">3.</span> <span class="toc-text">0x03解决问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-读取当前子目录下所有word格式文件"><span class="toc-number">3.1.</span> <span class="toc-text">0x01 读取当前子目录下所有word格式文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02转换文件格式-doc-gt-docx"><span class="toc-number">3.2.</span> <span class="toc-text">0x02转换文件格式(doc-&gt;docx)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03读取文件内容并修改"><span class="toc-number">3.3.</span> <span class="toc-text">0x03读取文件内容并修改</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-程序代码"><span class="toc-number">4.</span> <span class="toc-text">0x04:程序代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-致谢"><span class="toc-number">5.</span> <span class="toc-text">0x05:致谢</span></a></li></ol>
 		
@@ -153,7 +153,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/python/">python</a><a href="/tags/自动化/">自动化</a>
+  <span></span> <a href="/tags/自动化/">自动化</a><a href="/tags/python/">python</a>
   </div>
 
 </div>
@@ -175,6 +175,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2018/04/16/16位汇编实现helloworld！/" title="16位汇编实现hello world！">
+  <strong>上一篇：</strong><br/>
+  <span>
+  16位汇编实现hello world！</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2018/04/04/山东电子培训总结/"  title="神码选拔赛培训总结">
@@ -191,17 +199,17 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目录</strong>
  
  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01问题描述"><span class="toc-number">1.</span> <span class="toc-text">0x01问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02分析问题"><span class="toc-number">2.</span> <span class="toc-text">0x02分析问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03解决问题"><span class="toc-number">3.</span> <span class="toc-text">0x03解决问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-读取当前子目录下所有word格式文件"><span class="toc-number">3.1.</span> <span class="toc-text">0x01 读取当前子目录下所有word格式文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02转换文件格式-doc-gt-docx"><span class="toc-number">3.2.</span> <span class="toc-text">0x02转换文件格式(doc-&gt;docx)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03读取文件内容并修改"><span class="toc-number">3.3.</span> <span class="toc-text">0x03读取文件内容并修改</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-程序代码"><span class="toc-number">4.</span> <span class="toc-text">0x04:程序代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-致谢"><span class="toc-number">5.</span> <span class="toc-text">0x05:致谢</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -214,7 +222,7 @@
 		  
 		
 		  
-			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>5</sup></a></li>
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>6</sup></a></li>
 		  
 		
 		</ul>
@@ -235,27 +243,19 @@
 			
 		
 			
-				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
 			
@@ -267,7 +267,35 @@
 			
 		
 			
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/selenium/" title="selenium">selenium<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/汇编/" title="汇编">汇编<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>1</sup></a></li>
 			
 		
 			
@@ -276,22 +304,6 @@
 		
 			
 				<li><a href="/tags/信息安全管理与评估/" title="信息安全管理与评估">信息安全管理与评估<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -528,7 +540,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
