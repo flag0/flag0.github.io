@@ -1,0 +1,536 @@
+
+ <!DOCTYPE HTML>
+<html lang="cn-zh">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>TensorFlow框架的简单调用 | GetFlag&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="GetFlag">
+    
+
+    
+    <meta name="description" content="假期去银川参加了Google 高职组夏令营，见到了好多高职组省一国一的大佬们，夏令营主体是一个创客比赛，要求需要用到TensorFlow框架，简单学习了一下。">
+<meta name="keywords" content="python,TensorFlow,图像识别">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TensorFlow框架的简单调用">
+<meta property="og:url" content="http://flag0.com/2018/07/26/TensorFlow框架的简单调用/index.html">
+<meta property="og:site_name" content="GetFlag&#39;s Blog">
+<meta property="og:description" content="假期去银川参加了Google 高职组夏令营，见到了好多高职组省一国一的大佬们，夏令营主体是一个创客比赛，要求需要用到TensorFlow框架，简单学习了一下。">
+<meta property="og:locale" content="cn-zh">
+<meta property="og:updated_time" content="2018-07-28T09:11:22.046Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TensorFlow框架的简单调用">
+<meta name="twitter:description" content="假期去银川参加了Google 高职组夏令营，见到了好多高职组省一国一的大佬们，夏令营主体是一个创客比赛，要求需要用到TensorFlow框架，简单学习了一下。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:flag0.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/07/26/TensorFlow框架的简单调用/" title="TensorFlow框架的简单调用" itemprop="url">TensorFlow框架的简单调用</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2018-07-26T14:00:03.000Z" itemprop="datePublished"> Published 2018-07-26</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TensorFlow识别实现"><span class="toc-number">1.</span> <span class="toc-text">TensorFlow识别实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#record-py-生成数据集"><span class="toc-number">1.1.</span> <span class="toc-text">record.py 生成数据集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#model-py-生成模型"><span class="toc-number">1.2.</span> <span class="toc-text">model.py 生成模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#trains-py-训练数据"><span class="toc-number">1.3.</span> <span class="toc-text">trains.py 训练数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#evaluate-py-测试数据"><span class="toc-number">1.4.</span> <span class="toc-text">evaluate.py 测试数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#批量修改图片大小"><span class="toc-number">2.</span> <span class="toc-text">批量修改图片大小</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#增加样本容量脚本"><span class="toc-number">3.</span> <span class="toc-text">增加样本容量脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#批量剪切背景"><span class="toc-number">4.</span> <span class="toc-text">批量剪切背景</span></a></li></ol>
+		
+		</div>
+		
+		<p>假期去银川参加了Google 高职组夏令营，见到了好多高职组省一国一的大佬们，夏令营主体是一个创客比赛，要求需要用到TensorFlow框架，简单学习了一下。<br><a id="more"></a></p>
+<h2 id="TensorFlow识别实现"><a href="#TensorFlow识别实现" class="headerlink" title="TensorFlow识别实现"></a>TensorFlow识别实现</h2><blockquote>
+<p>首先收集数据集，保存在不同的文件夹，然后运行 resizes.py,批量修改图片大小，如有需要可以运行write_pic.py，批量增加样本容量或运行shear.py 剪切背景,之后运行tecord.py生成训练集，运行model.py 生成模型，运行trains.py 训练数据，最后运行evaluate.py,放入测试集，进行图像的识别</p>
+</blockquote>
+<h3 id="record-py-生成数据集"><a href="#record-py-生成数据集" class="headerlink" title="record.py 生成数据集"></a>record.py 生成数据集</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line">cwd = <span class="string">'E:\\tftest03\\'</span></span><br><span class="line">classes = [<span class="string">'01'</span>,<span class="string">'02'</span>] <span class="comment">#文件夹数量</span></span><br><span class="line">writer = tf.python_io.TFRecordWriter(<span class="string">"train.tfrecords"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> index, name <span class="keyword">in</span> enumerate(classes):</span><br><span class="line">    class_path = cwd + name + <span class="string">'\\'</span></span><br><span class="line">    <span class="keyword">for</span> img_name <span class="keyword">in</span> os.listdir(class_path):</span><br><span class="line">        img_path = class_path + img_name  <span class="comment"># 每一个图片的地址</span></span><br><span class="line">        img = Image.open(img_path)</span><br><span class="line">        img = img.resize((<span class="number">300</span>, <span class="number">300</span>))</span><br><span class="line">        img_raw = img.tobytes()  <span class="comment"># 将图片转化为二进制格式</span></span><br><span class="line">        example = tf.train.Example(features=tf.train.Features(feature=&#123;</span><br><span class="line">            <span class="string">"label"</span>: tf.train.Feature(int64_list=tf.train.Int64List(value=[index])),</span><br><span class="line">            <span class="string">'img_raw'</span>: tf.train.Feature(bytes_list=tf.train.BytesList(value=[img_raw]))</span><br><span class="line">        &#125;))  <span class="comment"># example对象对label和image数据进行封装</span></span><br><span class="line">        writer.write(example.SerializeToString())  <span class="comment"># 序列化为字符串</span></span><br><span class="line"></span><br><span class="line">writer.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_and_decode</span><span class="params">(filename,batch_size)</span>:</span>  <span class="comment"># 读入tfrecords</span></span><br><span class="line">    filename_queue = tf.train.string_input_producer([filename])  <span class="comment"># 生成一个queue队列</span></span><br><span class="line"></span><br><span class="line">    reader = tf.TFRecordReader()</span><br><span class="line">    _, serialized_example = reader.read(filename_queue)  <span class="comment"># 返回文件名和文件</span></span><br><span class="line">    features = tf.parse_single_example(serialized_example,</span><br><span class="line">                                       features=&#123;</span><br><span class="line">                                           <span class="string">'label'</span>: tf.FixedLenFeature([], tf.int64),</span><br><span class="line">                                           <span class="string">'img_raw'</span>: tf.FixedLenFeature([], tf.string),</span><br><span class="line">                                       &#125;)  <span class="comment"># 将image数据和label取出来</span></span><br><span class="line"></span><br><span class="line">    img = tf.decode_raw(features[<span class="string">'img_raw'</span>], tf.uint8)</span><br><span class="line">    img = tf.reshape(img, [<span class="number">500</span>, <span class="number">500</span>, <span class="number">3</span>])  <span class="comment"># reshape为500*500的3通道图片</span></span><br><span class="line">    label = tf.cast(features[<span class="string">'label'</span>], tf.float32)  <span class="comment"># 在流中抛出label张量</span></span><br><span class="line">    img = tf.image.per_image_standardization(img)</span><br><span class="line">    image_batch, label_batch = tf.train.batch([img, label],</span><br><span class="line">                                              batch_size=batch_size,</span><br><span class="line">                                              num_threads=<span class="number">64</span>,</span><br><span class="line">                                              capacity=<span class="number">2000</span>)</span><br><span class="line">    <span class="keyword">return</span> image_batch,tf.reshape(label_batch, [batch_size])</span><br></pre></td></tr></table></figure>
+<h3 id="model-py-生成模型"><a href="#model-py-生成模型" class="headerlink" title="model.py 生成模型"></a>model.py 生成模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">inference</span><span class="params">(images, batch_size, n_classes)</span>:</span></span><br><span class="line">    <span class="string">'''''Build the model</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        images: image batch, 4D tensor, tf.float32, [batch_size, width, height, channels]</span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        output tensor with the computed logits, float, [batch_size, n_classes]</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="comment"># conv1, shape = [kernel size, kernel size, channels, kernel numbers]</span></span><br><span class="line">    <span class="comment">#img = tf.get_variable_scope(images,tf.float32,name = 'images')</span></span><br><span class="line">    <span class="comment">#img = tf.cast(images,dtype = tf.float32,name = 'images')</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(<span class="string">'conv1'</span>) <span class="keyword">as</span> scope:</span><br><span class="line"></span><br><span class="line">        weights = tf.get_variable(<span class="string">'weights'</span>,</span><br><span class="line">                                  shape=[<span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">16</span>],</span><br><span class="line">                                  dtype=tf.float32,</span><br><span class="line">                                  initializer=tf.truncated_normal_initializer(stddev=<span class="number">0.1</span>, dtype=tf.float32))<span class="comment">#截取的正态分布</span></span><br><span class="line">        biases = tf.get_variable(<span class="string">'biases'</span>,</span><br><span class="line">                                 shape=[<span class="number">16</span>],</span><br><span class="line">                                 dtype=tf.float32,</span><br><span class="line">                                 initializer=tf.constant_initializer(<span class="number">0.1</span>))<span class="comment">#都以0.1初始化</span></span><br><span class="line">        conv = tf.nn.conv2d(images, weights, strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding=<span class="string">'SAME'</span>)</span><br><span class="line">        pre_activation = tf.nn.bias_add(conv, biases)</span><br><span class="line">        conv1 = tf.nn.relu(pre_activation, name=scope.name)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># pool1 and norm1</span></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(<span class="string">'pooling1_lrn'</span>) <span class="keyword">as</span> scope:</span><br><span class="line">        pool1 = tf.nn.max_pool(conv1, ksize=[<span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">1</span>], strides=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>],</span><br><span class="line">                               padding=<span class="string">'SAME'</span>, name=<span class="string">'pooling1'</span>)</span><br><span class="line">        norm1 = tf.nn.lrn(pool1, depth_radius=<span class="number">4</span>, bias=<span class="number">1.0</span>, alpha=<span class="number">0.001</span> / <span class="number">9.0</span>,</span><br><span class="line">                          beta=<span class="number">0.75</span>, name=<span class="string">'norm1'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># conv2</span></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(<span class="string">'conv2'</span>) <span class="keyword">as</span> scope:</span><br><span class="line">        weights = tf.get_variable(<span class="string">'weights'</span>,</span><br><span class="line">                                  shape=[<span class="number">3</span>, <span class="number">3</span>, <span class="number">16</span>, <span class="number">16</span>],</span><br><span class="line">                                  dtype=tf.float32,</span><br><span class="line">                                  initializer=tf.truncated_normal_initializer(stddev=<span class="number">0.1</span>, dtype=tf.float32))</span><br><span class="line">        biases = tf.get_variable(<span class="string">'biases'</span>,</span><br><span class="line">                                 shape=[<span class="number">16</span>],</span><br><span class="line">                                 dtype=tf.float32,</span><br><span class="line">                                 initializer=tf.constant_initializer(<span class="number">0.1</span>))</span><br><span class="line">        conv = tf.nn.conv2d(norm1, weights, strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding=<span class="string">'SAME'</span>)</span><br><span class="line">        pre_activation = tf.nn.bias_add(conv, biases)</span><br><span class="line">        conv2 = tf.nn.relu(pre_activation, name=<span class="string">'conv2'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># pool2 and norm2</span></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(<span class="string">'pooling2_lrn'</span>) <span class="keyword">as</span> scope:</span><br><span class="line">        norm2 = tf.nn.lrn(conv2, depth_radius=<span class="number">4</span>, bias=<span class="number">1.0</span>, alpha=<span class="number">0.001</span> / <span class="number">9.0</span>,</span><br><span class="line">                          beta=<span class="number">0.75</span>, name=<span class="string">'norm2'</span>)</span><br><span class="line">        pool2 = tf.nn.max_pool(norm2, ksize=[<span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">1</span>], strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>],</span><br><span class="line">                               padding=<span class="string">'SAME'</span>, name=<span class="string">'pooling2'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># local3</span></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(<span class="string">'local3'</span>) <span class="keyword">as</span> scope:</span><br><span class="line">        reshape = tf.reshape(pool2, shape=[batch_size, <span class="number">-1</span>])</span><br><span class="line">        dim = reshape.get_shape()[<span class="number">1</span>].value</span><br><span class="line">        weights = tf.get_variable(<span class="string">'weights'</span>,</span><br><span class="line">                                  shape=[dim, <span class="number">500</span>],</span><br><span class="line">                                  dtype=tf.float32,</span><br><span class="line">                                  initializer=tf.truncated_normal_initializer(stddev=<span class="number">0.005</span>, dtype=tf.float32))</span><br><span class="line">        biases = tf.get_variable(<span class="string">'biases'</span>,</span><br><span class="line">                                 shape=[<span class="number">500</span>],</span><br><span class="line">                                 dtype=tf.float32,</span><br><span class="line">                                 initializer=tf.constant_initializer(<span class="number">0.1</span>))</span><br><span class="line">        local3 = tf.nn.relu(tf.matmul(reshape, weights) + biases, name=scope.name)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># local4</span></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(<span class="string">'local4'</span>) <span class="keyword">as</span> scope:</span><br><span class="line">        weights = tf.get_variable(<span class="string">'weights'</span>,</span><br><span class="line">                                  shape=[<span class="number">500</span>, <span class="number">500</span>],</span><br><span class="line">                                  dtype=tf.float32,</span><br><span class="line">                                  initializer=tf.truncated_normal_initializer(stddev=<span class="number">0.005</span>, dtype=tf.float32))</span><br><span class="line">        biases = tf.get_variable(<span class="string">'biases'</span>,</span><br><span class="line">                                 shape=[<span class="number">500</span>],</span><br><span class="line">                                 dtype=tf.float32,</span><br><span class="line">                                 initializer=tf.constant_initializer(<span class="number">0.1</span>))</span><br><span class="line">        local4 = tf.nn.relu(tf.matmul(local3, weights) + biases, name=<span class="string">'local4'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># softmax</span></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(<span class="string">'softmax_linear'</span>) <span class="keyword">as</span> scope:</span><br><span class="line">        weights = tf.get_variable(<span class="string">'softmax_linear'</span>,</span><br><span class="line">                                  shape=[<span class="number">500</span>, n_classes],</span><br><span class="line">                                  dtype=tf.float32,</span><br><span class="line">                                  initializer=tf.truncated_normal_initializer(stddev=<span class="number">0.005</span>, dtype=tf.float32))</span><br><span class="line">        biases = tf.get_variable(<span class="string">'biases'</span>,</span><br><span class="line">                                 shape=[n_classes],</span><br><span class="line">                                 dtype=tf.float32,</span><br><span class="line">                                 initializer=tf.constant_initializer(<span class="number">0.1</span>))</span><br><span class="line">        softmax_linear = tf.add(tf.matmul(local4, weights), biases, name=<span class="string">'softmax_linear'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> softmax_linear</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">losses</span><span class="params">(logits, labels)</span>:</span></span><br><span class="line">    <span class="string">'''''Compute loss from logits and labels</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        logits: logits tensor, float, [batch_size, n_classes]</span></span><br><span class="line"><span class="string">        labels: label tensor, tf.int32, [batch_size]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        loss tensor of float type</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="keyword">with</span> tf.variable_scope(<span class="string">'loss'</span>) <span class="keyword">as</span> scope:</span><br><span class="line">        cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits \</span><br><span class="line">            (logits=logits, labels=labels, name=<span class="string">'xentropy_per_example'</span>)</span><br><span class="line">        loss = tf.reduce_mean(cross_entropy, name=<span class="string">'loss'</span>)<span class="comment">#在cross_entropy上求平均值</span></span><br><span class="line">        tf.summary.scalar(scope.name + <span class="string">'/loss'</span>, loss)</span><br><span class="line">    <span class="keyword">return</span> loss</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">trainning</span><span class="params">(loss, learning_rate)</span>:</span></span><br><span class="line">    <span class="string">'''''Training ops, the Op returned by this function is what must be passed to</span></span><br><span class="line"><span class="string">        'sess.run()' call to cause the model to train.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        loss: loss tensor, from losses()</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        train_op: The op for trainning</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="keyword">with</span> tf.name_scope(<span class="string">'optimizer'</span>):</span><br><span class="line">        optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)</span><br><span class="line">        global_step = tf.Variable(<span class="number">0</span>, name=<span class="string">'global_step'</span>, trainable=<span class="keyword">False</span>)</span><br><span class="line">        train_op = optimizer.minimize(loss, global_step=global_step)</span><br><span class="line">    <span class="keyword">return</span> train_op</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">evaluation</span><span class="params">(logits, labels)</span>:</span></span><br><span class="line">  <span class="string">"""Evaluate the quality of the logits at predicting the label.</span></span><br><span class="line"><span class="string">  Args:</span></span><br><span class="line"><span class="string">    logits: Logits tensor, float - [batch_size, NUM_CLASSES].</span></span><br><span class="line"><span class="string">    labels: Labels tensor, int32 - [batch_size], with values in the</span></span><br><span class="line"><span class="string">      range [0, NUM_CLASSES).</span></span><br><span class="line"><span class="string">  Returns:</span></span><br><span class="line"><span class="string">    A scalar int32 tensor with the number of examples (out of batch_size)</span></span><br><span class="line"><span class="string">    that were predicted correctly.</span></span><br><span class="line"><span class="string">  """</span></span><br><span class="line">  <span class="keyword">with</span> tf.variable_scope(<span class="string">'accuracy'</span>) <span class="keyword">as</span> scope:</span><br><span class="line">      correct = tf.nn.in_top_k(logits, labels, <span class="number">1</span>)</span><br><span class="line">      correct = tf.cast(correct, tf.float16)</span><br><span class="line">      accuracy = tf.reduce_mean(correct)</span><br><span class="line">      tf.summary.scalar(scope.name+<span class="string">'/accuracy'</span>, accuracy)</span><br><span class="line">  <span class="keyword">return</span> accuracy</span><br></pre></td></tr></table></figure>
+<h3 id="trains-py-训练数据"><a href="#trains-py-训练数据" class="headerlink" title="trains.py 训练数据"></a>trains.py 训练数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> model</span><br><span class="line"><span class="keyword">import</span> record <span class="keyword">as</span> cr</span><br><span class="line"></span><br><span class="line">N_CLASSES = <span class="number">2</span> <span class="comment">#标签类别数量 两类，有人，没人</span></span><br><span class="line">IMG_W = <span class="number">300</span></span><br><span class="line">IMG_H = <span class="number">300</span>  <span class="comment"># 图片尺寸</span></span><br><span class="line">BATCH_SIZE = <span class="number">5</span> <span class="comment">#批尺寸</span></span><br><span class="line">CAPACITY = <span class="number">2000</span> <span class="comment">#数据集容量</span></span><br><span class="line">MAX_STEP = <span class="number">300</span> <span class="comment">#训练次数</span></span><br><span class="line">learning_rate = <span class="number">0.0001</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># %%</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_training1</span><span class="params">()</span>:</span></span><br><span class="line"></span><br><span class="line">    logs_train_dir = <span class="string">'./recordstrain/'</span></span><br><span class="line">    tfrecords_file = <span class="string">'./train.tfrecords'</span></span><br><span class="line">    train_batch, train_label_batch = cr.read_and_decode(tfrecords_file, batch_size=BATCH_SIZE)</span><br><span class="line">    train_batch = tf.cast(train_batch, dtype=tf.float32)</span><br><span class="line">    train_label_batch = tf.cast(train_label_batch, dtype=tf.int64)</span><br><span class="line">    train_logits = model.inference(train_batch, BATCH_SIZE, N_CLASSES)</span><br><span class="line">    train_loss = model.losses(train_logits, train_label_batch)</span><br><span class="line">    train_op = model.trainning(train_loss, learning_rate)</span><br><span class="line">    train__acc = model.evaluation(train_logits, train_label_batch)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    summary_op = tf.summary.merge_all()</span><br><span class="line">    sess = tf.Session()</span><br><span class="line">    train_writer = tf.summary.FileWriter(logs_train_dir, sess.graph)</span><br><span class="line">    saver = tf.train.Saver()</span><br><span class="line"></span><br><span class="line">    sess.run(tf.global_variables_initializer())</span><br><span class="line">    coord = tf.train.Coordinator()</span><br><span class="line">    threads = tf.train.start_queue_runners(sess=sess, coord=coord)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">for</span> step <span class="keyword">in</span> np.arange(MAX_STEP):</span><br><span class="line">            <span class="keyword">if</span> coord.should_stop():</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            _, tra_loss, tra_acc = sess.run([train_op, train_loss, train__acc])</span><br><span class="line">            <span class="keyword">if</span> step % <span class="number">50</span> == <span class="number">0</span>:</span><br><span class="line">                print(<span class="string">'Step %d, train loss = %.2f, train accuracy = %.2f%%'</span> % (step, tra_loss, tra_acc * <span class="number">300.0</span>))</span><br><span class="line">                summary_str = sess.run(summary_op)</span><br><span class="line">                train_writer.add_summary(summary_str, step)</span><br><span class="line">            <span class="keyword">if</span> step % <span class="number">2000</span> == <span class="number">0</span> <span class="keyword">or</span> (step + <span class="number">1</span>) == MAX_STEP:</span><br><span class="line">                checkpoint_path = os.path.join(logs_train_dir, <span class="string">'model.ckpt'</span>)</span><br><span class="line">                saver.save(sess, checkpoint_path, global_step=step)</span><br><span class="line">                saver = tf.train.Saver()</span><br><span class="line">                saver.save(sess, <span class="string">"./model/model.ckpt"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">except</span> tf.errors.OutOfRangeError:</span><br><span class="line">        print(<span class="string">'Done training -- epoch limit reached'</span>)</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        coord.request_stop()</span><br><span class="line"></span><br><span class="line">    coord.join(threads)</span><br><span class="line">    sess.close()</span><br><span class="line"></span><br><span class="line">run_training1()</span><br></pre></td></tr></table></figure>
+<h3 id="evaluate-py-测试数据"><a href="#evaluate-py-测试数据" class="headerlink" title="evaluate.py 测试数据"></a>evaluate.py 测试数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> model</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> os.path</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="comment">#import input_data</span></span><br><span class="line"></span><br><span class="line">MODEL_DIR = <span class="string">"model/pb"</span></span><br><span class="line">MODEL_NAME = <span class="string">"model.pb"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_one_image</span><span class="params">(train)</span>:</span></span><br><span class="line"></span><br><span class="line">    n = len(train)</span><br><span class="line">    ind = np.random.randint(<span class="number">0</span>, n)</span><br><span class="line">    img_dir = train[ind]</span><br><span class="line"></span><br><span class="line">    image = Image.open(img_dir)</span><br><span class="line">    plt.imshow(image)</span><br><span class="line">    image = image.resize([<span class="number">300</span>, <span class="number">300</span>])</span><br><span class="line">    image = np.array(image)</span><br><span class="line">    <span class="keyword">return</span> image</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_one_img</span><span class="params">(img_dir)</span>:</span></span><br><span class="line">    image = Image.open(img_dir)</span><br><span class="line">    plt.imshow(image)</span><br><span class="line">    image = image.resize([<span class="number">300</span>, <span class="number">300</span>])</span><br><span class="line">    image = np.array(image)</span><br><span class="line">    <span class="keyword">return</span> image</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">evaluate_one_image</span><span class="params">()</span>:</span></span><br><span class="line"></span><br><span class="line">    output_graph = os.path.join(MODEL_DIR, MODEL_NAME)</span><br><span class="line">    image_array = get_one_img(<span class="string">'./testpic/13.jpg'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> tf.Graph().as_default():</span><br><span class="line">        BATCH_SIZE = <span class="number">1</span></span><br><span class="line">        N_CLASSES  = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">        image = tf.cast(image_array, tf.float32,name=<span class="string">'input'</span>)</span><br><span class="line">        image = tf.image.per_image_standardization(image)</span><br><span class="line">        image = tf.reshape(image, [<span class="number">1</span>, <span class="number">300</span>, <span class="number">300</span>, <span class="number">3</span>])</span><br><span class="line">        logit = model.inference(image, BATCH_SIZE, N_CLASSES)</span><br><span class="line"></span><br><span class="line">        logit = tf.nn.softmax(logit,name=<span class="string">'output'</span>)</span><br><span class="line"></span><br><span class="line">        x = tf.placeholder(tf.float32, shape=[<span class="number">300</span>, <span class="number">300</span>, <span class="number">3</span>])</span><br><span class="line"></span><br><span class="line">        logs_train_dir = <span class="string">'./recordstrain/'</span></span><br><span class="line"></span><br><span class="line">        saver = tf.train.Saver()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">            print(<span class="string">"Reading checkpoints..."</span>)</span><br><span class="line">            ckpt = tf.train.get_checkpoint_state(logs_train_dir)</span><br><span class="line">            <span class="keyword">if</span> ckpt <span class="keyword">and</span> ckpt.model_checkpoint_path:</span><br><span class="line">                global_step = ckpt.model_checkpoint_path.split(<span class="string">'/'</span>)[<span class="number">-1</span>].split(<span class="string">'-'</span>)[<span class="number">-1</span>]</span><br><span class="line">                saver.restore(sess, ckpt.model_checkpoint_path)</span><br><span class="line">                print(<span class="string">'Loading success, global_step is %s'</span> % global_step)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                print(<span class="string">'No checkpoint file found'</span>)</span><br><span class="line"></span><br><span class="line">            prediction = sess.run(logit, feed_dict=&#123;x: image_array&#125;)</span><br><span class="line">            print(prediction)</span><br><span class="line">            graph_defoutput_graph_def = tf.graph_util.convert_variables_to_constants(sess, sess.graph_def, [<span class="string">'output'</span>])</span><br><span class="line">            print(output_graph)</span><br><span class="line"></span><br><span class="line">            output_graph = output_graph.replace(<span class="string">'\\'</span>, <span class="string">'/'</span>)</span><br><span class="line">            <span class="keyword">with</span> tf.gfile.FastGFile(output_graph, mode=<span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">                f.write(graph_defoutput_graph_def.SerializeToString())</span><br><span class="line">            max_index = np.argmax(prediction)</span><br><span class="line">            <span class="keyword">if</span> max_index == <span class="number">0</span>:</span><br><span class="line">                print(<span class="string">'result is 1  with possibility %.6f'</span> % prediction[:, <span class="number">0</span>])</span><br><span class="line">            <span class="keyword">if</span> max_index == <span class="number">1</span>:</span><br><span class="line">                print(<span class="string">'result is 2 with possibility %.6f'</span> % prediction[:, <span class="number">1</span>])</span><br><span class="line">            <span class="keyword">if</span> max_index == <span class="number">2</span>:</span><br><span class="line">                print(<span class="string">'result is 3 with possibility %.6f'</span> % prediction[:, <span class="number">2</span>])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">evaluate_one_image()</span><br></pre></td></tr></table></figure>
+<h2 id="批量修改图片大小"><a href="#批量修改图片大小" class="headerlink" title="批量修改图片大小"></a>批量修改图片大小</h2><p>resizes.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> os <span class="comment">#通过os.listdir()函数列出指定目录下的所有文件</span></span><br><span class="line">class_path = [<span class="string">"./01/"</span>]<span class="comment">#设置路径</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">resize</span><span class="params">(img_path)</span>:</span></span><br><span class="line">    img = Image.open(img_path)<span class="comment">#打开图片</span></span><br><span class="line">    img = img.resize((<span class="number">500</span>, <span class="number">500</span>))<span class="comment">#修改图片大小为500*500</span></span><br><span class="line">    img.save(img_path)<span class="comment">#保存图片</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    <span class="comment">#for dir_path in class_path[]:#当路径列表中元素为多个时</span></span><br><span class="line">    <span class="keyword">for</span> img_name <span class="keyword">in</span> os.listdir(class_path[<span class="number">0</span>]):</span><br><span class="line">        img_path = class_path[<span class="number">0</span>]+img_name<span class="comment">#拼接路径和文件名</span></span><br><span class="line">        print(img_path)</span><br><span class="line">        resize(img_path)</span><br><span class="line"><span class="comment"># img_path = class_path + img_name  # 每一个图片的地址</span></span><br></pre></td></tr></table></figure>
+<h2 id="增加样本容量脚本"><a href="#增加样本容量脚本" class="headerlink" title="增加样本容量脚本"></a>增加样本容量脚本</h2><p>write_pic.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">count = <span class="number">0</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">image_repeat</span><span class="params">(image_path,image_name)</span>:</span></span><br><span class="line">    image_path_name = image_path+image_name <span class="comment">#拼接路径</span></span><br><span class="line">    img = Image.open(image_path_name)</span><br><span class="line">    second = int(random.random() * <span class="number">100</span>)</span><br><span class="line">    <span class="keyword">for</span> spot <span class="keyword">in</span> range(second):</span><br><span class="line">        x = int(random.random() * <span class="number">300</span>)<span class="comment">#设置图像点的X坐标</span></span><br><span class="line">        y = int(random.random() * <span class="number">500</span>)<span class="comment">#设置图像点的Y坐</span></span><br><span class="line">        R = int(random.random() * <span class="number">255</span>)<span class="comment">#设置R通道颜色</span></span><br><span class="line">        G = int(random.random() * <span class="number">255</span>)<span class="comment">#设置G通道颜色</span></span><br><span class="line">        B = int(random.random() * <span class="number">255</span>)<span class="comment">#设置B通道颜色</span></span><br><span class="line">        print(<span class="string">"[+]: "</span>+image_name,x,y,R,G,B)</span><br><span class="line">        img.putpixel((x,y),(R,G,B))<span class="comment">#写入颜色</span></span><br><span class="line">    images_name = image_path+str(int(time.time()))+<span class="string">"_"</span>+image_name </span><br><span class="line">    <span class="comment">#与unix时间戳结合拼接保存的文件名</span></span><br><span class="line">    print(images_name)</span><br><span class="line">    img.save(images_name)<span class="comment">#保存文件</span></span><br><span class="line">    print(<span class="string">"生成"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    class_path = [<span class="string">"./02/"</span>]</span><br><span class="line">    <span class="keyword">for</span> dir_path <span class="keyword">in</span> class_path:<span class="comment">#读取路径文件夹</span></span><br><span class="line">        <span class="keyword">for</span> img_name <span class="keyword">in</span> os.listdir(dir_path):<span class="comment">#获取并且迭代文件夹下所有的文件名</span></span><br><span class="line">            <span class="keyword">for</span> sec <span class="keyword">in</span> range(<span class="number">10</span>):<span class="comment">#重复次数，每一张图片扩充N倍</span></span><br><span class="line">                i+=<span class="number">1</span></span><br><span class="line">                image_repeat(class_path[<span class="number">0</span>],img_name)<span class="comment">#调用函数</span></span><br><span class="line">    print(<span class="string">"共生成"</span>,i)<span class="comment">#输出图片数量</span></span><br></pre></td></tr></table></figure>
+<h2 id="批量剪切背景"><a href="#批量剪切背景" class="headerlink" title="批量剪切背景"></a>批量剪切背景</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image </span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">crop</span><span class="params">(dir)</span>:</span></span><br><span class="line">    img = Image.open(<span class="string">"E:\\tftest03\\baidu_pic\\baidu_pic\\"</span>+dir)</span><br><span class="line">    region = (<span class="number">0</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">100</span>) <span class="comment">#设置剪切开始位置点的坐标，设置剪切结束位置的点的坐标</span></span><br><span class="line">    cropimg = img.crop(region)<span class="comment">#开始剪切</span></span><br><span class="line">    cropimg.save(<span class="string">"E:\\tftest03\\new no man\\"</span>+dir)<span class="comment">#保存图片</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">resize</span><span class="params">(dir)</span>:</span><span class="comment">#修改剪切后的图片大小</span></span><br><span class="line">    img = Image.open(<span class="string">"E:\\tftest03\\new no man\\"</span>+dir)</span><br><span class="line">    img = img.resize((<span class="number">250</span>,<span class="number">250</span>))</span><br><span class="line">    img.save(<span class="string">"./new_no_man/"</span>+dir)</span><br><span class="line"></span><br><span class="line">path = <span class="string">"E:\\tftest03\\baidu_pic\\baidu_pic\\"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> dir_path <span class="keyword">in</span> os.listdir(path):</span><br><span class="line">    print(dir_path)</span><br><span class="line">    crop(dir_path)</span><br><span class="line">    resize(dir_path)</span><br><span class="line">    <span class="comment">#print(dir_path)</span></span><br></pre></td></tr></table></figure>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/TensorFlow/">TensorFlow</a><a href="/tags/图像识别/">图像识别</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://flag0.com/2018/07/26/TensorFlow框架的简单调用/" data-title="TensorFlow框架的简单调用 | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2018/04/20/bypass安全狗/"  title="bypass安全狗">
+ <strong>下一篇：</strong><br/> 
+ <span>bypass安全狗
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TensorFlow识别实现"><span class="toc-number">1.</span> <span class="toc-text">TensorFlow识别实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#record-py-生成数据集"><span class="toc-number">1.1.</span> <span class="toc-text">record.py 生成数据集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#model-py-生成模型"><span class="toc-number">1.2.</span> <span class="toc-text">model.py 生成模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#trains-py-训练数据"><span class="toc-number">1.3.</span> <span class="toc-text">trains.py 训练数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#evaluate-py-测试数据"><span class="toc-number">1.4.</span> <span class="toc-text">evaluate.py 测试数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#批量修改图片大小"><span class="toc-number">2.</span> <span class="toc-text">批量修改图片大小</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#增加样本容量脚本"><span class="toc-number">3.</span> <span class="toc-text">增加样本容量脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#批量剪切背景"><span class="toc-number">4.</span> <span class="toc-text">批量剪切背景</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>8</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/图像识别/" title="图像识别">图像识别<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/信息安全管理与评估/" title="信息安全管理与评估">信息安全管理与评估<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/selenium/" title="selenium">selenium<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.cnblogs.com/test404" target="_blank" title="胖虎">胖虎</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://p0desta.top" target="_blank" title="p0desta">p0desta</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="www.jzns.club" target="_blank" title="鸡汁安全">鸡汁安全</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Rise and rise again until lambs become lions <br/>
+			Everyone can cook, but only those who dare to try can become the real chef.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/https://github.com/flag0" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:root@flag0.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2018 
+		
+		<a href="/about" target="_blank" title="GetFlag">GetFlag</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
