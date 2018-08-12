@@ -12,7 +12,7 @@
 
     
     <meta name="description" content="西普杯铁人三项赛，训练营企业赛真题drupal渗透。铁三全是CVE的洞，真给劲。测试了大半下午，实验环境的菜刀是废的，不妨碍验证是否成功拿下webshell">
-<meta name="keywords" content="铁人三项,综合渗透,Writeup">
+<meta name="keywords" content="综合渗透,铁人三项,Writeup">
 <meta property="og:type" content="article">
 <meta property="og:title" content="企业赛真题-drupal渗透-Writeup">
 <meta property="og:url" content="http://flag0.com/2018/03/22/铁三真题-drupal-Writeup/index.html">
@@ -54,7 +54,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -93,14 +93,14 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-03-22T08:00:00.000Z" itemprop="datePublished"> Published 2018-03-22</time>
+    <time datetime="2018-03-22T08:00:00.000Z" itemprop="datePublished"> 发表于 2018-03-22</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目录</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-任务目标"><span class="toc-number">1.</span> <span class="toc-text">0x01:任务目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-题目分析"><span class="toc-number">2.</span> <span class="toc-text">0x02:题目分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-致谢"><span class="toc-number">3.</span> <span class="toc-text">0x03:致谢</span></a></li></ol>
 		
@@ -150,7 +150,7 @@ s:39:\&quot;\0GuzzleHttp\Cookie\\CookieJar\0strictMode\&quot;;N;}&quot;&quot;
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/铁人三项/">铁人三项</a><a href="/tags/综合渗透/">综合渗透</a><a href="/tags/Writeup/">Writeup</a>
+  <span></span> <a href="/tags/综合渗透/">综合渗透</a><a href="/tags/铁人三项/">铁人三项</a><a href="/tags/Writeup/">Writeup</a>
   </div>
 
 </div>
@@ -196,17 +196,17 @@ s:39:\&quot;\0GuzzleHttp\Cookie\\CookieJar\0strictMode\&quot;;N;}&quot;&quot;
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目录</strong>
  
  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-任务目标"><span class="toc-number">1.</span> <span class="toc-text">0x01:任务目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-题目分析"><span class="toc-number">2.</span> <span class="toc-text">0x02:题目分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-致谢"><span class="toc-number">3.</span> <span class="toc-text">0x03:致谢</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -215,7 +215,7 @@ s:39:\&quot;\0GuzzleHttp\Cookie\\CookieJar\0strictMode\&quot;;N;}&quot;&quot;
 		<ul>
 		
 		  
-			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>6</sup></a></li>
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>7</sup></a></li>
 		  
 		
 		  
@@ -248,35 +248,11 @@ s:39:\&quot;\0GuzzleHttp\Cookie\\CookieJar\0strictMode\&quot;;N;}&quot;&quot;
 			
 		
 			
-				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
 			
 		
 			
@@ -284,7 +260,7 @@ s:39:\&quot;\0GuzzleHttp\Cookie\\CookieJar\0strictMode\&quot;;N;}&quot;&quot;
 			
 		
 			
-				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
 			
 		
 			
@@ -296,7 +272,11 @@ s:39:\&quot;\0GuzzleHttp\Cookie\\CookieJar\0strictMode\&quot;;N;}&quot;&quot;
 			
 		
 			
-				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
+				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/图像识别/" title="图像识别">图像识别<sup>1</sup></a></li>
 			
 		
 			
@@ -304,11 +284,31 @@ s:39:\&quot;\0GuzzleHttp\Cookie\\CookieJar\0strictMode\&quot;;N;}&quot;&quot;
 			
 		
 			
-				<li><a href="/tags/信息安全管理与评估/" title="信息安全管理与评估">信息安全管理与评估<sup>1</sup></a></li>
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>1</sup></a></li>
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/xman/" title="xman">xman<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/CTF/" title="CTF">CTF<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/培训总结/" title="培训总结">培训总结<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -551,7 +551,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
