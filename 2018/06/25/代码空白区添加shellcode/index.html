@@ -4,23 +4,31 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>GetFlag&#39;s Blog</title>
+    <title>代码空白区添加shellcode | GetFlag&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="GetFlag">
     
 
     
-    <meta name="description" content="个人博客,技术分享,生活记录">
-<meta property="og:type" content="website">
-<meta property="og:title" content="GetFlag&#39;s Blog">
-<meta property="og:url" content="http://flag0.com/index.html">
+    <meta name="description" content="代码空白区添加shellcode适合有一定基础的萌新！ 前言： 本篇文章主要实现为记事本添加 空白弹窗，后续有时间写的话可以去写简单的文件感染的文章。 手动和编程实现，在代码空白区添加shellcode 、在数据空白区添加shellcode 需要知识 ： PE 实验环境 windows xp  记事本 PETool Uedit32 Visual c++ 6.0 手动添加shellcode手动添加s">
+<meta name="keywords" content="shellcode,PE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代码空白区添加shellcode">
+<meta property="og:url" content="http://flag0.com/2018/06/25/代码空白区添加shellcode/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
-<meta property="og:description" content="个人博客,技术分享,生活记录">
+<meta property="og:description" content="代码空白区添加shellcode适合有一定基础的萌新！ 前言： 本篇文章主要实现为记事本添加 空白弹窗，后续有时间写的话可以去写简单的文件感染的文章。 手动和编程实现，在代码空白区添加shellcode 、在数据空白区添加shellcode 需要知识 ： PE 实验环境 windows xp  记事本 PETool Uedit32 Visual c++ 6.0 手动添加shellcode手动添加s">
 <meta property="og:locale" content="cn-zh">
+<meta property="og:image" content="http://flag0.com/2018/06/25/代码空白区添加shellcode/代码空白区添加shellcode.assets/20190625120521.png">
+<meta property="og:image" content="http://flag0.com/2018/06/25/代码空白区添加shellcode/代码空白区添加shellcode.assets/1561436946735.png">
+<meta property="og:image" content="http://flag0.com/2018/06/25/代码空白区添加shellcode/代码空白区添加shellcode.assets/1561454221052.png">
+<meta property="og:image" content="http://flag0.com/2018/06/25/代码空白区添加shellcode/代码空白区添加shellcode.assets/1561453842765.png">
+<meta property="og:image" content="http://flag0.com/2018/06/25/代码空白区添加shellcode/代码空白区添加shellcode.assets/1561458172003.png">
+<meta property="og:updated_time" content="2019-08-28T18:30:06.838Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="GetFlag&#39;s Blog">
-<meta name="twitter:description" content="个人博客,技术分享,生活记录">
+<meta name="twitter:title" content="代码空白区添加shellcode">
+<meta name="twitter:description" content="代码空白区添加shellcode适合有一定基础的萌新！ 前言： 本篇文章主要实现为记事本添加 空白弹窗，后续有时间写的话可以去写简单的文件感染的文章。 手动和编程实现，在代码空白区添加shellcode 、在数据空白区添加shellcode 需要知识 ： PE 实验环境 windows xp  记事本 PETool Uedit32 Visual c++ 6.0 手动添加shellcode手动添加s">
+<meta name="twitter:image" content="http://flag0.com/2018/06/25/代码空白区添加shellcode/代码空白区添加shellcode.assets/20190625120521.png">
 
     
     <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
@@ -70,501 +78,10 @@
 </div>
     </header>
     <div id="container">
-      <div id="main">
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/11/19/湖湘杯2018复赛Web-Writeup/" title="湖湘杯2018复赛Web Writeup" itemprop="url">湖湘杯2018复赛Web Writeup</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-11-18T16:00:00.000Z" itemprop="datePublished"> 发表于 2018-11-19</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>web题难度不大，就是环境比较坑</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/11/19/湖湘杯2018复赛Web-Writeup/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
+      <div id="main" class="post" itemscope itemprop="blogPost">
   
-  <span></span> <a href="/tags/湖湘杯2018/">湖湘杯2018</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/11/11/浅析SSTI-python沙盒绕过/" title="浅析SSTI(python沙盒绕过)" itemprop="url">浅析SSTI(python沙盒绕过)</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-11-10T17:30:00.000Z" itemprop="datePublished"> 发表于 2018-11-11</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>在CTF比赛中见过不少的SSTI题目，在这里整理下思路，记录下<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/11/11/浅析SSTI-python沙盒绕过/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/SSTI/">SSTI</a><a href="/tags/python沙箱绕过/">python沙箱绕过</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/11/08/第七届山东省大学生信息安全竞赛Writeup/" title="第七届山东省信息安全竞赛Writeup" itemprop="url">第七届山东省信息安全竞赛Writeup</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-11-08T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-11-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>留下了没有技术的泪水。。。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/11/08/第七届山东省大学生信息安全竞赛Writeup/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/山东省大学生信息安全竞赛/">山东省大学生信息安全竞赛</a><a href="/tags/科来杯/">科来杯</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/09/15/AWD流量混淆/" title="AWD流量混淆" itemprop="url">AWD流量混淆</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-09-14T16:00:00.000Z" itemprop="datePublished"> 发表于 2018-09-15</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>题目取得有点标题党，其实只是自己当时的一个想法，去实现了一遍，只有简单的一个混淆的脚本，水平比较有限，所以很多地方实现的并不是比较合理，写这篇文章的目的主要是提供思路的参考<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/09/15/AWD流量混淆/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/AWD/">AWD</a><a href="/tags/流量混淆/">流量混淆</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/08/30/ISG2018-Web-Writeup/" title="ISG 2018 Web Writeup" itemprop="url">ISG 2018 Web Writeup</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-08-30T10:00:00.000Z" itemprop="datePublished"> 发表于 2018-08-30</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>又一次感觉到了，作为一个CTFer，要想在比赛中有高的输出，只做Web是不够的</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/08/30/ISG2018-Web-Writeup/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Writeup/">Writeup</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/08/15/中孚杯铜牌LFI/" title="中孚杯铜牌 LFI" itemprop="url">中孚杯铜牌 LFI</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-08-15T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-08-15</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>当时这道题并没有做出来，也并没有意识到会是文件包含，去年参加比赛的时候，太萌新了，机缘巧合遇到出题人才想起来再次去看这道题。</p>
-<p>考点为php伪协议文件包含<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/08/15/中孚杯铜牌LFI/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/中孚杯/">中孚杯</a><a href="/tags/山东省大学生信息安全竞赛/">山东省大学生信息安全竞赛</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/08/12/xman2018个人排位赛Web-MISCWriteup/" title="Xman2018排位赛 Web、MISC Writeup" itemprop="url">Xman2018排位赛 Web、MISC Writeup</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-08-12T09:15:03.000Z" itemprop="datePublished"> 发表于 2018-08-12</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>感觉到了Web狗在CTF比赛中存活的艰难<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/08/12/xman2018个人排位赛Web-MISCWriteup/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/xman/">xman</a><a href="/tags/CTF/">CTF</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/07/26/TensorFlow框架的简单调用/" title="TensorFlow框架的简单调用" itemprop="url">TensorFlow框架的简单调用</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-07-26T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-07-26</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>假期去银川参加了Google 高职组夏令营，见到了好多高职组省一国一的大佬们，夏令营主体是一个创客比赛，要求需要用到TensorFlow框架，简单学习了一下。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/07/26/TensorFlow框架的简单调用/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/python/">python</a><a href="/tags/TensorFlow/">TensorFlow</a><a href="/tags/图像识别/">图像识别</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
   <h1 itemprop="name">
     
       <a href="/2018/06/25/代码空白区添加shellcode/" title="代码空白区添加shellcode" itemprop="url">代码空白区添加shellcode</a>
@@ -578,9 +95,16 @@
     
   </p>
 </header>
-    <div class="article-content">
-        
-        <h2 id="代码空白区添加shellcode"><a href="#代码空白区添加shellcode" class="headerlink" title="代码空白区添加shellcode"></a>代码空白区添加shellcode</h2><p>适合有一定基础的萌新！</p>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码空白区添加shellcode"><span class="toc-number">1.</span> <span class="toc-text">代码空白区添加shellcode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#手动添加shellcode"><span class="toc-number">2.</span> <span class="toc-text">手动添加shellcode</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#寻找代码节空白区"><span class="toc-number">2.1.</span> <span class="toc-text">寻找代码节空白区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取MessageBox地址，构造ShellCode代码"><span class="toc-number">2.2.</span> <span class="toc-text">获取MessageBox地址，构造ShellCode代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算修正E8-与-E9-后面的参数"><span class="toc-number">2.3.</span> <span class="toc-text">计算修正E8 与 E9 后面的参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算并修改OEP"><span class="toc-number">2.4.</span> <span class="toc-text">计算并修改OEP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用代码添加shellcode"><span class="toc-number">3.</span> <span class="toc-text">使用代码添加shellcode</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="代码空白区添加shellcode"><a href="#代码空白区添加shellcode" class="headerlink" title="代码空白区添加shellcode"></a>代码空白区添加shellcode</h2><p>适合有一定基础的萌新！</p>
 <p><b>前言：</b></p>
 <p>本篇文章主要实现为记事本添加 空白弹窗，后续有时间写的话可以去写简单的文件感染的文章。</p>
 <p>手动和编程实现，在代码空白区添加shellcode 、在数据空白区添加shellcode</p>
@@ -664,14 +188,9 @@
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AddShellCode.cpp : Defines the entry point for the console application.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdafx.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"windows.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdlib.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FILEPATH_IN <span class="meta-string">"C:\\test.exe"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FILEPATH_OUT <span class="meta-string">"C:\\t.exe"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SHELLCODELENGTH 0X12</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MESSAGEBOXADDR 0x77D5050B</span></span><br><span class="line"></span><br><span class="line">BYTE shellCode[] = </span><br><span class="line">&#123;</span><br><span class="line">	<span class="number">0x6A</span>,<span class="number">0x00</span>,<span class="number">0x6A</span>,<span class="number">0x00</span>,<span class="number">0x6A</span>,<span class="number">0x00</span>,<span class="number">0x6A</span>,<span class="number">0x00</span>,</span><br><span class="line">	<span class="number">0xE8</span>,<span class="number">0x00</span>,<span class="number">0x00</span>,<span class="number">0x00</span>,<span class="number">0x00</span>,</span><br><span class="line">	<span class="number">0xE9</span>,<span class="number">0x00</span>,<span class="number">0x00</span>,<span class="number">0x00</span>,<span class="number">0x00</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FileLength</span><span class="params">(FILE* fp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fileSize = <span class="number">0</span>;</span><br><span class="line">    fseek(fp,<span class="number">0</span>,SEEK_END);</span><br><span class="line">    fileSize = ftell(fp);</span><br><span class="line">    fseek(fp,<span class="number">0</span>,SEEK_SET);  <span class="comment">//指针归位</span></span><br><span class="line">    <span class="keyword">return</span> fileSize;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">DWORD <span class="title">ReadPEFile</span><span class="params">(IN LPSTR lpszFile,OUT LPVOID* pFileBuffer)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	FILE* pFile = <span class="literal">NULL</span>;</span><br><span class="line">	DWORD fileSize = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//打开文件</span></span><br><span class="line">	pFile = fopen(lpszFile,<span class="string">"rb+"</span>);</span><br><span class="line">	<span class="keyword">if</span>(!pFile)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"无法打开EXE文件"</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//读取文件大小</span></span><br><span class="line">	fileSize = FileLength(pFile);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//分配缓冲区大小</span></span><br><span class="line">	*pFileBuffer = <span class="built_in">malloc</span>(fileSize);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(!pFileBuffer)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">" 分配空间失败！ "</span>);</span><br><span class="line">		fclose(pFile);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//将文件数据读取到缓冲区</span></span><br><span class="line">	<span class="keyword">size_t</span> n = fread(*pFileBuffer,fileSize,<span class="number">1</span>,pFile);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(!n)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"  读取数据失败！ "</span>);</span><br><span class="line">		<span class="built_in">free</span>(*pFileBuffer);</span><br><span class="line">		fclose(pFile);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//关闭文件</span></span><br><span class="line">	fclose(pFile);</span><br><span class="line">	<span class="keyword">return</span> fileSize;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function">VOID <span class="title">addShellCode</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	LPVOID pFileBuffer=<span class="literal">NULL</span>;</span><br><span class="line">	PIMAGE_DOS_HEADER pDosHeader = <span class="literal">NULL</span>;<span class="comment">//声明DOS头结构体变量</span></span><br><span class="line">	PIMAGE_NT_HEADERS pNTHeader = <span class="literal">NULL</span>;<span class="comment">//声明NT头结构体变量</span></span><br><span class="line">	PIMAGE_FILE_HEADER pPEHeader = <span class="literal">NULL</span>;<span class="comment">//声明PE头结构体变量</span></span><br><span class="line">	PIMAGE_OPTIONAL_HEADER32 pOptionHeader = <span class="literal">NULL</span>;<span class="comment">//声明可选PE头结构体变量</span></span><br><span class="line">	PIMAGE_SECTION_HEADER pSectionHeader = <span class="literal">NULL</span>;<span class="comment">//声明节表 结构体 变量</span></span><br><span class="line">	DWORD RVA_codeBegin = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//将exe文件读取入内存</span></span><br><span class="line">	<span class="keyword">size_t</span> size = ReadPEFile(FILEPATH_IN,&amp;pFileBuffer);</span><br><span class="line">    <span class="comment">//解析PE</span></span><br><span class="line">	pDosHeader = (PIMAGE_DOS_HEADER)pFileBuffer;<span class="comment">//Dos头</span></span><br><span class="line">	pNTHeader = (PIMAGE_NT_HEADERS)((DWORD)pFileBuffer+pDosHeader-&gt;e_lfanew);<span class="comment">//NT头</span></span><br><span class="line">	pPEHeader = (PIMAGE_FILE_HEADER)(((DWORD)pNTHeader) + <span class="number">4</span>);<span class="comment">//PE头</span></span><br><span class="line">	pOptionHeader = (PIMAGE_OPTIONAL_HEADER32)((DWORD)pPEHeader + IMAGE_SIZEOF_FILE_HEADER);<span class="comment">//可选PE头</span></span><br><span class="line">	pSectionHeader = (PIMAGE_SECTION_HEADER)((DWORD)pOptionHeader + pPEHeader-&gt;SizeOfOptionalHeader);<span class="comment">//节表</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//判断代码空闲区空间</span></span><br><span class="line">	<span class="keyword">if</span>((pSectionHeader-&gt;SizeOfRawData - pSectionHeader-&gt;Misc.VirtualSize) &lt; SHELLCODELENGTH)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"代码区空闲空间不足"</span>);</span><br><span class="line">		<span class="built_in">free</span>(pFileBuffer);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//添加shellcode代码</span></span><br><span class="line">	PBYTE codeBegin = (PBYTE)((DWORD)pFileBuffer+pSectionHeader-&gt;PointerToRawData +pSectionHeader-&gt;Misc.VirtualSize +<span class="number">8</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"codeBegin:%x\n"</span>,codeBegin);</span><br><span class="line">	<span class="built_in">memcpy</span>(codeBegin,shellCode,SHELLCODELENGTH);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//FOA-&gt;RVA</span></span><br><span class="line">	<span class="keyword">if</span>(pOptionHeader-&gt;SectionAlignment != pOptionHeader-&gt;FileAlignment)</span><br><span class="line">	&#123;</span><br><span class="line">		RVA_codeBegin = (DWORD)codeBegin - pSectionHeader-&gt;PointerToRawData + pSectionHeader-&gt;VirtualAddress + pOptionHeader-&gt;ImageBase - (DWORD)pFileBuffer;</span><br><span class="line">	&#125;<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		RVA_codeBegin = (DWORD)codeBegin - (DWORD)pFileBuffer;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	<span class="comment">//修正E8</span></span><br><span class="line">	DWORD callAddr = MESSAGEBOXADDR - (RVA_codeBegin+<span class="number">0xD</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"callAddr:%x\n"</span>,callAddr);</span><br><span class="line">	*(PDWORD)(codeBegin+<span class="number">0x9</span>) = callAddr;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//修正E9</span></span><br><span class="line">	DWORD jmpAddr = (pOptionHeader-&gt;ImageBase + pOptionHeader-&gt;AddressOfEntryPoint) - (RVA_codeBegin+<span class="number">0x12</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"ImageBase:%x\nAddressEntryPoint:%x\n"</span>,pOptionHeader-&gt;ImageBase,pOptionHeader-&gt;AddressOfEntryPoint);</span><br><span class="line">	*(PDWORD)(codeBegin+<span class="number">0xE</span>) = jmpAddr;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"jmpAddr:%x\n"</span>,jmpAddr);</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	<span class="comment">//修正OEP</span></span><br><span class="line">	pOptionHeader-&gt;AddressOfEntryPoint = RVA_codeBegin-pOptionHeader-&gt;ImageBase;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"OEP:%x\n"</span>,RVA_codeBegin-pOptionHeader-&gt;ImageBase);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//存入文件</span></span><br><span class="line">	FILE* fp = fopen(FILEPATH_OUT,<span class="string">"wb+"</span>);</span><br><span class="line">	fwrite(pFileBuffer,size,<span class="number">1</span>,fp);</span><br><span class="line">	fclose(fp);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	addShellCode();</span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>注意：每个系统的MessageBox的地址可能都不相同，替换代码中的MessageBox地址</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
+  
+	</div>
+		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
@@ -689,89 +208,53 @@
 
 
 
-
-<div class="comments-count">
+	<div class="article-share" id="share">
 	
-</div>
+	  <div data-url="http://flag0.com/2018/06/25/代码空白区添加shellcode/" data-title="代码空白区添加shellcode | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
 
 </footer>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/04/20/bypass安全狗/" title="bypass安全狗" itemprop="url">bypass安全狗</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-04-20T10:00:03.000Z" itemprop="datePublished"> 发表于 2018-04-20</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>绕过安全狗v4.0默认配置防护，手工过狗，编写tamper脚本使sqlmap过狗，过狗一句话<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/04/20/bypass安全狗/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/bypass/">bypass</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
+   	       
+	</article>
 	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2018/07/26/TensorFlow框架的简单调用/" title="TensorFlow框架的简单调用">
+  <strong>上一篇：</strong><br/>
+  <span>
+  TensorFlow框架的简单调用</span>
+</a>
 </div>
 
-</footer>
 
-
-    </article>
-
-
-
-
-
-
-
-  <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
-  </nav>
-
+<div class="next">
+<a href="/2018/04/20/bypass安全狗/"  title="bypass安全狗">
+ <strong>下一篇：</strong><br/> 
+ <span>bypass安全狗
+</span>
+</a>
 </div>
+
+</nav>
+
+	
+
+
+
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码空白区添加shellcode"><span class="toc-number">1.</span> <span class="toc-text">代码空白区添加shellcode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#手动添加shellcode"><span class="toc-number">2.</span> <span class="toc-text">手动添加shellcode</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#寻找代码节空白区"><span class="toc-number">2.1.</span> <span class="toc-text">寻找代码节空白区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取MessageBox地址，构造ShellCode代码"><span class="toc-number">2.2.</span> <span class="toc-text">获取MessageBox地址，构造ShellCode代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算修正E8-与-E9-后面的参数"><span class="toc-number">2.3.</span> <span class="toc-text">计算修正E8 与 E9 后面的参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算并修改OEP"><span class="toc-number">2.4.</span> <span class="toc-text">计算并修改OEP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用代码添加shellcode"><span class="toc-number">3.</span> <span class="toc-text">使用代码添加shellcode</span></a></li></ol>
+ 
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -997,12 +480,89 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
 
 
 
@@ -1065,4 +625,4 @@ $(document).ready(function(){
 <!-- Tiny_search End -->
 
   </body>
- </html>
+</html>
