@@ -19,10 +19,15 @@
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
 <meta property="og:description" content="使用docker构建ruby + redis环境">
 <meta property="og:locale" content="cn-zh">
-<meta property="og:updated_time" content="2019-09-03T13:02:04.984Z">
+<meta property="og:image" content="http://flag0.com/img/images/使用Dcoker构建sinatra/QQ图片20190901000907.png">
+<meta property="og:image" content="http://flag0.com/img/images/使用Dcoker构建sinatra/1567516369515.png">
+<meta property="og:image" content="http://flag0.com/img/images/使用Dcoker构建sinatra/1567516669995.png">
+<meta property="og:image" content="http://flag0.com/img/images/使用Dcoker构建sinatra/1567517446884.png">
+<meta property="og:updated_time" content="2019-09-03T13:32:01.266Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Dcoker构建Web应用程序sinatra">
 <meta name="twitter:description" content="使用docker构建ruby + redis环境">
+<meta name="twitter:image" content="http://flag0.com/img/images/使用Dcoker构建sinatra/QQ图片20190901000907.png">
 
     
     <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
@@ -46,7 +51,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -85,16 +90,16 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2019-09-03T13:02:04.000Z" itemprop="datePublished"> 发表于 2019-09-03</time>
+    <time datetime="2019-09-03T13:32:01.000Z" itemprop="datePublished"> Published 2019-09-03</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Dcoker构建Web应用程序sinatra"><span class="toc-number">1.</span> <span class="toc-text">使用Dcoker构建Web应用程序sinatra</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#构建Sinatra应用程序镜像"><span class="toc-number">1.1.</span> <span class="toc-text">构建Sinatra应用程序镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建Sinatra容器"><span class="toc-number">1.2.</span> <span class="toc-text">创建Sinatra容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#拓展Sinatra应用程序来使用Redis"><span class="toc-number">1.3.</span> <span class="toc-text">拓展Sinatra应用程序来使用Redis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将Sinatra应用程序连接到Redis容器"><span class="toc-number">1.4.</span> <span class="toc-text">将Sinatra应用程序连接到Redis容器</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Dcoker构建Web应用程序sinatra"><span class="toc-number">1.</span> <span class="toc-text">使用Dcoker构建Web应用程序sinatra</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#构建Sinatra应用程序镜像"><span class="toc-number">1.1.</span> <span class="toc-text">构建Sinatra应用程序镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建Sinatra容器"><span class="toc-number">1.2.</span> <span class="toc-text">创建Sinatra容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#拓展Sinatra应用程序来使用Redis"><span class="toc-number">1.3.</span> <span class="toc-text">拓展Sinatra应用程序来使用Redis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将Sinatra应用程序连接到Redis容器"><span class="toc-number">1.4.</span> <span class="toc-text">将Sinatra应用程序连接到Redis容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#中途遇到的问题-避免踩坑"><span class="toc-number">1.5.</span> <span class="toc-text">中途遇到的问题(避免踩坑):</span></a></li></ol></li></ol>
 		
 		</div>
 		
@@ -181,8 +186,21 @@
 <p><strong>测试启用了Redis的Sinatra应用程序</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">curl -i -H &apos;Accept: application/json&apos; -d &apos;name=Foo&amp;status=Bar&apos; http://localhost:32781/json</span><br><span class="line">HTTP/1.1 200 OK </span><br><span class="line">Content-Type: text/html;charset=utf-8</span><br><span class="line">Content-Length: 29</span><br><span class="line">X-Xss-Protection: 1; mode=block</span><br><span class="line">X-Content-Type-Options: nosniff</span><br><span class="line">X-Frame-Options: SAMEORIGIN</span><br><span class="line">Server: WEBrick/1.4.2 (Ruby/2.5.1/2018-03-29)</span><br><span class="line">Date: Tue, 03 Sep 2019 12:40:41 GMT</span><br><span class="line">Connection: Keep-Alive</span><br><span class="line"></span><br><span class="line">&#123;&quot;name&quot;:&quot;Foo&quot;,&quot;status&quot;:&quot;Bar&quot;&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>确认Redis容器数据</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">curl -i http://localhost:32781/json</span><br><span class="line">HTTP/1.1 200 OK </span><br><span class="line">Content-Type: text/html;charset=utf-8</span><br><span class="line">Content-Length: 41</span><br><span class="line">X-Xss-Protection: 1; mode=block</span><br><span class="line">X-Content-Type-Options: nosniff</span><br><span class="line">X-Frame-Options: SAMEORIGIN</span><br><span class="line">Server: WEBrick/1.4.2 (Ruby/2.5.1/2018-03-29)</span><br><span class="line">Date: Tue, 03 Sep 2019 12:43:47 GMT</span><br><span class="line">Connection: Keep-Alive</span><br><span class="line"></span><br><span class="line">&quot;[&#123;\&quot;name\&quot;:\&quot;Foo\&quot;,\&quot;status\&quot;:\&quot;Bar\&quot;&#125;]&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">![QQ图片20190901000907](\img\images\C:/Users/GetFlag/Desktop/QQ图片20190901000907.png)curl -i http://localhost:32781/json</span><br><span class="line">HTTP/1.1 200 OK </span><br><span class="line">Content-Type: text/html;charset=utf-8</span><br><span class="line">Content-Length: 41</span><br><span class="line">X-Xss-Protection: 1; mode=block</span><br><span class="line">X-Content-Type-Options: nosniff</span><br><span class="line">X-Frame-Options: SAMEORIGIN</span><br><span class="line">Server: WEBrick/1.4.2 (Ruby/2.5.1/2018-03-29)</span><br><span class="line">Date: Tue, 03 Sep 2019 12:43:47 GMT</span><br><span class="line">Connection: Keep-Alive</span><br><span class="line"></span><br><span class="line">&quot;[&#123;\&quot;name\&quot;:\&quot;Foo\&quot;,\&quot;status\&quot;:\&quot;Bar\&quot;&#125;]&quot;</span><br></pre></td></tr></table></figure>
 <p>安装成功！</p>
+<h4 id="中途遇到的问题-避免踩坑"><a href="#中途遇到的问题-避免踩坑" class="headerlink" title="中途遇到的问题(避免踩坑):"></a>中途遇到的问题(避免踩坑):</h4><p> <strong>1.构建flag0/sinatra时，提示 <code>rack requires Ruby version &gt;= 2.2.2</code></strong></p>
+<p>   <img src="\img\images\使用Dcoker构建sinatra\QQ图片20190901000907.png" alt=""></p>
+<p>   原因在于按照《第一本Docker书》上的Dockerfile来生成镜像，其中<code>FROM ubuntu:14.04</code>使用了低版本的ubuntu镜像导致了该问题，使用18.08可以解决该问题</p>
+<p><strong>2.构建redis容器时，连接后执行命令提示<code>(error) DENIED Redis is running in protected mode because protected mode is enabled</code></strong></p>
+<p><img src="\img\images\使用Dcoker构建sinatra\1567516369515.png" alt="1567516369515"></p>
+<p>这里是因为没有关闭redis默认的保护模式，中途我尝试了替换配置文件，运行后本地连接后执行命令关闭等方式均没有成功，最后在启动容器的时候使用<code>--protected-mode no</code>命令成功关闭</p>
+<p><strong>3.运行webapp容器后，docker ps可以看到映射的宿主机端口，但是curl连接后提示<code>Recv failure:Connection reset by peer</code></strong></p>
+<p><img src="\img\images\使用Dcoker构建sinatra\1567516669995.png" alt="1567516669995"></p>
+<p>这个问题困扰了我一个晚上，最终怀疑是文件夹里的webapp坏掉了，尝试了去运行没有redis的sinatra应用程序，可以访问，替换掉webapp果然解决了</p>
+<p>但是这个问题解决的不够透彻，后续我把有问题的目录删除后重新上传，问题就没有再出现过了，在出现上面这种情况的时候，我进入容器内部进行curl可以成功访问，由于无法重新复现且通过替换webapp程序解决了问题，就把原因大概的解释为webapp出问题了吧，如果你同时出现了这个问题，请联系我，一块研究研究，一探究竟 email:cm9vdEBmbGFnMC5jb20=</p>
+<p><strong>4.运行容器时出现<code>OCI runtime create failed: container_linux.go:345:...</code></strong></p>
+<p><img src="\img\images\使用Dcoker构建sinatra\1567517446884.png" alt="1567517446884"></p>
+<p>原因在于没有给webapp程序执行权限，容器启动后运行该程序时发现无法运行才爆出的错误，<code>chmod +x webapp</code>后解决</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -234,17 +252,17 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Dcoker构建Web应用程序sinatra"><span class="toc-number">1.</span> <span class="toc-text">使用Dcoker构建Web应用程序sinatra</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#构建Sinatra应用程序镜像"><span class="toc-number">1.1.</span> <span class="toc-text">构建Sinatra应用程序镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建Sinatra容器"><span class="toc-number">1.2.</span> <span class="toc-text">创建Sinatra容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#拓展Sinatra应用程序来使用Redis"><span class="toc-number">1.3.</span> <span class="toc-text">拓展Sinatra应用程序来使用Redis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将Sinatra应用程序连接到Redis容器"><span class="toc-number">1.4.</span> <span class="toc-text">将Sinatra应用程序连接到Redis容器</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Dcoker构建Web应用程序sinatra"><span class="toc-number">1.</span> <span class="toc-text">使用Dcoker构建Web应用程序sinatra</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#构建Sinatra应用程序镜像"><span class="toc-number">1.1.</span> <span class="toc-text">构建Sinatra应用程序镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建Sinatra容器"><span class="toc-number">1.2.</span> <span class="toc-text">创建Sinatra容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#拓展Sinatra应用程序来使用Redis"><span class="toc-number">1.3.</span> <span class="toc-text">拓展Sinatra应用程序来使用Redis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将Sinatra应用程序连接到Redis容器"><span class="toc-number">1.4.</span> <span class="toc-text">将Sinatra应用程序连接到Redis容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#中途遇到的问题-避免踩坑"><span class="toc-number">1.5.</span> <span class="toc-text">中途遇到的问题(避免踩坑):</span></a></li></ol></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
@@ -302,15 +320,11 @@
 			
 		
 			
-				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
 			
 		
 			
@@ -322,15 +336,15 @@
 			
 		
 			
-				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/图像识别/" title="图像识别">图像识别<sup>1</sup></a></li>
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
+				<li><a href="/tags/dockerfile/" title="dockerfile">dockerfile<sup>1</sup></a></li>
 			
 		
 			
@@ -342,11 +356,15 @@
 			
 		
 			
+				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/selenium/" title="selenium">selenium<sup>1</sup></a></li>
+				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -595,7 +613,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
