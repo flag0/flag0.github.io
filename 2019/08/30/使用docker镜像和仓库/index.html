@@ -1,0 +1,766 @@
+
+ <!DOCTYPE HTML>
+<html lang="cn-zh">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>使用docker镜像和仓库 | GetFlag&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="GetFlag">
+    
+
+    
+    <meta name="description" content="《第一本Docker书》第4章读书笔记 构建自己的Docker镜像，以及如何使用Docker仓库和Docker Registry">
+<meta name="keywords" content="Docker,Dockerimages,dockerhub">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用docker镜像和仓库">
+<meta property="og:url" content="http://flag0.com/2019/08/30/使用docker镜像和仓库/index.html">
+<meta property="og:site_name" content="GetFlag&#39;s Blog">
+<meta property="og:description" content="《第一本Docker书》第4章读书笔记 构建自己的Docker镜像，以及如何使用Docker仓库和Docker Registry">
+<meta property="og:locale" content="cn-zh">
+<meta property="og:image" content="http://flag0.com/img/images/4.使用docker镜像和仓库/1566834435611.png">
+<meta property="og:image" content="http://flag0.com/img/images/4.使用docker镜像和仓库/1566836933369.png">
+<meta property="og:updated_time" content="2019-09-04T14:48:24.996Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用docker镜像和仓库">
+<meta name="twitter:description" content="《第一本Docker书》第4章读书笔记 构建自己的Docker镜像，以及如何使用Docker仓库和Docker Registry">
+<meta name="twitter:image" content="http://flag0.com/img/images/4.使用docker镜像和仓库/1566834435611.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:flag0.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2019/08/30/使用docker镜像和仓库/" title="使用docker镜像和仓库" itemprop="url">使用docker镜像和仓库</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2019-08-29T16:00:00.000Z" itemprop="datePublished"> Published 2019-08-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用docker镜像和仓库"><span class="toc-number">1.</span> <span class="toc-text">使用docker镜像和仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#列出镜像"><span class="toc-number">1.1.</span> <span class="toc-text">列出镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拉取镜像"><span class="toc-number">1.2.</span> <span class="toc-text">拉取镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查找镜像"><span class="toc-number">1.3.</span> <span class="toc-text">查找镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建镜像"><span class="toc-number">1.4.</span> <span class="toc-text">构建镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建Docker-Hub账号"><span class="toc-number">1.5.</span> <span class="toc-text">创建Docker Hub账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用commit-命令创建镜像"><span class="toc-number">1.6.</span> <span class="toc-text">使用commit 命令创建镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用Dockerfile构建镜像"><span class="toc-number">1.7.</span> <span class="toc-text">用Dockerfile构建镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于Dockerfile构建新镜像"><span class="toc-number">1.8.</span> <span class="toc-text">基于Dockerfile构建新镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#指令失败时会怎样"><span class="toc-number">1.9.</span> <span class="toc-text">指令失败时会怎样</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dockefile和构建缓存"><span class="toc-number">1.10.</span> <span class="toc-text">Dockefile和构建缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于构建缓存的Dockerfile模板"><span class="toc-number">1.11.</span> <span class="toc-text">基于构建缓存的Dockerfile模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看新镜像"><span class="toc-number">1.12.</span> <span class="toc-text">查看新镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从新镜像中启动容器"><span class="toc-number">1.13.</span> <span class="toc-text">从新镜像中启动容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将镜像推送到docker-hub"><span class="toc-number">1.14.</span> <span class="toc-text">将镜像推送到docker hub</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除镜像"><span class="toc-number">1.15.</span> <span class="toc-text">删除镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从容器中运行Registry"><span class="toc-number">1.16.</span> <span class="toc-text">从容器中运行Registry</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#运行基于容器的Registry"><span class="toc-number">1.16.1.</span> <span class="toc-text">运行基于容器的Registry</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#测试新Registry"><span class="toc-number">1.16.2.</span> <span class="toc-text">测试新Registry</span></a></li></ol></li></ol></li></ol>
+		
+		</div>
+		
+		<p>《第一本Docker书》第4章读书笔记</p>
+<p>构建自己的Docker镜像，以及如何使用Docker仓库和Docker Registry</p>
+<a id="more"></a>
+<h2 id="使用docker镜像和仓库"><a href="#使用docker镜像和仓库" class="headerlink" title="使用docker镜像和仓库"></a>使用docker镜像和仓库</h2><h3 id="列出镜像"><a href="#列出镜像" class="headerlink" title="列出镜像"></a>列出镜像</h3><p><strong>查看所有的镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@iz0201z3qoku45z ~]# docker images</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">ubuntu              latest              a2a15febcdf3        7 days ago          64.2MB</span><br></pre></td></tr></table></figure>
+<p>镜像保存在docker宿主机的/var/lib/docker目录下</p>
+<p><strong>值查看指定的镜像(查看fedora相关的镜像)</strong></p>
+<p>在docker images 后面直接跟镜像名字即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images fedora</span><br></pre></td></tr></table></figure>
+<p>为了区分一个仓库中的不同镜像，Docker提供了一种称为标签(Tag)的东西，每个镜像在列出来的时候都带有一个标签，如12.04、12.10、quantal或者precise等，每个标签对醉成特定镜像的一些镜像层进行标记，这种机制使得在同一个仓库中可以存储多个镜像。</p>
+<p>可以通过在仓库名后面加上冒号和标签来指定仓库中的某一镜像，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -t -i --name new_container ubuntu:12.04 /bin/bash</span><br></pre></td></tr></table></figure>
+<p>同一个镜像可以有多个标签，使得我们可以方便的对镜像进行打标签，并很容易找到标签。</p>
+<p>dockerhub 上的仓库分为两种：用户仓库(user repository)和顶层仓库(top-level repository)，用户仓库的镜像都是由Docker用户创建的，顶层仓库则是由Docker内部的人员来管理的</p>
+<p>用户仓库的命名由用户名和仓库名两部分组成，如<code>jamtur01/puppet</code>(使用用户镜像，需要自己承担相应的风险)</p>
+<ul>
+<li>用户名：jamtur01</li>
+<li>仓库名：puppet</li>
+</ul>
+<p>顶层仓库只包含仓库名部分，如ubuntu仓库，顶层仓库中的镜像是架构良好、安全且最新的</p>
+<h3 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h3><p>使用docker run命令从镜像启动一个容器时，如果镜像不在本地，Docker会先从docker hub下载该镜像，如果没有指定具体的标签，docker会子弟哦那个下载latest标签的镜像</p>
+<p>可以通过docker pull命令将镜像拉取回本地，会节省从一个新奖项启动一个容器所需要的时间</p>
+<p><strong>拉取fedora:20基础镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull fedora:20</span><br></pre></td></tr></table></figure>
+<h3 id="查找镜像"><a href="#查找镜像" class="headerlink" title="查找镜像"></a>查找镜像</h3><p>通过docker search 来查找所有Docker hub上公共的可用镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@iz0201z3qoku45z ~]# docker search puppet</span><br><span class="line">NAME                                               DESCRIPTION                                     STARS               OFFICIAL            AUTOMATED</span><br><span class="line">puppet/puppetserver                                A Docker Image for running Puppet Server. Wi…   80                                      </span><br><span class="line">alekzonder/puppeteer                               GoogleChrome/puppeteer image and screenshots…   58                                      [OK]</span><br><span class="line">puppet/puppetserver-standalone                     An image for running a Puppet Server standal…   32                                      </span><br><span class="line">devopsil/puppet                                    Dockerfile for a container with puppet insta…   30                                      [OK]</span><br></pre></td></tr></table></figure>
+<p>返回了在Docker hub上查找到的所有puppet的镜像，该命令会完成镜像查找工作，并返回如下信息</p>
+<ul>
+<li>仓库名(NAME)</li>
+<li>镜像描述(DESCRIPTION)</li>
+<li>用户评价(STARS)—反应出一个镜像的受欢迎程度</li>
+<li>是否官方(OFFICIAL)—由上游开发者管理的镜像</li>
+<li>自动构建(Automated)—表示这个镜像是由Docker Hub的自动构建流程(Automated Build)创建成的</li>
+</ul>
+<p><strong>拉取macadmins/puppetmaster镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull macadmins/puppetmaster</span><br></pre></td></tr></table></figure>
+<p><strong>从puppet镜像创建一个容器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -i -t macadmins/puppetmaster /bin/bash</span><br></pre></td></tr></table></figure>
+<h3 id="构建镜像"><a href="#构建镜像" class="headerlink" title="构建镜像"></a>构建镜像</h3><p>构建docker镜像的两种方法</p>
+<ul>
+<li>使用docker commit 命令</li>
+<li>使用docker build 命令 和 Dockerfile文件</li>
+</ul>
+<p>推荐使用dockerfile来构建docker镜像，</p>
+<p>一般来说，我们不是真正的创建新镜像，而是继续一个已有的基础镜像，如ubuntu等，构建新镜像</p>
+<h3 id="创建Docker-Hub账号"><a href="#创建Docker-Hub账号" class="headerlink" title="创建Docker Hub账号"></a>创建Docker Hub账号</h3><p>构建镜像中很重要的一环就是如何共享和发布镜像，可以将镜像推送到Docker Hub或者用户自己的私有Registry中，为了完成这项工作需要在Docker hub上创建一个账号</p>
+<p><a href="https://hub.docker.com/signup" target="_blank" rel="noopener">https://hub.docker.com/signup</a></p>
+<p>注册成功后进行登陆</p>
+<p><strong>登陆docker hub</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@iz0201z3qoku45z ~]# docker login</span><br><span class="line">Login with your Docker ID to push and pull images from Docker Hub. If you don&apos;t have a Docker ID, head over to https://hub.docker.com to create one.</span><br><span class="line">Username: flag0</span><br><span class="line">Password: </span><br><span class="line">WARNING! Your password will be stored unencrypted in /root/.docker/config.json.</span><br><span class="line">Configure a credential helper to remove this warning. See</span><br><span class="line">https://docs.docker.com/engine/reference/commandline/login/#credentials-store</span><br><span class="line"></span><br><span class="line">Login Succeeded</span><br></pre></td></tr></table></figure>
+<p>用户的个人认证信息会保存到<code>$HOME/.docker/config.json</code>中</p>
+<p><strong>登出docekr hub</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker loginout</span><br></pre></td></tr></table></figure>
+<h3 id="使用commit-命令创建镜像"><a href="#使用commit-命令创建镜像" class="headerlink" title="使用commit 命令创建镜像"></a>使用commit 命令创建镜像</h3><p>可以将使用commit命令想象成在往版本控制系统里面提交变更，先创建一个新的容器，并在容器中做出修改，就像修改代码一样，最后再将修改提交为一个新镜像</p>
+<p>从创建一个新容器开始，这个容器基于ubuntu镜像</p>
+<p><strong>创建一个需要进行修改的定制容器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -i -t ubuntu /bin/bash</span><br><span class="line">root@85b5b40294be:/#</span><br></pre></td></tr></table></figure>
+<p><strong>在容器中安装Apache软件包</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@85b5b40294be:/# apt-get -yqq update</span><br><span class="line">...</span><br><span class="line">root@85b5b40294be:/# apt-get -y install apache2</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-yqq 软件安装时会有提问是否继续，需要输入 yes ，使用yqq参数，自动 yes 。</li>
+</ul>
+<p>我们启动了一个容器，在里面安装了apache，想要将它的当前状态保存下来，需要先使用exit命令从容器里退出，之后再运行docker commit命令</p>
+<p><strong>提交定制容器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit 85b5b40294be flag0/apache2</span><br></pre></td></tr></table></figure>
+<p>docker commit 中指定了需要提交的容器的id(可以通过 docker ps -l -q 获得刚刚创建的容器的id)，以及一个目标镜像仓库和镜像名。</p>
+<p>docker commit提交的只是创建容器的镜像与容器的当前状态之间有差异的部分，这使得该更新非常轻量</p>
+<p><strong>查看新创建的镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker images flag0/apache2</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">flag0/apache2       latest              ff47a37f3204        3 minutes ago       188MB</span><br></pre></td></tr></table></figure>
+<p>可以在提交竟像是指定更多的数据(包括标签)来详细描述所作的修改。</p>
+<p><strong>提交另一个新的定制容器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit -m &quot;A new custom image&quot; -a &quot;flag0&quot; 85b5b40294be flag0/apache2:webserver</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-m 选项用来指定新创建的镜像的提交信息</li>
+<li>-a 指定该镜像的作者信息</li>
+<li>flag0/apache2:webserver 指定了镜像的用户名和仓库名为该镜像增加了一个webserver标签</li>
+</ul>
+<p><strong>查看提交的新镜像的详细信息</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker inspect flag0/apache2:webserver</span><br><span class="line">&#123;&#123;</span><br><span class="line">    &quot;Author&quot;: &quot;flag0&quot;,</span><br><span class="line">	&quot;Comment&quot;: &quot;A new custom image&quot;,</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p><strong>从提交的镜像运行一个新容器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -t -i flag0/apache2:webserver /bin/bash</span><br></pre></td></tr></table></figure>
+<h3 id="用Dockerfile构建镜像"><a href="#用Dockerfile构建镜像" class="headerlink" title="用Dockerfile构建镜像"></a>用Dockerfile构建镜像</h3><p>dockerfile使用基本的基于DSL(Domain Specific Language)语法的指令来构建一个docker镜像，推荐使用Dockerfile构建镜像更具有可重复性、透明性以及幂等性</p>
+<p>接下来，我们将创建一个包含简单web服务器的Docker镜像</p>
+<p><strong>创建一个示例仓库</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir static_web</span><br><span class="line">cd static_web</span><br><span class="line">touch Dockerfile</span><br></pre></td></tr></table></figure>
+<p>我们创建了一个名为static_web的目录用来保存Dockerfile，这个目录就是我们的构建环境(build environment)，Docker会在构建镜像时将构建上下文和该上下文中的文件和目录上传到Docker守护进程，这样Docker守护进程就能够直接访问用户想在镜像中存储的任何代码、文件或者其他数据</p>
+<p><strong>创建第一个Dockerfile</strong></p>
+<p>通过dockerfile构建一个能够作为web服务器的Docker镜像</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">14.04</span></span><br><span class="line"><span class="keyword">MAINTAINER</span>	flag0 <span class="string">"root@flag0.com"</span></span><br><span class="line"><span class="keyword">RUN</span> apt-get -yqq update &amp;&amp; apt-get install -y ngix</span><br><span class="line">RUN echo 'Hi,I am in your container' &gt; /usr/share/ngix/html/index.html</span><br><span class="line">EXPOSE 80</span><br></pre></td></tr></table></figure>
+<p>Dockerfile的每条指令，如FROM，都必须为大写字母且后面要跟随一个参数：<code>FROM ubuntu:14.04</code>，Dockerfile中的指令会按顺序从上到下执行，所以应该根据需要合理安排指令的顺序</p>
+<p>每条指令都会创建一个新的镜像层并对镜像进行提交。Docker大体上按照如下流程执行Dockerfile中的命令</p>
+<ul>
+<li>Docker 从基础镜像运行一个容器</li>
+<li>执行一条指令，对容器做出修改</li>
+<li>执行类似 docker commint的操作，提交一个新的镜像层</li>
+<li>Docker再基于刚提交的镜像运行一个新容器</li>
+<li>执行Dockerfile中的下一条指令，直到所有指令都执行完毕</li>
+</ul>
+<p>当Dockerfile因为某些原因失败了，没有正常执行，用户可以得到一个使用正常的镜像，可以基于该镜像运行一个具备交互功能的容器，使用最后创建的镜像进行调试 失败的指令。</p>
+<p>dockerfile中以<code>#</code>开头的行都会被认为成注释</p>
+<ul>
+<li><strong>FROM</strong> 每个Dockerfile的第一条命令必须是FROM，FROM指令指定一个已经存在的镜像，后续指令都将继续该进行进行，这个镜像被称为<strong>基础镜像(base images)</strong></li>
+<li><strong>MAINTAINER</strong> 用于标识镜像的所有者和联系方式</li>
+<li><strong>RUN</strong> 会在当前镜像中运行指定的命令，每条RUN命令都会创建一个新的镜像层，如果该指令执行成功，就会将此镜像层提交，之后继续执行Dockerfile中的下一条指令</li>
+<li><strong>EXPOSE</strong>告诉Docker该容器内的应用程序将会使用容器的指定端口，由于安全原因Docker并不会自动打开该端口，而是需要用户在使用docker run运行容器时来指定需要打开哪些端口。可以多次使用EXPOSE指令来向外部公开多个端口</li>
+</ul>
+<p><strong>exec格式的RUN命令</strong></p>
+<p>默认情况下，RUN指令会在shell里使用命令包装器/bin/sh -c 来执行，在不支持shell的平台上运行或者不希望在shell中运行(比如避免shell字符串篡改)，也可以使用exec格式的run命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RUN [&quot;apt-get&quot;,&quot;install&quot;,&quot;-y&quot;,&quot;nginx&quot;]</span><br></pre></td></tr></table></figure>
+<p>在这种方式中，我们使用一个数组来指定要运行的命令和传递给该命令的每个参数</p>
+<h3 id="基于Dockerfile构建新镜像"><a href="#基于Dockerfile构建新镜像" class="headerlink" title="基于Dockerfile构建新镜像"></a>基于Dockerfile构建新镜像</h3><p>执行docker build命令时，Dockerfile中的所有指令都会被执行并且提交，在该命令成功结束后会返回一个新镜像。</p>
+<p><strong>运行Dockerfile</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@iz0201z3qoku45z static_web]# cd static_web</span><br><span class="line">[root@iz0201z3qoku45z static_web]# docker build -t=&quot;flag0/static_web&quot;  .</span><br><span class="line">Sending build context to Docker daemon  2.048kB</span><br><span class="line">Step 1/5 : FROM ubuntu:14.04</span><br><span class="line"> ---&gt; 2c5e00d77a67</span><br><span class="line">Step 2/5 : MAINTAINER flag0 &quot;root@flag0.com&quot;</span><br><span class="line"> ---&gt; Using cache</span><br><span class="line"> ---&gt; 42de39438f65</span><br><span class="line">Step 3/5 : RUN apt-get -yqq update &amp;&amp; apt-get install -y nginx</span><br><span class="line"> ---&gt; Using cache</span><br><span class="line"> ---&gt; 6e6348290412</span><br><span class="line">Step 4/5 : RUN echo &quot;Hi,I am in your container&quot; &gt; /usr/share/nginx/html/index.html</span><br><span class="line"> ---&gt; Running in dc0d1396f60a</span><br><span class="line">Removing intermediate container dc0d1396f60a</span><br><span class="line"> ---&gt; 27575b451fe0</span><br><span class="line">Step 5/5 : EXPOSE 80</span><br><span class="line"> ---&gt; Running in 9b941e50b42b</span><br><span class="line">Removing intermediate container 9b941e50b42b</span><br><span class="line"> ---&gt; 009c6a5fa17b</span><br><span class="line">Successfully built 009c6a5fa17b</span><br><span class="line">Successfully tagged flag0/static_web:latest</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-t 为新镜像设置仓库和名称(本例中仓库为jamtur01，镜像名为static_web)，也可以为镜像设置一个标签，使用方法为<code>镜像名:标签</code>(如果没有指定任何标签，docker会为镜像设置一个latest标签)</li>
+</ul>
+<p><strong>从Git仓库构建Docker镜像</strong></p>
+<p>上面命令最后的<code>.</code> 告诉docker到本地目录中去找Dockerfile文件，也可以指定一个Git仓库的源地址来指定Dockerfile的位置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t=&quot;flag0/static_web:latest&quot; git@github:jamtur01/docker-static_web</span><br></pre></td></tr></table></figure>
+<p>这里假设在这个Git仓库的根目录下存在Dockerfile文件</p>
+<p>可以使用<code>-f</code> 标志指定一个区别与标准Dockerfile的构建源的位置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t=&quot;flag0/static_web&quot; -f path/to/file</span><br></pre></td></tr></table></figure>
+<p>这个文件可以不必命名为Dockerfile，但是必须要位于构建上下文之中</p>
+<p><strong>将构建上下文上传到Docker守护进程</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@iz0201z3qoku45z static_web]# docker build -t=&quot;flag0/static_web&quot;  .</span><br><span class="line">Sending build context to Docker daemon  2.048kB</span><br></pre></td></tr></table></figure>
+<p>在构建上下文的根目录下存在以<code>.dockerignore</code>命名的文件的话，那么该文件的内容将被按行进行分割，每一行都是一条文件过滤匹配模式，这非常像<code>.gitignore</code>文件，该文件用来设置哪些文件不会被当作构建上下文的一部分，因此可以防止他们被上传到Docker守护进程里去。</p>
+<h3 id="指令失败时会怎样"><a href="#指令失败时会怎样" class="headerlink" title="指令失败时会怎样"></a>指令失败时会怎样</h3><p>假设在在编写Dockerfile的把软件包的名字弄错了，比如写了ngix</p>
+<p>运行一遍构建过程，并看下指令失败时会怎么样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cd static_web</span><br><span class="line">docker build -t=&quot;jamtur01/static_web&quot; .</span><br><span class="line">[root@iz0201z3qoku45z static_web]# docker build -t=&quot;flag0/static_web&quot; .</span><br><span class="line">Sending build context to Docker daemon  2.048kB</span><br><span class="line">Step 1/5 : FROM ubuntu:14.04</span><br><span class="line"> ---&gt; 2c5e00d77a67</span><br><span class="line">Step 2/5 : MAINTAINER flag0 &quot;root@flag0.com&quot;</span><br><span class="line"> ---&gt; Using cache</span><br><span class="line"> ---&gt; 42de39438f65</span><br><span class="line">Step 3/5 : RUN apt-get -yqq update &amp;&amp; apt-get install -y ngix</span><br><span class="line"> ---&gt; Running in d40e9918b765</span><br><span class="line">Reading package lists...</span><br><span class="line">Building dependency tree...</span><br><span class="line">Reading state information...</span><br><span class="line">E: Unable to locate package ngix</span><br><span class="line">The command &apos;/bin/sh -c apt-get -yqq update &amp;&amp; apt-get install -y ngix&apos; returned a non-zero code: 100</span><br></pre></td></tr></table></figure>
+<p>这是需要调试一个这次失败，可以用docker run命令来基于这次构建到目前为止已经成功的最后一步创建一个容器，在这个例子里，使用的镜像id是42de39438f65</p>
+<p><strong>基于最后的成功步骤创建新容器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -t -i 42de39438f65 /bin/bash</span><br><span class="line">root@19f53703e528:/#</span><br></pre></td></tr></table></figure>
+<p>在这里可以再次运行<code>RUN apt-get -yqq update &amp;&amp; apt-get install -y ngix</code>来进一步调试找出出错的原因，一旦解决了这个问题，就可以退出容器，使用正确的报名修改Dockerfile文件，之后再尝试进行构建。</p>
+<h3 id="Dockefile和构建缓存"><a href="#Dockefile和构建缓存" class="headerlink" title="Dockefile和构建缓存"></a>Dockefile和构建缓存</h3><p>Docker会把每一步的构建过程都提交为镜像，会将之前的镜像层都看作缓存，当再次构建时，Docker则会从第一条发生变化的指令开始，当之前的构建步骤没有变化时，会节省大量的时间</p>
+<p>当需要全部重新构建时，使用<code>--no-cache</code>参数</p>
+<p><strong>忽略Dockerfile的构建缓存</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build --no-cache -t=&quot;flag0/static_web&quot; .</span><br></pre></td></tr></table></figure>
+<h3 id="基于构建缓存的Dockerfile模板"><a href="#基于构建缓存的Dockerfile模板" class="headerlink" title="基于构建缓存的Dockerfile模板"></a>基于构建缓存的Dockerfile模板</h3><p>构建缓存可以让我们实现简单的Dockerfile模板，可以节省镜像构建时间(比如在Dockerfile文件顶部增加包仓库或者更新包，从而尽可能确保缓存命中)尽可能的在自己的Dockerfile文件顶部使用相同的指令集模板。</p>
+<p><strong>ubuntu系统的Dockerfile模板</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:14.04</span><br><span class="line">MAINTAINER flag0 &quot;root@flag.com&quot;</span><br><span class="line">ENV REFERSHED_AT 2014-07-01</span><br><span class="line">RUN apt-get -qq update</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-ENV 指令在镜像中设置环境变量(通过ENV指令来设置一个名为REFRESHED_AT的环境变量，这个环境变量用来表名该镜像模板最后的更新时间)</li>
+<li>-RUN 指令来运行<code>apt-get -qq update</code>命令，该指令运行时，会刷新APT包的缓存，用来确保我们能将要安装的每个软件包都更新到最新版本</li>
+</ul>
+<p>有了这个模板，如果想刷新一个构建，只需要修改ENV指令中的日期，使得Docker在执行到ENV指令是开始重置这个缓存，运行后续指令而无须依赖该缓存。RUN apt-get update这条指令将会被再次执行，包缓存也将会被刷新为最新内容</p>
+<p><strong>Fedora Dockerfile模板</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FROM fedora:20</span><br><span class="line">MAINTAINER flag0 &quot;root@flag0.com&quot;</span><br><span class="line">ENV REFRESHED_AT 2014-07-01</span><br><span class="line">RUN yum -q makecache</span><br></pre></td></tr></table></figure>
+<p>在Fedora中使用yum实现了与上面的ubuntu例子中非常类似的功能</p>
+<h3 id="查看新镜像"><a href="#查看新镜像" class="headerlink" title="查看新镜像"></a>查看新镜像</h3><p><strong>列出新镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@iz0201z3qoku45z ~]# docker images flag0/static_web</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">flag0/static_web    latest              009c6a5fa17b        5 hours ago         222MB</span><br></pre></td></tr></table></figure>
+<p><strong>使用docker history命令</strong></p>
+<p>如果想深入探求镜像是如何构建出来的，可以使用docker history命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">root@iz0201z3qoku45z ~]# docker history 009c6a5fa17b</span><br><span class="line">IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT</span><br><span class="line">009c6a5fa17b        5 hours ago         /bin/sh -c #(nop)  EXPOSE 80                    0B                  </span><br><span class="line">27575b451fe0        5 hours ago         /bin/sh -c echo &quot;Hi,I am in your container&quot; …   26B                 </span><br><span class="line">6e6348290412        5 hours ago         /bin/sh -c apt-get -yqq update &amp;&amp; apt-get in…   34.3MB              </span><br><span class="line">42de39438f65        5 hours ago         /bin/sh -c #(nop)  MAINTAINER flag0 &quot;root@fl…   0B                  </span><br><span class="line">2c5e00d77a67        3 months ago        /bin/sh -c #(nop)  CMD [&quot;/bin/bash&quot;]            0B                  </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>从上面的结果可以看到新构建的<code>jamtur01/static_web</code>镜像的每一层，以及创建这些层的Dockerfile命令</p>
+<h3 id="从新镜像中启动容器"><a href="#从新镜像中启动容器" class="headerlink" title="从新镜像中启动容器"></a>从新镜像中启动容器</h3><p><strong>从新镜像启动一个容器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80 --name static_web flag0/static_web nginx -g &quot;daemon off&quot;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>nginx -g “daemon off”将以前台运行的方式启动Nginx，来作为我们的Web服务器</li>
+<li>-p 用来控制Docker在运行时应该公开哪些网络端口给外部(宿主机)。</li>
+</ul>
+<p>运行一个容器时，Docker可以通过两种方法来宿主机上分配端口</p>
+<ul>
+<li>Docker可以在宿主机上随机选择一个位于32768~61000的一个比较大的端口号来映射到容器的80端口上</li>
+<li>可以在Docker宿主机中指定一个具体的端口号来映射到容器中的80端口上</li>
+</ul>
+<p>上述命令将在Docker宿主机上随机打开一个端口，这个端口会连接到容器中的80端口上。</p>
+<p><strong>查看Docker端口映射情况</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker ps -l</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                   NAMES</span><br><span class="line">2d157174a62f        flag0/static_web    &quot;nginx -g &apos;daemon of…&quot;   25 seconds ago      Up 24 seconds       0.0.0.0:32769-&gt;80/tcp   static_web1</span><br></pre></td></tr></table></figure>
+<p>可以看到容器中的80端口被映射到了宿主机的49154上，我们也可以通过<code>docker port</code>命令来查看容器的端口映射情况</p>
+<p><strong>docker port命令</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker port 2d157174a62f 80</span><br><span class="line">0.0.0.0:32769</span><br></pre></td></tr></table></figure>
+<p>除了id外，也可以使用容器名，也可以不指定端口号，会列出所有映射端口号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker port static_web1</span><br><span class="line">80/tcp -&gt; 0.0.0.0:32769</span><br></pre></td></tr></table></figure>
+<p><strong>通过-p选项映射到特定端口</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 8080:80 --name static_web3 flag0/static_web nginx -g &quot;daemon off;&quot;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-p 可以指定将容器中的端口映射到Docker宿主机的某一特定端口上，上述命令会将容器内的80端口绑定到本地宿主机的8080端口上</li>
+</ul>
+<p>宿主机的一个端口，只能绑定一个容器，为了避免这个问题可以将容器内的端口绑定到不同的宿主机端口上去</p>
+<p><strong>绑定到特定的网络接口</strong></p>
+<p>也可以将端口绑定限制在特定的网络接口(即IP地址)上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 127.0.0.1:8081:80 --name static_web4 flag0/static_web nginx -g &quot;daemon off;&quot;</span><br></pre></td></tr></table></figure>
+<p>上述命令将容器内的80端口绑定到了本地宿主机的127.0.0.1这个IP的80端口上，我们也可以使用类似的方式将容器内的80端口绑定到一个宿主机的随机端口上</p>
+<p><strong>绑定特定的网络接口的随机端口</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 127.0.0.1::80 --name static_web5 flag0/static_web nginx -g &quot;daemon off;&quot;</span><br></pre></td></tr></table></figure>
+<p>可以使用docker inspect 或者 docker port命令来查看容器内的80端口具体被绑定到了宿主机的哪个端口上。</p>
+<p>也可以通过端口绑定时使用/udp 后缀来指定UDP端口</p>
+<p><strong>使用docker run命令对外公开端口</strong></p>
+<p>Docker还提供了一个更简单的方式，即可-P 参数，可以用来对外公开在Dockerfile中通过EXPOSE指令公开的所有端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -P --name static_web6 flag0/static_web nginx -g &quot;daemon off;&quot;</span><br></pre></td></tr></table></figure>
+<p>该命令会将容器内的80端口对本地宿主机公开，并且绑定到一个随机端口上。该命令会将用来构建该镜像的Dockerfile文件中EXPOSE指令指定的其他端口也一并公开。</p>
+<p><strong>使用curl连接到容器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl localhost:32770</span><br><span class="line">Hi,I am in your container</span><br></pre></td></tr></table></figure>
+<p>得到了一个非常简单的基于Docker的Web服务器</p>
+<h3 id="将镜像推送到docker-hub"><a href="#将镜像推送到docker-hub" class="headerlink" title="将镜像推送到docker hub"></a>将镜像推送到docker hub</h3><p><strong>推送Docker镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker push flag0/apache2-1</span><br></pre></td></tr></table></figure>
+<p>我们使用了一个名为flag0/apache2-1的用户仓库，成功得将镜像推送到了docker hub</p>
+<p>可以在docker hub上看到我们上传的镜像</p>
+<p><img src="\img\images\4.使用docker镜像和仓库\1566834435611.png" alt="1566834435611"></p>
+<p><strong>自动构建</strong></p>
+<p>docker hub允许我们定义自动构建，只需要将github或bitbucket中含有dockerfile文件的仓库连接到docker hub即可。</p>
+<p>。。。明天补上</p>
+<h3 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h3><p><strong>删除docker镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker rmi -f flag0/static_web1</span><br><span class="line">Untagged: flag0/static_web1:latest</span><br><span class="line">Deleted: sha256:4403ea0272ba374367b5eaee5900fb1ce19c0834b979f6403d6f6c4b7266445c</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-f 强制删除</li>
+</ul>
+<p>每一个Deleted：行都代表一个镜像层被删除</p>
+<p>该操作只会将本地的镜像删除，如果之前已经将该镜像推送到Dockerhub上，那么他在docker hub上依旧存在</p>
+<p>如果想删除一个Docker hub上的镜像仓库，在登陆Docker hub后使用delete repository 来删除</p>
+<p><img src="\img\images\4.使用docker镜像和仓库\1566836933369.png" alt="1566836933369"></p>
+<p><strong>同时删除多个Docker镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi flag0/apache2 flag0/apache2-1</span><br></pre></td></tr></table></figure>
+<p><strong>删除所有镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi `docker images -a -q`</span><br></pre></td></tr></table></figure>
+<h3 id="从容器中运行Registry"><a href="#从容器中运行Registry" class="headerlink" title="从容器中运行Registry"></a>从容器中运行Registry</h3><h4 id="运行基于容器的Registry"><a href="#运行基于容器的Registry" class="headerlink" title="运行基于容器的Registry"></a>运行基于容器的Registry</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 5000:5000 registry:2</span><br></pre></td></tr></table></figure>
+<p>在启动Docker守护进程的命令中添加-insecure-registry localhost:5000，并重启守护进程，才能继续使用本地Registry</p>
+<h4 id="测试新Registry"><a href="#测试新Registry" class="headerlink" title="测试新Registry"></a>测试新Registry</h4><p><strong>使用新的Registy为镜像打标签</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag 5c42817d9f34 localhost:5000/flag0/apache2-1</span><br></pre></td></tr></table></figure>
+<p><strong>将镜像推送到新Registry</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker push localhost:5000/flag0/apache2-1</span><br><span class="line">The push refers to repository [localhost:5000/flag0/apache2-1]</span><br><span class="line">c1d7d627d405: Pushed </span><br><span class="line">66285ac4bf24: Pushed </span><br><span class="line">48334332ed8d: Pushed </span><br><span class="line">46c1a22ffea5: Pushed </span><br><span class="line">b057ab380990: Pushed </span><br><span class="line">latest: digest: sha256:3b86cc40923125ca9c66475f350014a365e8fbf365b240f656c1c1aa05f13dee size: 1364</span><br></pre></td></tr></table></figure>
+<p>这个镜像被提交到了本地的Registry中，并且可以将其用于使用docker run命令构建新容器</p>
+<p><strong>从本地Registry构建新容器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -t -i localhost:5000/flag0/apache2-1 /bin/bash</span><br></pre></td></tr></table></figure>
+<p>这是在防火墙后部署自己的Docker Registry最简单的方式</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Docker/">Docker</a><a href="/tags/Dockerimages/">Dockerimages</a><a href="/tags/dockerhub/">dockerhub</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://flag0.com/2019/08/30/使用docker镜像和仓库/" data-title="使用docker镜像和仓库 | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2019/08/31/代码空白区添加shellcode/" title="代码空白区添加shellcode">
+  <strong>上一篇：</strong><br/>
+  <span>
+  代码空白区添加shellcode</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2018/11/19/湖湘杯2018复赛Web-Writeup/"  title="湖湘杯2018复赛Web Writeup">
+ <strong>下一篇：</strong><br/> 
+ <span>湖湘杯2018复赛Web Writeup
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用docker镜像和仓库"><span class="toc-number">1.</span> <span class="toc-text">使用docker镜像和仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#列出镜像"><span class="toc-number">1.1.</span> <span class="toc-text">列出镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拉取镜像"><span class="toc-number">1.2.</span> <span class="toc-text">拉取镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查找镜像"><span class="toc-number">1.3.</span> <span class="toc-text">查找镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建镜像"><span class="toc-number">1.4.</span> <span class="toc-text">构建镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建Docker-Hub账号"><span class="toc-number">1.5.</span> <span class="toc-text">创建Docker Hub账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用commit-命令创建镜像"><span class="toc-number">1.6.</span> <span class="toc-text">使用commit 命令创建镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用Dockerfile构建镜像"><span class="toc-number">1.7.</span> <span class="toc-text">用Dockerfile构建镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于Dockerfile构建新镜像"><span class="toc-number">1.8.</span> <span class="toc-text">基于Dockerfile构建新镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#指令失败时会怎样"><span class="toc-number">1.9.</span> <span class="toc-text">指令失败时会怎样</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dockefile和构建缓存"><span class="toc-number">1.10.</span> <span class="toc-text">Dockefile和构建缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于构建缓存的Dockerfile模板"><span class="toc-number">1.11.</span> <span class="toc-text">基于构建缓存的Dockerfile模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看新镜像"><span class="toc-number">1.12.</span> <span class="toc-text">查看新镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从新镜像中启动容器"><span class="toc-number">1.13.</span> <span class="toc-text">从新镜像中启动容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将镜像推送到docker-hub"><span class="toc-number">1.14.</span> <span class="toc-text">将镜像推送到docker hub</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除镜像"><span class="toc-number">1.15.</span> <span class="toc-text">删除镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从容器中运行Registry"><span class="toc-number">1.16.</span> <span class="toc-text">从容器中运行Registry</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#运行基于容器的Registry"><span class="toc-number">1.16.1.</span> <span class="toc-text">运行基于容器的Registry</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#测试新Registry"><span class="toc-number">1.16.2.</span> <span class="toc-text">测试新Registry</span></a></li></ol></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>13</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>13</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/图像识别/" title="图像识别">图像识别<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/dockerfile/" title="dockerfile">dockerfile<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.cnblogs.com/test404" target="_blank" title="胖虎">胖虎</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://p0desta.com" target="_blank" title="p0desta">p0desta</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.test407.cn" target="_blank" title="薯片博客">薯片博客</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://alem0n.github.io" target="_blank" title="lem0n">lem0n</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Rise and rise again until lambs become lions <br/>
+			Everyone can cook, but only those who dare to try can become the real chef.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/flag0" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:root@flag0.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2019 
+		
+		<a href="/about" target="_blank" title="GetFlag">GetFlag</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
