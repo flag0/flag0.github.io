@@ -15,7 +15,7 @@
 <meta name="keywords" content="docker,docker应用,docker实例,sinatra,ruby,redis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用Dcoker构建Web应用程序sinatra">
-<meta property="og:url" content="http://flag0.com/2019/09/03/使用Dcoker构建sinatra/index.html">
+<meta property="og:url" content="http://flag0.com/2019/09/03/使用Docker构建sinatra/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
 <meta property="og:description" content="使用docker构建ruby + redis环境">
 <meta property="og:locale" content="cn-zh">
@@ -23,7 +23,7 @@
 <meta property="og:image" content="http://flag0.com/img/images/使用Dcoker构建sinatra/1567516369515.png">
 <meta property="og:image" content="http://flag0.com/img/images/使用Dcoker构建sinatra/1567516669995.png">
 <meta property="og:image" content="http://flag0.com/img/images/使用Dcoker构建sinatra/1567517446884.png">
-<meta property="og:updated_time" content="2019-09-03T13:32:01.266Z">
+<meta property="og:updated_time" content="2019-09-04T14:38:22.175Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Dcoker构建Web应用程序sinatra">
 <meta name="twitter:description" content="使用docker构建ruby + redis环境">
@@ -51,7 +51,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -83,29 +83,29 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2019/09/03/使用Dcoker构建sinatra/" title="使用Dcoker构建Web应用程序sinatra" itemprop="url">使用Dcoker构建Web应用程序sinatra</a>
+      <a href="/2019/09/03/使用Docker构建sinatra/" title="使用Dcoker构建Web应用程序sinatra" itemprop="url">使用Dcoker构建Web应用程序sinatra</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2019-09-03T13:32:01.000Z" itemprop="datePublished"> 发表于 2019-09-03</time>
+    <time datetime="2019-09-03T13:32:01.000Z" itemprop="datePublished"> Published 2019-09-03</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Dcoker构建Web应用程序sinatra"><span class="toc-number">1.</span> <span class="toc-text">使用Dcoker构建Web应用程序sinatra</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#构建Sinatra应用程序镜像"><span class="toc-number">1.1.</span> <span class="toc-text">构建Sinatra应用程序镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建Sinatra容器"><span class="toc-number">1.2.</span> <span class="toc-text">创建Sinatra容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#拓展Sinatra应用程序来使用Redis"><span class="toc-number">1.3.</span> <span class="toc-text">拓展Sinatra应用程序来使用Redis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将Sinatra应用程序连接到Redis容器"><span class="toc-number">1.4.</span> <span class="toc-text">将Sinatra应用程序连接到Redis容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#中途遇到的问题-避免踩坑"><span class="toc-number">1.5.</span> <span class="toc-text">中途遇到的问题(避免踩坑):</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Docker构建Web应用程序sinatra"><span class="toc-number">1.</span> <span class="toc-text">使用Docker构建Web应用程序sinatra</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#构建Sinatra应用程序镜像"><span class="toc-number">1.1.</span> <span class="toc-text">构建Sinatra应用程序镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建Sinatra容器"><span class="toc-number">1.2.</span> <span class="toc-text">创建Sinatra容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#拓展Sinatra应用程序来使用Redis"><span class="toc-number">1.3.</span> <span class="toc-text">拓展Sinatra应用程序来使用Redis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将Sinatra应用程序连接到Redis容器"><span class="toc-number">1.4.</span> <span class="toc-text">将Sinatra应用程序连接到Redis容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#中途遇到的问题-避免踩坑"><span class="toc-number">1.5.</span> <span class="toc-text">中途遇到的问题(避免踩坑):</span></a></li></ol></li></ol>
 		
 		</div>
 		
 		<p>使用docker构建ruby + redis环境</p>
 <a id="more"></a>
-<h3 id="使用Dcoker构建Web应用程序sinatra"><a href="#使用Dcoker构建Web应用程序sinatra" class="headerlink" title="使用Dcoker构建Web应用程序sinatra"></a>使用Dcoker构建Web应用程序sinatra</h3><p>测试一个基于Sinatra的Web应用程序，基于Docker来对这个应用进行测试，我们将创建一个应用程序，它接收输入的URL参数，并以JSON散列的结构输出到客户端。</p>
+<h3 id="使用Docker构建Web应用程序sinatra"><a href="#使用Docker构建Web应用程序sinatra" class="headerlink" title="使用Docker构建Web应用程序sinatra"></a>使用Docker构建Web应用程序sinatra</h3><p>测试一个基于Sinatra的Web应用程序，基于Docker来对这个应用进行测试，我们将创建一个应用程序，它接收输入的URL参数，并以JSON散列的结构输出到客户端。</p>
 <h4 id="构建Sinatra应用程序镜像"><a href="#构建Sinatra应用程序镜像" class="headerlink" title="构建Sinatra应用程序镜像"></a>构建Sinatra应用程序镜像</h4><p><strong>为测试Web应用程序创建目录</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p sinatra</span><br><span class="line">cd sinatra</span><br><span class="line">touch Docekrfile</span><br></pre></td></tr></table></figure>
 <p><strong>测试用web应用程序的Dockerfile</strong></p>
@@ -223,7 +223,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://flag0.com/2019/09/03/使用Dcoker构建sinatra/" data-title="使用Dcoker构建Web应用程序sinatra | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  <div data-url="http://flag0.com/2019/09/03/使用Docker构建sinatra/" data-title="使用Dcoker构建Web应用程序sinatra | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -260,17 +260,17 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Dcoker构建Web应用程序sinatra"><span class="toc-number">1.</span> <span class="toc-text">使用Dcoker构建Web应用程序sinatra</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#构建Sinatra应用程序镜像"><span class="toc-number">1.1.</span> <span class="toc-text">构建Sinatra应用程序镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建Sinatra容器"><span class="toc-number">1.2.</span> <span class="toc-text">创建Sinatra容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#拓展Sinatra应用程序来使用Redis"><span class="toc-number">1.3.</span> <span class="toc-text">拓展Sinatra应用程序来使用Redis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将Sinatra应用程序连接到Redis容器"><span class="toc-number">1.4.</span> <span class="toc-text">将Sinatra应用程序连接到Redis容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#中途遇到的问题-避免踩坑"><span class="toc-number">1.5.</span> <span class="toc-text">中途遇到的问题(避免踩坑):</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Docker构建Web应用程序sinatra"><span class="toc-number">1.</span> <span class="toc-text">使用Docker构建Web应用程序sinatra</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#构建Sinatra应用程序镜像"><span class="toc-number">1.1.</span> <span class="toc-text">构建Sinatra应用程序镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建Sinatra容器"><span class="toc-number">1.2.</span> <span class="toc-text">创建Sinatra容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#拓展Sinatra应用程序来使用Redis"><span class="toc-number">1.3.</span> <span class="toc-text">拓展Sinatra应用程序来使用Redis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将Sinatra应用程序连接到Redis容器"><span class="toc-number">1.4.</span> <span class="toc-text">将Sinatra应用程序连接到Redis容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#中途遇到的问题-避免踩坑"><span class="toc-number">1.5.</span> <span class="toc-text">中途遇到的问题(避免踩坑):</span></a></li></ol></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
@@ -304,15 +304,15 @@
 			
 		
 			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
 			
 		
 			
@@ -336,23 +336,7 @@
 			
 		
 			
-				<li><a href="/tags/Docker/" title="Docker">Docker<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/pdo/" title="pdo">pdo<sup>1</sup></a></li>
 			
 		
 			
@@ -364,7 +348,19 @@
 			
 		
 			
-				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/dockerfile/" title="dockerfile">dockerfile<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Docker/" title="Docker">Docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
 			
 		
 			
@@ -373,6 +369,10 @@
 		
 			
 				<li><a href="/tags/图像识别/" title="图像识别">图像识别<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -621,7 +621,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
