@@ -4,23 +4,29 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>GetFlag&#39;s Blog</title>
+    <title>Docker搭建jekyll框架网站 | GetFlag&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="GetFlag">
     
 
     
-    <meta name="description" content="个人博客,技术分享,生活记录">
-<meta property="og:type" content="website">
-<meta property="og:title" content="GetFlag&#39;s Blog">
-<meta property="og:url" content="http://flag0.com/index.html">
+    <meta name="description" content="构建Jekyll基础镜像创建 Jekyll Dockerfile123mkdir jekyllcd jekylltouch Dockerfile Jekyll Dockerfile123456789101112FROM ubuntuMAINTAINER flag0 root@flag0.comENV REFRESHED_AT 2019-9-5RUN apt-get -yqq updateRUN a">
+<meta name="keywords" content="docker,jekyll">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker搭建jekyll框架网站">
+<meta property="og:url" content="http://flag0.com/2019/09/07/Docker构建jekyll框架网站/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
-<meta property="og:description" content="个人博客,技术分享,生活记录">
+<meta property="og:description" content="构建Jekyll基础镜像创建 Jekyll Dockerfile123mkdir jekyllcd jekylltouch Dockerfile Jekyll Dockerfile123456789101112FROM ubuntuMAINTAINER flag0 root@flag0.comENV REFRESHED_AT 2019-9-5RUN apt-get -yqq updateRUN a">
 <meta property="og:locale" content="cn-zh">
+<meta property="og:image" content="http://flag0.com/img/images/Docker构建jekyll框架网站/1567869039284.png">
+<meta property="og:image" content="http://flag0.com/img/images/Docker构建jekyll框架网站/1567869508850.png">
+<meta property="og:image" content="http://flag0.com/img/images/Docker构建jekyll框架网站/1567869676129.png">
+<meta property="og:updated_time" content="2019-09-07T15:26:02.039Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="GetFlag&#39;s Blog">
-<meta name="twitter:description" content="个人博客,技术分享,生活记录">
+<meta name="twitter:title" content="Docker搭建jekyll框架网站">
+<meta name="twitter:description" content="构建Jekyll基础镜像创建 Jekyll Dockerfile123mkdir jekyllcd jekylltouch Dockerfile Jekyll Dockerfile123456789101112FROM ubuntuMAINTAINER flag0 root@flag0.comENV REFRESHED_AT 2019-9-5RUN apt-get -yqq updateRUN a">
+<meta name="twitter:image" content="http://flag0.com/img/images/Docker构建jekyll框架网站/1567869039284.png">
 
     
     <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
@@ -70,12 +76,10 @@
 </div>
     </header>
     <div id="container">
-      <div id="main">
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
   <h1 itemprop="name">
     
       <a href="/2019/09/07/Docker构建jekyll框架网站/" title="Docker搭建jekyll框架网站" itemprop="url">Docker搭建jekyll框架网站</a>
@@ -89,9 +93,16 @@
     
   </p>
 </header>
-    <div class="article-content">
-        
-        <h3 id="构建Jekyll基础镜像"><a href="#构建Jekyll基础镜像" class="headerlink" title="构建Jekyll基础镜像"></a>构建Jekyll基础镜像</h3><p><strong>创建 Jekyll Dockerfile</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir jekyll</span><br><span class="line">cd jekyll</span><br><span class="line">touch Dockerfile</span><br></pre></td></tr></table></figure></p>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#构建Jekyll基础镜像"><span class="toc-number">1.</span> <span class="toc-text">构建Jekyll基础镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建Apache基础镜像"><span class="toc-number">2.</span> <span class="toc-text">构建Apache基础镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动Jekyll网站"><span class="toc-number">3.</span> <span class="toc-text">启动Jekyll网站</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更新Jekyll网站"><span class="toc-number">4.</span> <span class="toc-text">更新Jekyll网站</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#备份Jekyll卷"><span class="toc-number">5.</span> <span class="toc-text">备份Jekyll卷</span></a></li></ol>
+		
+		</div>
+		
+		<h3 id="构建Jekyll基础镜像"><a href="#构建Jekyll基础镜像" class="headerlink" title="构建Jekyll基础镜像"></a>构建Jekyll基础镜像</h3><p><strong>创建 Jekyll Dockerfile</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir jekyll</span><br><span class="line">cd jekyll</span><br><span class="line">touch Dockerfile</span><br></pre></td></tr></table></figure></p>
 <p><strong>Jekyll Dockerfile</strong><br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu</span><br><span class="line"><span class="keyword">MAINTAINER</span> flag0 root@flag0.com</span><br><span class="line"><span class="keyword">ENV</span> REFRESHED_AT <span class="number">2019</span>-<span class="number">9</span>-<span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span> apt-get -yqq update</span><br><span class="line">RUN apt-get -y install ruby ruby-dev make nodejs gcc</span><br><span class="line">RUN gem install --no-rdoc --no-ri jekyll -v 2.5.3</span><br><span class="line"></span><br><span class="line">VOLUME ["/data","/var/www/html"]</span><br><span class="line">WORKDIR /data</span><br><span class="line"></span><br><span class="line">ENTRYPOINT ["jekyll","build","--destination=/var/www/html"]</span><br></pre></td></tr></table></figure></p>
 <p>使用<code>VOLUME</code>指令创建了两个卷</p>
 <ul>
@@ -146,14 +157,9 @@
 <li><code>--rm</code>容器运行完后自动删除</li>
 </ul>
 <p>运行后，在当前目录下会出现<code>james_blog_backup.tar</code>文件</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
+  
+	</div>
+		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
@@ -171,579 +177,45 @@
 
 
 
-
-<div class="comments-count">
+	<div class="article-share" id="share">
 	
-</div>
+	  <div data-url="http://flag0.com/2019/09/07/Docker构建jekyll框架网站/" data-title="Docker搭建jekyll框架网站 | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
 
 </footer>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2019/09/04/Docker搭建Jenkins/" title="Docker搭建Jenkins" itemprop="url">Docker搭建Jenkins</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2019-09-04T14:35:31.000Z" itemprop="datePublished"> 发表于 2019-09-04</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>《第一本Docker书》第五章实例</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2019/09/04/Docker搭建Jenkins/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Docker/">Docker</a><a href="/tags/Jenkins/">Jenkins</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
+   	       
+	</article>
 	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2019/09/04/Docker搭建Jenkins/"  title="Docker搭建Jenkins">
+ <strong>下一篇：</strong><br/> 
+ <span>Docker搭建Jenkins
+</span>
+</a>
 </div>
 
-</footer>
+</nav>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2019/09/03/使用Docker构建sinatra/" title="使用Dcoker构建Web应用程序sinatra" itemprop="url">使用Dcoker构建Web应用程序sinatra</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2019-09-03T13:32:01.000Z" itemprop="datePublished"> 发表于 2019-09-03</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>使用docker构建ruby + redis环境</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2019/09/03/使用Docker构建sinatra/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/docker/">docker</a><a href="/tags/docker应用/">docker应用</a><a href="/tags/docker实例/">docker实例</a><a href="/tags/sinatra/">sinatra</a><a href="/tags/ruby/">ruby</a><a href="/tags/redis/">redis</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
 	
-</div>
 
-</footer>
 
 
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2019/09/01/Dockerfile指令/" title="docker学习笔记:dockerfile详解" itemprop="url">docker学习笔记:dockerfile详解</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2019-09-01T14:34:56.000Z" itemprop="datePublished"> 发表于 2019-09-01</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>人类的本质是复读机</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2019/09/01/Dockerfile指令/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/docker/">docker</a><a href="/tags/dockerfile/">dockerfile</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2019/08/31/代码空白区添加shellcode/" title="代码空白区添加shellcode" itemprop="url">代码空白区添加shellcode</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2019-08-31T12:54:04.000Z" itemprop="datePublished"> 发表于 2019-08-31</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>本篇文章主要实现为记事本添加 空白弹窗，后续有时间写的话可以去写简单的文件感染的文章。</p>
-<p>手动和编程实现，在代码空白区添加shellcode 、在数据空白区添加shellcode<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2019/08/31/代码空白区添加shellcode/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/shellcode/">shellcode</a><a href="/tags/PE/">PE</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2019/08/30/使用docker镜像和仓库/" title="Docker学习笔记:使用docker镜像和仓库" itemprop="url">Docker学习笔记:使用docker镜像和仓库</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2019-08-29T16:00:00.000Z" itemprop="datePublished"> 发表于 2019-08-30</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>《第一本Docker书》第4章读书笔记</p>
-<p>构建自己的Docker镜像，以及如何使用Docker仓库和Docker Registry</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2019/08/30/使用docker镜像和仓库/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Docker/">Docker</a><a href="/tags/Dockerimages/">Dockerimages</a><a href="/tags/dockerhub/">dockerhub</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/11/19/湖湘杯2018复赛Web-Writeup/" title="湖湘杯2018复赛Web Writeup" itemprop="url">湖湘杯2018复赛Web Writeup</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-11-18T16:00:00.000Z" itemprop="datePublished"> 发表于 2018-11-19</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>web题难度不大，就是环境比较坑</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/11/19/湖湘杯2018复赛Web-Writeup/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/湖湘杯2018/">湖湘杯2018</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/11/11/浅析SSTI-python沙盒绕过/" title="浅析SSTI(python沙盒绕过)" itemprop="url">浅析SSTI(python沙盒绕过)</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-11-10T17:30:00.000Z" itemprop="datePublished"> 发表于 2018-11-11</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>在CTF比赛中见过不少的SSTI题目，在这里整理下思路，记录下<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/11/11/浅析SSTI-python沙盒绕过/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/SSTI/">SSTI</a><a href="/tags/python沙箱绕过/">python沙箱绕过</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/11/08/第七届山东省大学生信息安全竞赛Writeup/" title="第七届山东省信息安全竞赛Writeup" itemprop="url">第七届山东省信息安全竞赛Writeup</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-11-08T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-11-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>留下了没有技术的泪水。。。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/11/08/第七届山东省大学生信息安全竞赛Writeup/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/山东省大学生信息安全竞赛/">山东省大学生信息安全竞赛</a><a href="/tags/科来杯/">科来杯</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/09/15/AWD流量混淆/" title="AWD流量混淆" itemprop="url">AWD流量混淆</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-09-14T16:00:00.000Z" itemprop="datePublished"> 发表于 2018-09-15</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>题目取得有点标题党，其实只是自己当时的一个想法，去实现了一遍，只有简单的一个混淆的脚本，水平比较有限，所以很多地方实现的并不是比较合理，写这篇文章的目的主要是提供思路的参考<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/09/15/AWD流量混淆/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/AWD/">AWD</a><a href="/tags/流量混淆/">流量混淆</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-
-  <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
-  </nav>
-
-</div>
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#构建Jekyll基础镜像"><span class="toc-number">1.</span> <span class="toc-text">构建Jekyll基础镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建Apache基础镜像"><span class="toc-number">2.</span> <span class="toc-text">构建Apache基础镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动Jekyll网站"><span class="toc-number">3.</span> <span class="toc-text">启动Jekyll网站</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更新Jekyll网站"><span class="toc-number">4.</span> <span class="toc-text">更新Jekyll网站</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#备份Jekyll卷"><span class="toc-number">5.</span> <span class="toc-text">备份Jekyll卷</span></a></li></ol>
+ 
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -969,12 +441,89 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
 
 
 
@@ -1037,4 +586,4 @@ $(document).ready(function(){
 <!-- Tiny_search End -->
 
   </body>
- </html>
+</html>
