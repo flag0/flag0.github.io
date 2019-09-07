@@ -85,71 +85,18 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2019-09-07T15:26:01.000Z" itemprop="datePublished"> 发表于 2019-09-07</time>
+    <time datetime="2019-09-07T15:28:17.000Z" itemprop="datePublished"> 发表于 2019-09-07</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <h3 id="构建Jekyll基础镜像"><a href="#构建Jekyll基础镜像" class="headerlink" title="构建Jekyll基础镜像"></a>构建Jekyll基础镜像</h3><p><strong>创建 Jekyll Dockerfile</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir jekyll</span><br><span class="line">cd jekyll</span><br><span class="line">touch Dockerfile</span><br></pre></td></tr></table></figure></p>
-<p><strong>Jekyll Dockerfile</strong><br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu</span><br><span class="line"><span class="keyword">MAINTAINER</span> flag0 root@flag0.com</span><br><span class="line"><span class="keyword">ENV</span> REFRESHED_AT <span class="number">2019</span>-<span class="number">9</span>-<span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span> apt-get -yqq update</span><br><span class="line">RUN apt-get -y install ruby ruby-dev make nodejs gcc</span><br><span class="line">RUN gem install --no-rdoc --no-ri jekyll -v 2.5.3</span><br><span class="line"></span><br><span class="line">VOLUME ["/data","/var/www/html"]</span><br><span class="line">WORKDIR /data</span><br><span class="line"></span><br><span class="line">ENTRYPOINT ["jekyll","build","--destination=/var/www/html"]</span><br></pre></td></tr></table></figure></p>
-<p>使用<code>VOLUME</code>指令创建了两个卷</p>
-<ul>
-<li><p><code>/data/</code>用来存放网站的源代码</p>
-</li>
-<li><p><code>/var/www/html/</code>，用来存放编译后的Jekyll网站代码</p>
-</li>
-</ul>
-<p>将够做目录设置到<code>/data/</code>，使用ENTRYPOINT指定自动构建的命令，将<code>/data/</code>中所有的Jekyll网站代码构建到<code>/var/www/html</code>目录中</p>
-<p><strong>构建镜像</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t flag0/jekyll .</span><br></pre></td></tr></table></figure>
-<h3 id="构建Apache基础镜像"><a href="#构建Apache基础镜像" class="headerlink" title="构建Apache基础镜像"></a>构建Apache基础镜像</h3><p><strong>创建Apache Dockerfile</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir apache</span><br><span class="line">cd apache</span><br><span class="line">vim Dockerfile</span><br></pre></td></tr></table></figure>
-<p><strong>Jekyll Apache的Dockerfile</strong></p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">14.04</span></span><br><span class="line"><span class="keyword">MAINTAINER</span> flag root@flag0.com</span><br><span class="line"><span class="keyword">ENV</span> REFRESHED_AT <span class="number">2019</span>-<span class="number">9</span>-<span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span> apt-get -yqq update</span><br><span class="line">RUN apt-get -yqq install apache2</span><br><span class="line"></span><br><span class="line">VOLUME ["/var/www/html"]</span><br><span class="line">WORKDIR /var/www/html</span><br><span class="line"></span><br><span class="line">ENV APACHE_RUN_USER www-data</span><br><span class="line">ENV APACHE_RUN_GROUP www-data</span><br><span class="line">ENV APACHE_LOG_DIR /var/log/apache2</span><br><span class="line">ENV APACHE_PID_FILE /var/run/apache2.pid</span><br><span class="line">ENV APACHE_RUN_DIR /var/run/apache2</span><br><span class="line">ENV APACHE_LOCK_DIR /var/locl/apache2</span><br><span class="line"></span><br><span class="line">RUN mkdir -p $APACHE_RUN_DIR $APACHE_LOCK_DIR $APACHE_LOG_DIR</span><br><span class="line"></span><br><span class="line">EXPOSE 80</span><br><span class="line"></span><br><span class="line">ENTRYPOINT ["/usr/sbin/apache2"]</span><br><span class="line">CMD ["-D","FOREGROUND"]</span><br></pre></td></tr></table></figure>
-<p>Dockerfile 安装了Apache镜像，使用了<code>VOLUME</code>指令创建了一个卷<code>/var/www/html</code>，用来存放编译后的Jekyll网站，将其设为工作目录，使用<code>ENV</code>指令设置了必要的环境变量，创建了必要的目录，使用<code>EXPOSE</code>公开了80端口，指定了<code>ENTRYPOINT</code>和CMD指令组合来在容器启动时默认运行Apache</p>
-<p><strong>构建镜像</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t flag0/apache .</span><br></pre></td></tr></table></figure>
-<h3 id="启动Jekyll网站"><a href="#启动Jekyll网站" class="headerlink" title="启动Jekyll网站"></a>启动Jekyll网站</h3><p>现在有了两个镜像</p>
-<ul>
-<li>Jekyll:安装了Ruby 及其他必备软件包的Jekyll镜像</li>
-<li>Apache:通过Apache Web服务器来让Jekyll网站工作起来的镜像</li>
-</ul>
-<p><strong>下载Jekyll博客</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~</span><br><span class="line">git clone https://github.com/flag0/james_blog.git</span><br></pre></td></tr></table></figure>
-<p>在这个目录下可以看到启用了Twitter Bootstrap的最基础的Jekyll博客，可以通过修改<code>_config.yum</code>文件和主题来达到想要的效果</p>
-<p><strong>创建Jekyll容器</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -v /root/james_blog:/data/ --name james_blog flag0/jekyll</span><br><span class="line">Configuration file: /data/_config.yml</span><br><span class="line">            Source: /data</span><br><span class="line">       Destination: /var/www/html</span><br><span class="line">      Generating... </span><br><span class="line">                    done.</span><br><span class="line"> Auto-regeneration: disabled. Use --watch to enable.</span><br></pre></td></tr></table></figure>
-<p>启动了名为james_blog的新容器，将本地的james_blog目录作为<code>/data/</code>卷挂在到容器里，容器将其构建到已编译的网站存放到<code>/var/www/html</code>目录</p>
-<p><strong>创建Apache容器</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -P --volumes-from james_blog flag0/apache</span><br></pre></td></tr></table></figure>
-<p><code>--volumns-from</code> 把指定容器里所有的卷都加入新创建的容器。</p>
-<p>apache可以访问james_blog容器中的<code>/var/www/html</code>卷的内容，即便james_blog容器没有运行，apche也可以访问这个卷。</p>
-<p>查看apache容器端口</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker port 3f208ad9d913 80</span><br><span class="line">0.0.0.0:32780</span><br></pre></td></tr></table></figure>
-<p><img src="\img\images\Docker构建jekyll框架网站\1567869039284.png" alt="1567869039284"></p>
-<p>成功访问！</p>
-<h3 id="更新Jekyll网站"><a href="#更新Jekyll网站" class="headerlink" title="更新Jekyll网站"></a>更新Jekyll网站</h3><p><strong>编辑Jekyll博客</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim james_blog/_config.yml</span><br></pre></td></tr></table></figure>
-<p>修改其title为flag0’s blog</p>
-<p><img src="\img\images\Docker构建jekyll框架网站\1567869508850.png" alt="1567869508850"></p>
-<p><strong>再次启动james_blog容器</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start james_blog</span><br></pre></td></tr></table></figure>
-<p><strong>查看james_blog容器的日志</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost]# docker logs james_blog</span><br><span class="line">Configuration file: /data/_config.yml</span><br><span class="line">            Source: /data</span><br><span class="line">       Destination: /var/www/html</span><br><span class="line">      Generating... </span><br><span class="line">                    done.</span><br><span class="line"> Auto-regeneration: disabled. Use --watch to enable.</span><br><span class="line">Configuration file: /data/_config.yml</span><br><span class="line">            Source: /data</span><br><span class="line">       Destination: /var/www/html</span><br><span class="line">      Generating... </span><br><span class="line">                    done.</span><br><span class="line"> Auto-regeneration: disabled. Use --watch to enable.</span><br></pre></td></tr></table></figure>
-<p>访问查看修改效果</p>
-<p><img src="\img\images\Docker构建jekyll框架网站\1567869676129.png" alt="1567869676129"></p>
-<p>修改成功!</p>
-<h3 id="备份Jekyll卷"><a href="#备份Jekyll卷" class="headerlink" title="备份Jekyll卷"></a>备份Jekyll卷</h3><p>备份<code>/var/www/html</code>卷</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm --volumes-from james_blog -v $(pwd):/backup ubuntu tar cvf /backup/james_blog_backup.tar /var/www/html</span><br><span class="line">tar: Removing leading `/&apos; from member names</span><br><span class="line">/var/www/html/</span><br><span class="line">/var/www/html/archive.html</span><br><span class="line">/var/www/html/atom.xml</span><br><span class="line">/var/www/html/sitemap.txt</span><br><span class="line">/var/www/html/tags.html </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>--rm</code>容器运行完后自动删除</li>
-</ul>
-<p>运行后，在当前目录下会出现<code>james_blog_backup.tar</code>文件</p>
-
+        <p>dockerfile 构建apache+jekyll</p>
         
         
         <p class="article-more-link">
+          
+            <a href="/2019/09/07/Docker构建jekyll框架网站/#more">Read More</a>
           
        </p>
     </div>
@@ -780,10 +727,6 @@
 			
 		
 			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
@@ -792,7 +735,15 @@
 			
 		
 			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
 			
 		
 			
@@ -804,23 +755,11 @@
 			
 		
 			
-				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
 			
 		
 			
@@ -832,6 +771,22 @@
 			
 		
 			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/dockerfile/" title="dockerfile">dockerfile<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
 			
 		
@@ -840,15 +795,7 @@
 			
 		
 			
-				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
+				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
 			
 		
 		</ul>

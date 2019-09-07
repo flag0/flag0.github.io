@@ -11,21 +11,21 @@
     
 
     
-    <meta name="description" content="构建Jekyll基础镜像创建 Jekyll Dockerfile123mkdir jekyllcd jekylltouch Dockerfile Jekyll Dockerfile123456789101112FROM ubuntuMAINTAINER flag0 root@flag0.comENV REFRESHED_AT 2019-9-5RUN apt-get -yqq updateRUN a">
+    <meta name="description" content="dockerfile 构建apache+jekyll">
 <meta name="keywords" content="docker,jekyll">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker搭建jekyll框架网站">
 <meta property="og:url" content="http://flag0.com/2019/09/07/Docker构建jekyll框架网站/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
-<meta property="og:description" content="构建Jekyll基础镜像创建 Jekyll Dockerfile123mkdir jekyllcd jekylltouch Dockerfile Jekyll Dockerfile123456789101112FROM ubuntuMAINTAINER flag0 root@flag0.comENV REFRESHED_AT 2019-9-5RUN apt-get -yqq updateRUN a">
+<meta property="og:description" content="dockerfile 构建apache+jekyll">
 <meta property="og:locale" content="cn-zh">
 <meta property="og:image" content="http://flag0.com/img/images/Docker构建jekyll框架网站/1567869039284.png">
 <meta property="og:image" content="http://flag0.com/img/images/Docker构建jekyll框架网站/1567869508850.png">
 <meta property="og:image" content="http://flag0.com/img/images/Docker构建jekyll框架网站/1567869676129.png">
-<meta property="og:updated_time" content="2019-09-07T15:26:02.039Z">
+<meta property="og:updated_time" content="2019-09-07T15:28:17.206Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker搭建jekyll框架网站">
-<meta name="twitter:description" content="构建Jekyll基础镜像创建 Jekyll Dockerfile123mkdir jekyllcd jekylltouch Dockerfile Jekyll Dockerfile123456789101112FROM ubuntuMAINTAINER flag0 root@flag0.comENV REFRESHED_AT 2019-9-5RUN apt-get -yqq updateRUN a">
+<meta name="twitter:description" content="dockerfile 构建apache+jekyll">
 <meta name="twitter:image" content="http://flag0.com/img/images/Docker构建jekyll框架网站/1567869039284.png">
 
     
@@ -89,7 +89,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2019-09-07T15:26:01.000Z" itemprop="datePublished"> 发表于 2019-09-07</time>
+    <time datetime="2019-09-07T15:28:17.000Z" itemprop="datePublished"> 发表于 2019-09-07</time>
     
   </p>
 </header>
@@ -102,7 +102,9 @@
 		
 		</div>
 		
-		<h3 id="构建Jekyll基础镜像"><a href="#构建Jekyll基础镜像" class="headerlink" title="构建Jekyll基础镜像"></a>构建Jekyll基础镜像</h3><p><strong>创建 Jekyll Dockerfile</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir jekyll</span><br><span class="line">cd jekyll</span><br><span class="line">touch Dockerfile</span><br></pre></td></tr></table></figure></p>
+		<p>dockerfile 构建apache+jekyll</p>
+<a id="more"></a>
+<h3 id="构建Jekyll基础镜像"><a href="#构建Jekyll基础镜像" class="headerlink" title="构建Jekyll基础镜像"></a>构建Jekyll基础镜像</h3><p><strong>创建 Jekyll Dockerfile</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir jekyll</span><br><span class="line">cd jekyll</span><br><span class="line">touch Dockerfile</span><br></pre></td></tr></table></figure></p>
 <p><strong>Jekyll Dockerfile</strong><br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu</span><br><span class="line"><span class="keyword">MAINTAINER</span> flag0 root@flag0.com</span><br><span class="line"><span class="keyword">ENV</span> REFRESHED_AT <span class="number">2019</span>-<span class="number">9</span>-<span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span> apt-get -yqq update</span><br><span class="line">RUN apt-get -y install ruby ruby-dev make nodejs gcc</span><br><span class="line">RUN gem install --no-rdoc --no-ri jekyll -v 2.5.3</span><br><span class="line"></span><br><span class="line">VOLUME ["/data","/var/www/html"]</span><br><span class="line">WORKDIR /data</span><br><span class="line"></span><br><span class="line">ENTRYPOINT ["jekyll","build","--destination=/var/www/html"]</span><br></pre></td></tr></table></figure></p>
 <p>使用<code>VOLUME</code>指令创建了两个卷</p>
 <ul>
@@ -252,10 +254,6 @@
 			
 		
 			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
@@ -264,7 +262,15 @@
 			
 		
 			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
 			
 		
 			
@@ -276,23 +282,11 @@
 			
 		
 			
-				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
 			
 		
 			
@@ -304,6 +298,22 @@
 			
 		
 			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/dockerfile/" title="dockerfile">dockerfile<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
 			
 		
@@ -312,15 +322,7 @@
 			
 		
 			
-				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/bypass/" title="bypass">bypass<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
+				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
 			
 		
 		</ul>
