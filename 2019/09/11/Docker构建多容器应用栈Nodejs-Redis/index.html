@@ -1,0 +1,622 @@
+
+ <!DOCTYPE HTML>
+<html lang="cn-zh">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Docker构建多容器应用栈Nodejs+Redis | GetFlag&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="GetFlag">
+    
+
+    
+    <meta name="description" content="本篇将构建如下镜像来支持部署多容器的应用  Node容器，用来服务于Node应用，该容器会处于express网络下，链接到Redis容器 Redis容器，用来保存和集群化应用状态，该容器会处于express网络下，链接到两个Redis副本容器，用于集群化应用状态 日志容器，用于捕获应用日志">
+<meta name="keywords" content="docker,nodejs,redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker构建多容器应用栈Nodejs+Redis">
+<meta property="og:url" content="http://flag0.com/2019/09/11/Docker构建多容器应用栈Nodejs-Redis/index.html">
+<meta property="og:site_name" content="GetFlag&#39;s Blog">
+<meta property="og:description" content="本篇将构建如下镜像来支持部署多容器的应用  Node容器，用来服务于Node应用，该容器会处于express网络下，链接到Redis容器 Redis容器，用来保存和集群化应用状态，该容器会处于express网络下，链接到两个Redis副本容器，用于集群化应用状态 日志容器，用于捕获应用日志">
+<meta property="og:locale" content="cn-zh">
+<meta property="og:image" content="http://flag0.com/img/images/Docker构建多容器应用栈Nodejs+Redis/1568165743488.png">
+<meta property="og:updated_time" content="2019-09-11T01:42:10.319Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker构建多容器应用栈Nodejs+Redis">
+<meta name="twitter:description" content="本篇将构建如下镜像来支持部署多容器的应用  Node容器，用来服务于Node应用，该容器会处于express网络下，链接到Redis容器 Redis容器，用来保存和集群化应用状态，该容器会处于express网络下，链接到两个Redis副本容器，用于集群化应用状态 日志容器，用于捕获应用日志">
+<meta name="twitter:image" content="http://flag0.com/img/images/Docker构建多容器应用栈Nodejs+Redis/1568165743488.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:flag0.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2019/09/11/Docker构建多容器应用栈Nodejs-Redis/" title="Docker构建多容器应用栈Nodejs+Redis" itemprop="url">Docker构建多容器应用栈Nodejs+Redis</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2019-09-11T01:42:10.000Z" itemprop="datePublished"> Published 2019-09-11</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#构建nodejs镜像"><span class="toc-number">1.</span> <span class="toc-text">构建nodejs镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建Redis基础镜像"><span class="toc-number">2.</span> <span class="toc-text">构建Redis基础镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建Redis主镜像"><span class="toc-number">3.</span> <span class="toc-text">构建Redis主镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建Redis副本镜像"><span class="toc-number">4.</span> <span class="toc-text">构建Redis副本镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建Redis后端集群"><span class="toc-number">5.</span> <span class="toc-text">构建Redis后端集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建Node容器"><span class="toc-number">6.</span> <span class="toc-text">创建Node容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#捕获应用日志"><span class="toc-number">7.</span> <span class="toc-text">捕获应用日志</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#遇到的问题"><span class="toc-number">8.</span> <span class="toc-text">遇到的问题</span></a></li></ol>
+		
+		</div>
+		
+		<p>本篇将构建如下镜像来支持部署多容器的应用</p>
+<ul>
+<li>Node容器，用来服务于Node应用，该容器会处于express网络下，链接到Redis容器</li>
+<li>Redis容器，用来保存和集群化应用状态，该容器会处于express网络下，链接到两个Redis副本容器，用于集群化应用状态</li>
+<li>日志容器，用于捕获应用日志</li>
+</ul>
+<a id="more"></a>
+<h3 id="构建nodejs镜像"><a href="#构建nodejs镜像" class="headerlink" title="构建nodejs镜像"></a>构建nodejs镜像</h3><p><strong>创建Node.js Dockerfile</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mkdir nodejs</span><br><span class="line">cd nodejs</span><br><span class="line">mkdir -p nodeapp</span><br><span class="line">cd nodeapp</span><br><span class="line">wget https://raw.githubusercontent.com/jamtur01/dockerbook-code/master/code/6/node/nodejs/nodeapp/package.json</span><br><span class="line">wget https://raw.githubusercontent.com/jamtur01/dockerbook-code/master/code/6/node/nodejs/nodeapp/server.js</span><br><span class="line">cd ..</span><br><span class="line">vim Dockerfile</span><br></pre></td></tr></table></figure>
+<p><strong>Dockerfile</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:14.04</span><br><span class="line">MAINTAINER flag0 &lt;root@flag0.com&gt;</span><br><span class="line">ENV REFRESHED_AT 2019-09-10</span><br><span class="line"></span><br><span class="line">RUN apt-get -yqq update</span><br><span class="line">RUN apt-get -y install npm wget curl </span><br><span class="line">RUN ln -s /usr/bin/nodejs /usr/bin/node</span><br><span class="line">RUN mkdir -p /var/log/nodeapp</span><br><span class="line"></span><br><span class="line">ADD nodeapp /opt/nodeapp/</span><br><span class="line">WORKDIR /opt/nodeapp</span><br><span class="line"></span><br><span class="line">RUN npm config set strict-ssl false</span><br><span class="line">RUN npm install</span><br><span class="line">RUN npm install -g n</span><br><span class="line">RUN n stable</span><br><span class="line"></span><br><span class="line">VOLUME [ &quot;/var/log/nodeapp&quot; ]</span><br><span class="line">EXPOSE 3000</span><br><span class="line"></span><br><span class="line">ENTRYPOINT [ &quot;node&quot;,&quot;server.js&quot; ]</span><br></pre></td></tr></table></figure>
+<p>默认安装的nodejs版本过老，无法支持<code>server.js</code>中的语法，所以我们这里使用<code>n stable</code>来安装最新版的nodejs</p>
+<p>其中<code>npm install</code>用来安装server.js运行所需的模块</p>
+<p><strong>构建Node.js镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t flag0/nodejs .</span><br></pre></td></tr></table></figure>
+<h3 id="构建Redis基础镜像"><a href="#构建Redis基础镜像" class="headerlink" title="构建Redis基础镜像"></a>构建Redis基础镜像</h3><p>Redis主镜像和副本镜像都是依照基础镜像来创建的。</p>
+<p><strong>创建Redis基础镜像 Dockerfile</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir redis_base</span><br><span class="line">cd redis_base</span><br><span class="line">vim Dockerfile</span><br></pre></td></tr></table></figure>
+<p><strong>Dockerfile</strong></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">14.04</span></span><br><span class="line"><span class="keyword">MAINTAINER</span> flag0 root@flag0.com</span><br><span class="line"><span class="keyword">ENV</span> REFRESHED_AT <span class="number">2019</span>-<span class="number">9</span>-<span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span> apt-get -y update</span><br><span class="line">RUN apt-get install -y software-properties-common python-software-properties</span><br><span class="line">RUN add-apt-repository ppa:chris-lea/redis-server</span><br><span class="line">RUN apt-get -y update</span><br><span class="line">RUN apt-get -y install redis-server redis-tools</span><br><span class="line"></span><br><span class="line">VOLUME ["/var/lib/redis","/var/log/redis/"]</span><br><span class="line">EXPOSE 6379</span><br><span class="line">CMD []</span><br></pre></td></tr></table></figure>
+<p>该Redis基础镜像安装了最新版本的Redis(从PPA库中进行安装，而不是使用ubuntu自带的较老的Redis包)</p>
+<p><strong>构建Redis 基础镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t flag0/redis .</span><br></pre></td></tr></table></figure>
+<h3 id="构建Redis主镜像"><a href="#构建Redis主镜像" class="headerlink" title="构建Redis主镜像"></a>构建Redis主镜像</h3><p><strong>创建Redis主服务的Dockerfile</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir redis_primary</span><br><span class="line">cd redis_primary</span><br><span class="line">vim Dockerfile</span><br></pre></td></tr></table></figure>
+<p><strong>Redis主镜像</strong></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> flag0/redis</span><br><span class="line"><span class="keyword">MAINTAINER</span> flag0 &lt;root@flag0.com&gt;</span><br><span class="line"><span class="keyword">ENV</span> REFRESHED_AT <span class="number">2019</span>-<span class="number">09</span>-<span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENTRYPOINT</span> ["redis-server","--logfile /var/log/redis/redis-server.log"]</span><br></pre></td></tr></table></figure>
+<p><strong>构建Redis主镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t flag0/redis_primary .</span><br></pre></td></tr></table></figure>
+<h3 id="构建Redis副本镜像"><a href="#构建Redis副本镜像" class="headerlink" title="构建Redis副本镜像"></a>构建Redis副本镜像</h3><p><strong>创建Redis副本镜像的Dockerfile</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir redis_replica</span><br><span class="line">cd redis_replica</span><br><span class="line">vim Dockerfile</span><br></pre></td></tr></table></figure>
+<p><strong>Redis副本镜像</strong></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> flag0/redis</span><br><span class="line"><span class="keyword">MAINTAINER</span> flag0 &lt;root@flag0.com&gt;</span><br><span class="line"><span class="keyword">ENV</span> REFRESHED_AT <span class="number">2019</span>-<span class="number">09</span>-<span class="number">10</span></span><br><span class="line"></span><br><span class="line">ENVTRYPOINT [<span class="string">"redis-server"</span>,<span class="string">"--logfile /var/log/redis/redis-replica.log"</span>,<span class="string">"--slaveof redis_primary 6379"</span>]</span><br></pre></td></tr></table></figure>
+<p><strong>构建Redis副本镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t flag0/redis_replica .</span><br></pre></td></tr></table></figure>
+<h3 id="构建Redis后端集群"><a href="#构建Redis后端集群" class="headerlink" title="构建Redis后端集群"></a>构建Redis后端集群</h3><p><strong>创建express网络</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create express</span><br></pre></td></tr></table></figure>
+<p><strong>运行Redis容器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -h redis_primary --net express --name redis_priary flag0/redis_primary</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-h 设置容器的主机名，使用其可以确保容器使用指定的主机名，并被本地的DNS服务正常解析</li>
+</ul>
+<p><strong>读取Redis主日志</strong></p>
+<p>Redis服务会将日志记录到一个文件而不是记录到标准输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm --volumes-from redis_primary ubuntu cat /var/log/redis/redis-server.log</span><br><span class="line"></span><br><span class="line">1:C 10 Sep 2019 04:24:53.310 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo</span><br><span class="line">1:C 10 Sep 2019 04:24:53.310 # Redis version=5.0.4, bits=64, commit=00000000, modified=0, pid=1, just started</span><br><span class="line">1:C 10 Sep 2019 04:24:53.310 # Configuration loaded</span><br><span class="line">1:M 10 Sep 2019 04:24:53.313 * Running mode=standalone, port=6379.</span><br><span class="line">1:M 10 Sep 2019 04:24:53.313 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.</span><br><span class="line">1:M 10 Sep 2019 04:24:53.313 # Server initialized</span><br><span class="line">1:M 10 Sep 2019 04:24:53.313 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add &apos;vm.overcommit_memory = 1&apos; to /etc/sysctl.conf and then reboot or run the command &apos;sysctl vm.overcommit_memory=1&apos; for this to take effect.</span><br><span class="line">1:M 10 Sep 2019 04:24:53.313 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command &apos;echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled&apos; as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.</span><br><span class="line">1:M 10 Sep 2019 04:24:53.313 * Ready to accept connections</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>--rm</code> 运行结束后自动删除容器</li>
+<li><code>--volume-from redis_primary</code>将redis_primary中的卷映射到新的redis日志容器中</li>
+</ul>
+<p><strong>创建Redis副本容器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -h redis_replical --name redis_replial --net express flag0/redis_replica</span><br></pre></td></tr></table></figure>
+<p><strong>查看Redis副本容器服务器日志</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm --volumes-from redis_replical ubuntu cat /var/log/redis/redis-replica.log</span><br><span class="line"></span><br><span class="line">1:C 10 Sep 2019 14:43:15.177 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo</span><br><span class="line">1:C 10 Sep 2019 14:43:15.177 # Redis version=5.0.4, bits=64, commit=00000000, modified=0, pid=1, just started</span><br><span class="line">1:C 10 Sep 2019 14:43:15.177 # Configuration loaded</span><br><span class="line">1:S 10 Sep 2019 14:43:15.179 * Running mode=standalone, port=6379.</span><br><span class="line">1:S 10 Sep 2019 14:43:15.179 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.</span><br><span class="line">1:S 10 Sep 2019 14:43:15.179 # Server initialized</span><br><span class="line">1:S 10 Sep 2019 14:43:15.179 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add &apos;vm.overcommit_memory = 1&apos; to /etc/sysctl.conf and then reboot or run the command &apos;sysctl vm.overcommit_memory=1&apos; for this to take effect.</span><br><span class="line">1:S 10 Sep 2019 14:43:15.179 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command &apos;echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled&apos; as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.</span><br><span class="line">1:S 10 Sep 2019 14:43:15.180 * Ready to accept connections</span><br><span class="line">1:S 10 Sep 2019 14:43:15.180 * Connecting to MASTER redis_primary:6379</span><br><span class="line">1:S 10 Sep 2019 14:43:15.190 * MASTER &lt;-&gt; REPLICA sync started</span><br><span class="line">1:S 10 Sep 2019 14:43:15.190 * Non blocking connect for SYNC fired the event.</span><br><span class="line">1:S 10 Sep 2019 14:43:15.191 * Master replied to PING, replication can continue...</span><br><span class="line">1:S 10 Sep 2019 14:43:15.191 * Partial resynchronization not possible (no cached master)</span><br><span class="line">1:S 10 Sep 2019 14:43:15.193 * Full resync from master: cd1a91d73c03c48a040716bfa98941b9cf31a2cb:406</span><br><span class="line">1:S 10 Sep 2019 14:43:15.272 * MASTER &lt;-&gt; REPLICA sync: receiving 176 bytes from master</span><br><span class="line">1:S 10 Sep 2019 14:43:15.272 * MASTER &lt;-&gt; REPLICA sync: Flushing old data</span><br><span class="line">1:S 10 Sep 2019 14:43:15.272 * MASTER &lt;-&gt; REPLICA sync: Loading DB in memory</span><br><span class="line">1:S 10 Sep 2019 14:43:15.273 * MASTER &lt;-&gt; REPLICA sync: Finished with success</span><br></pre></td></tr></table></figure>
+<p><strong>运行第二个Redis副本容器</strong></p>
+<p>为了确保万无一失我们加入另一个副本容器<code>redis_replica2</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -h redis_replica2 --name redis_replica2 --net express flag0/redis_replica</span><br></pre></td></tr></table></figure>
+<p><strong>第二个Redis副本容器的日志</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm --volumes-from redis_replica2 ubuntu cat /var/log/redis/redis-replica.log</span><br><span class="line"></span><br><span class="line">1:S 10 Sep 2019 02:21:42.516 * Connecting to MASTER redis_primary:6379</span><br><span class="line">1:S 10 Sep 2019 02:21:42.517 * MASTER &lt;-&gt; REPLICA sync started</span><br><span class="line">1:S 10 Sep 2019 02:21:42.517 * Non blocking connect for SYNC fired the event.</span><br><span class="line">1:S 10 Sep 2019 02:21:42.517 # Error condition on socket for SYNC: Connection reset by peer</span><br><span class="line">1:S 10 Sep 2019 02:21:43.519 * Connecting to MASTER redis_primary:6379</span><br><span class="line">1:S 10 Sep 2019 02:21:43.520 * MASTER &lt;-&gt; REPLICA sync started</span><br><span class="line">1:S 10 Sep 2019 02:21:43.520 * Non blocking connect for SYNC fired the event.</span><br><span class="line">1:S 10 Sep 2019 02:21:43.520 # Error condition on socket for SYNC: Connection reset by peer</span><br><span class="line">1:S 10 Sep 2019 02:21:44.522 * Connecting to MASTER redis_primary:6379</span><br><span class="line">1:S 10 Sep 2019 02:21:44.522 * MASTER &lt;-&gt; REPLICA sync started</span><br><span class="line">1:S 10 Sep 2019 02:21:44.523 * Non blocking connect for SYNC fired the event.</span><br><span class="line">1:S 10 Sep 2019 02:21:44.523 # Error condition on socket for SYNC: Connection reset by peer</span><br><span class="line">1:S 10 Sep 2019 02:21:45.524 * Connecting to MASTER redis_primary:6379</span><br><span class="line">1:S 10 Sep 2019 02:21:45.525 * MASTER &lt;-&gt; REPLICA sync started</span><br><span class="line">1:S 10 Sep 2019 02:21:45.525 * Non blocking connect for SYNC fired the event.</span><br><span class="line">1:S 10 Sep 2019 02:21:45.525 # Error condition on socket for SYNC: Connection reset by peer</span><br><span class="line">1:S 10 Sep 2019 02:21:46.528 * Connecting to MASTER redis_primary:6379</span><br><span class="line">1:S 10 Sep 2019 02:21:46.529 * MASTER &lt;-&gt; REPLICA sync started</span><br><span class="line">1:S 10 Sep 2019 02:21:46.529 * Non blocking connect for SYNC fired the event.</span><br><span class="line">1:S 10 Sep 2019 02:21:46.529 # Error condition on socket for SYNC: Connection reset by peer</span><br><span class="line">1:S 10 Sep 2019 02:21:47.531 * Connecting to MASTER redis_primary:6379</span><br><span class="line">1:S 10 Sep 2019 02:21:47.533 * MASTER &lt;-&gt; REPLICA sync started</span><br><span class="line">1:S 10 Sep 2019 02:21:47.533 * Non blocking connect for SYNC fired the event.</span><br><span class="line">1:S 10 Sep 2019 02:21:47.533 # Error condition on socket for SYNC: Connection reset by peer</span><br><span class="line">1:S 10 Sep 2019 02:21:48.555 * Connecting to MASTER redis_primary:6379</span><br><span class="line">1:S 10 Sep 2019 02:21:48.563 * MASTER &lt;-&gt; REPLICA sync started</span><br><span class="line">1:S 10 Sep 2019 02:21:48.563 * Non blocking connect for SYNC fired the event.</span><br><span class="line">1:S 10 Sep 2019 02:21:48.564 # Error condition on socket for SYNC: Connection reset by peer</span><br></pre></td></tr></table></figure>
+<h3 id="创建Node容器"><a href="#创建Node容器" class="headerlink" title="创建Node容器"></a>创建Node容器</h3><p><strong>运行Node.js容器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name nodeapp -p 3000:3000 --net express flag0/nodejs</span><br></pre></td></tr></table></figure>
+<p><strong>查看Nodeapp容器的日志</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker logs nodeapp</span><br><span class="line"></span><br><span class="line">Listening on port 3000</span><br></pre></td></tr></table></figure>
+<p>查看相应网页</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl http://127.0.0.1:3000</span><br><span class="line"></span><br><span class="line">&#123;&quot;status&quot;:&quot;ok&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p>正常启动</p>
+<h3 id="捕获应用日志"><a href="#捕获应用日志" class="headerlink" title="捕获应用日志"></a>捕获应用日志</h3><p>在生产环境中需要确保可以捕获日志并将日志保存到日志服务器，使用Logstash来完成</p>
+<p><strong>创建Logstash的Dockerfile</strong></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">14.04</span></span><br><span class="line"><span class="keyword">MAINTAINER</span> flag0 &lt;root@flag.com&gt;</span><br><span class="line"><span class="keyword">ENV</span> FEFRESHED_AT <span class="number">2019</span>-<span class="number">09</span>-<span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span> apt-get -y update</span><br><span class="line">RUN apt-get -y install wget</span><br><span class="line">RUN wget -O - http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add -</span><br><span class="line">RUN echo 'deb http://packages.elasticsearch.org/logstash/1.4/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash.list</span><br><span class="line">RUN apt-get -y update</span><br><span class="line">RUN apt-get -y install logstash</span><br><span class="line"></span><br><span class="line">ADD logstash.conf /etc/</span><br><span class="line">WORKDIR /opt/logstash</span><br><span class="line">ENTRYPOINT ["bin/logstash"]</span><br><span class="line">CMD ["--config=/etc/logstash.conf"]</span><br></pre></td></tr></table></figure>
+<p>Dockerfile创建了镜像并安装了Logstash，将logstash.conf文件使用ADD指令添加到etc目录</p>
+<p><strong>Logstash配置文件</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">input&#123;</span><br><span class="line">    file&#123;</span><br><span class="line">        type =&gt; &quot;syslog&quot;</span><br><span class="line">        path =&gt;[&quot;/var/log/nodeapp/nodeapp.log&quot;,&quot;/var/log/redis/redis-server.log&quot;]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">output&#123;</span><br><span class="line">    stdout&#123;</span><br><span class="line">        codec =&gt; rubydebug</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该配置文件功能为</p>
+<p><code>input</code>其监控两个文件，即<code>/var/log/nodeapp/nodeapp.log</code>和<code>/var/log/redis/redis-server.log</code>Logstash会一直监控这两个文件，将更新的内容发送给Logstash</p>
+<p><code>output</code>部分，接收所有的Logstash输入的内容并将其输出到标准输出上。实际项目中，一般会将Logstash配置为输出到Elasticsearch集群或者其他目的地。</p>
+<p><strong>构建Logstash镜像</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t flag0/logstash .</span><br></pre></td></tr></table></figure>
+<p><strong>启动Logstash容器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name logstash --volumes-from redis_primary --volumes-from nodeapp flag0/logstash</span><br></pre></td></tr></table></figure>
+<p><strong>查看logstash容器的日志</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker logs -f logstash</span><br><span class="line">&#123;:timestamp=&gt;&quot;2019-09-11T01:20:36.029000+0000&quot;, :message=&gt;&quot;Using milestone 2 input plugin &apos;file&apos;. This plugin should be stable, but if you see strange behavior, please let us know! For more information on plugin milestones, see http://logstash.net/docs/1.4.5/plugin-milestones&quot;, :level=&gt;:warn&#125;</span><br></pre></td></tr></table></figure>
+<p>在浏览器中刷新Web应用，产生一个新的日志事件，能在logstash容器的输出中看到这个事件。</p>
+<p><strong>Logstash的中的Node事件</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">       &quot;message&quot; =&gt; &quot;::ffff:112.54.84.218 - - [11/Sep/2019:01:22:30 +0000] \&quot;GET / HTTP/1.1\&quot; 200 15 \&quot;-\&quot; \&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/18.17763\&quot;&quot;,</span><br><span class="line">      &quot;@version&quot; =&gt; &quot;1&quot;,</span><br><span class="line">    &quot;@timestamp&quot; =&gt; &quot;2019-09-11T01:22:30.755Z&quot;,</span><br><span class="line">          &quot;type&quot; =&gt; &quot;syslog&quot;,</span><br><span class="line">          &quot;host&quot; =&gt; &quot;e805867dff5d&quot;,</span><br><span class="line">          &quot;path&quot; =&gt; &quot;/var/log/nodeapp/nodeapp.log&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>构建成功</p>
+<h3 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h3><p><strong>node版本过低，运行<code>node service.js</code>报出语法错误</strong></p>
+<p><img src="\img\images\Docker构建多容器应用栈Nodejs+Redis\1568165743488.png" alt="1568165743488"></p>
+<p>解决办法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RUN npm install -g n</span><br><span class="line">RUN n stable</span><br></pre></td></tr></table></figure>
+<p>使用npm安装n模块进行更新</p>
+<p><code>n stable</code>会安装最新版本的nodejs</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/docker/">docker</a><a href="/tags/nodejs/">nodejs</a><a href="/tags/redis/">redis</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://flag0.com/2019/09/11/Docker构建多容器应用栈Nodejs-Redis/" data-title="Docker构建多容器应用栈Nodejs+Redis | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2019/09/10/CVE-2019-0708复现-基于MSF/"  title="CVE_2019_0708复现-基于MSF">
+ <strong>下一篇：</strong><br/> 
+ <span>CVE_2019_0708复现-基于MSF
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#构建nodejs镜像"><span class="toc-number">1.</span> <span class="toc-text">构建nodejs镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建Redis基础镜像"><span class="toc-number">2.</span> <span class="toc-text">构建Redis基础镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建Redis主镜像"><span class="toc-number">3.</span> <span class="toc-text">构建Redis主镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建Redis副本镜像"><span class="toc-number">4.</span> <span class="toc-text">构建Redis副本镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建Redis后端集群"><span class="toc-number">5.</span> <span class="toc-text">构建Redis后端集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建Node容器"><span class="toc-number">6.</span> <span class="toc-text">创建Node容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#捕获应用日志"><span class="toc-number">7.</span> <span class="toc-text">捕获应用日志</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#遇到的问题"><span class="toc-number">8.</span> <span class="toc-text">遇到的问题</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>14</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>15</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/redis/" title="redis">redis<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nodejs/" title="nodejs">nodejs<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.cnblogs.com/test404" target="_blank" title="胖虎">胖虎</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://p0desta.com" target="_blank" title="p0desta">p0desta</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.test407.cn" target="_blank" title="薯片博客">薯片博客</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://alem0n.github.io" target="_blank" title="lem0n">lem0n</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Rise and rise again until lambs become lions <br/>
+			Everyone can cook, but only those who dare to try can become the real chef.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/flag0" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:root@flag0.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2019 
+		
+		<a href="/about" target="_blank" title="GetFlag">GetFlag</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
