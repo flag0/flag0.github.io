@@ -11,13 +11,13 @@
     
 
     
-    <meta name="description" content="基础分类反射型xss 发出带xss攻击代码的请求，作为输入提交到服务端，服务端响应后，在响应内容中出现xss攻击代码，最终被浏览器执行，整个过程像一次反射。 存储型xss 提交的xss攻击代码，会被存储的服务端，下次请求该页面时会被显示出来。 DOM型xss 攻击者提交的攻击代码并未显式的包含在web服务器的响应页面中，但会被页面中的js脚本以变量的形式来访问到，导致浏览器在渲染页面执行js脚本的">
+    <meta name="description" content="反射型xss靶场刷题记录">
 <meta name="keywords" content="xss">
 <meta property="og:type" content="article">
 <meta property="og:title" content="xss靶场刷题笔记">
 <meta property="og:url" content="http://flag0.com/2019/09/17/xss靶场刷题笔记/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
-<meta property="og:description" content="基础分类反射型xss 发出带xss攻击代码的请求，作为输入提交到服务端，服务端响应后，在响应内容中出现xss攻击代码，最终被浏览器执行，整个过程像一次反射。 存储型xss 提交的xss攻击代码，会被存储的服务端，下次请求该页面时会被显示出来。 DOM型xss 攻击者提交的攻击代码并未显式的包含在web服务器的响应页面中，但会被页面中的js脚本以变量的形式来访问到，导致浏览器在渲染页面执行js脚本的">
+<meta property="og:description" content="反射型xss靶场刷题记录">
 <meta property="og:locale" content="cn-zh">
 <meta property="og:image" content="http://flag0.com/img/images/xss/ct_htmltree.gif">
 <meta property="og:image" content="http://flag0.com/img/images/xss/1566117473054.png">
@@ -56,10 +56,10 @@
 <meta property="og:image" content="http://flag0.com/img/images/xss/1566111680101.png">
 <meta property="og:image" content="http://flag0.com/img/images/xss/1566111921044.png">
 <meta property="og:image" content="http://flag0.com/img/images/xss/1566111956810.png">
-<meta property="og:updated_time" content="2019-09-17T10:55:41.664Z">
+<meta property="og:updated_time" content="2019-09-17T10:59:08.648Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="xss靶场刷题笔记">
-<meta name="twitter:description" content="基础分类反射型xss 发出带xss攻击代码的请求，作为输入提交到服务端，服务端响应后，在响应内容中出现xss攻击代码，最终被浏览器执行，整个过程像一次反射。 存储型xss 提交的xss攻击代码，会被存储的服务端，下次请求该页面时会被显示出来。 DOM型xss 攻击者提交的攻击代码并未显式的包含在web服务器的响应页面中，但会被页面中的js脚本以变量的形式来访问到，导致浏览器在渲染页面执行js脚本的">
+<meta name="twitter:description" content="反射型xss靶场刷题记录">
 <meta name="twitter:image" content="http://flag0.com/img/images/xss/ct_htmltree.gif">
 
     
@@ -123,7 +123,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2019-09-17T10:55:41.000Z" itemprop="datePublished"> Published 2019-09-17</time>
+    <time datetime="2019-09-17T10:59:08.000Z" itemprop="datePublished"> Published 2019-09-17</time>
     
   </p>
 </header>
@@ -136,13 +136,14 @@
 		
 		</div>
 		
-		<h3 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h3><h4 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h4><p><strong>反射型xss</strong></p>
+		<p>反射型xss靶场刷题记录</p>
+<a id="more"></a>
+<h3 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h3><h4 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h4><p><strong>反射型xss</strong></p>
 <p>发出带xss攻击代码的请求，作为输入提交到服务端，服务端响应后，在响应内容中出现xss攻击代码，最终被浏览器执行，整个过程像一次反射。</p>
 <p><strong>存储型xss</strong></p>
 <p>提交的xss攻击代码，会被存储的服务端，下次请求该页面时会被显示出来。</p>
 <p><strong>DOM型xss</strong></p>
 <p>攻击者提交的攻击代码并未显式的包含在web服务器的响应页面中，但会被页面中的js脚本以变量的形式来访问到，导致浏览器在渲染页面执行js脚本的过程中，通过DOM操作执行变量所代表的恶意脚本。</p>
-<a id="more"></a>
 <p><img src="\img\images\xss\ct_htmltree.gif" alt="HTML DOM Node Tree"></p>
 <h4 id="危害"><a href="#危害" class="headerlink" title="危害"></a>危害</h4><ul>
 <li>钓鱼，获取用户账号，密码</li>
@@ -430,15 +431,15 @@
 			
 		
 			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
 			
 		
 			
@@ -462,11 +463,15 @@
 			
 		
 			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
 			
 		
 			
@@ -482,10 +487,6 @@
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/dockerfile/" title="dockerfile">dockerfile<sup>1</sup></a></li>
 			
 		
@@ -494,11 +495,11 @@
 			
 		
 			
-				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
+				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/nodejs/" title="nodejs">nodejs<sup>1</sup></a></li>
+				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
 			
 		
 		</ul>
