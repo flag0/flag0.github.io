@@ -62,7 +62,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -101,14 +101,14 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2019-09-20T15:57:55.000Z" itemprop="datePublished"> Published 2019-09-20</time>
+    <time datetime="2019-09-20T15:57:55.000Z" itemprop="datePublished"> 发表于 2019-09-20</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目录</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#弱类型比较缺陷"><span class="toc-number">1.</span> <span class="toc-text">== 弱类型比较缺陷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱类型绕过switch"><span class="toc-number">2.</span> <span class="toc-text">弱类型绕过switch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱类型绕过md5-hash比较缺陷"><span class="toc-number">3.</span> <span class="toc-text">弱类型绕过md5 hash比较缺陷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱类型绕过json数据比较"><span class="toc-number">4.</span> <span class="toc-text">弱类型绕过json数据比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱类型绕过array-search"><span class="toc-number">5.</span> <span class="toc-text">弱类型绕过array_search</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱类型绕过序列化数据比较"><span class="toc-number">6.</span> <span class="toc-text">弱类型绕过序列化数据比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数组绕过strcmp函数"><span class="toc-number">7.</span> <span class="toc-text">数组绕过strcmp函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数组绕过md5、sha1、base64-decode"><span class="toc-number">8.</span> <span class="toc-text">数组绕过md5、sha1、base64_decode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用md5碰撞绕过强制类型转换后的强类型比较"><span class="toc-number">9.</span> <span class="toc-text">使用md5碰撞绕过强制类型转换后的强类型比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-number">10.</span> <span class="toc-text">参考资料</span></a></li></ol>
 		
@@ -232,6 +232,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2019/09/22/深思杯预选赛Writeup/" title="深思杯线上预选赛Writeup">
+  <strong>上一篇：</strong><br/>
+  <span>
+  深思杯线上预选赛Writeup</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2019/09/18/redis非授权访问/"  title="redis非授权访问">
@@ -248,17 +256,17 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目录</strong>
  
  <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#弱类型比较缺陷"><span class="toc-number">1.</span> <span class="toc-text">== 弱类型比较缺陷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱类型绕过switch"><span class="toc-number">2.</span> <span class="toc-text">弱类型绕过switch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱类型绕过md5-hash比较缺陷"><span class="toc-number">3.</span> <span class="toc-text">弱类型绕过md5 hash比较缺陷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱类型绕过json数据比较"><span class="toc-number">4.</span> <span class="toc-text">弱类型绕过json数据比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱类型绕过array-search"><span class="toc-number">5.</span> <span class="toc-text">弱类型绕过array_search</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱类型绕过序列化数据比较"><span class="toc-number">6.</span> <span class="toc-text">弱类型绕过序列化数据比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数组绕过strcmp函数"><span class="toc-number">7.</span> <span class="toc-text">数组绕过strcmp函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数组绕过md5、sha1、base64-decode"><span class="toc-number">8.</span> <span class="toc-text">数组绕过md5、sha1、base64_decode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用md5碰撞绕过强制类型转换后的强类型比较"><span class="toc-number">9.</span> <span class="toc-text">使用md5碰撞绕过强制类型转换后的强类型比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-number">10.</span> <span class="toc-text">参考资料</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -267,7 +275,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>18</sup></a></li>
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>19</sup></a></li>
 		  
 		
 		  
@@ -292,7 +300,15 @@
 			
 		
 			
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>3</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/redis/" title="redis">redis<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>3</sup></a></li>
 			
 		
 			
@@ -308,10 +324,6 @@
 			
 		
 			
-				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
 			
 		
@@ -320,15 +332,15 @@
 			
 		
 			
-				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
 			
 		
 			
@@ -344,10 +356,6 @@
 			
 		
 			
-				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
 			
 		
@@ -360,7 +368,7 @@
 			
 		
 			
-				<li><a href="/tags/TensorFlow/" title="TensorFlow">TensorFlow<sup>1</sup></a></li>
+				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -609,7 +617,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

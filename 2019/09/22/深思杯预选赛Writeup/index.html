@@ -1,0 +1,662 @@
+
+ <!DOCTYPE HTML>
+<html lang="cn-zh">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>深思杯线上预选赛Writeup | GetFlag&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="GetFlag">
+    
+
+    
+    <meta name="description" content="上午比赛的时候，平台被ddos攻击，导致上午比赛推迟到了下午，但是上午的时候也下载下来了几道题，做了出来，但是下午的时候直接换题了，Writeup整理的时候我把上午的题目也整理了进去。">
+<meta name="keywords" content="Writeup,山东省大学生信息安全竞赛,深思杯">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深思杯线上预选赛Writeup">
+<meta property="og:url" content="http://flag0.com/2019/09/22/深思杯预选赛Writeup/index.html">
+<meta property="og:site_name" content="GetFlag&#39;s Blog">
+<meta property="og:description" content="上午比赛的时候，平台被ddos攻击，导致上午比赛推迟到了下午，但是上午的时候也下载下来了几道题，做了出来，但是下午的时候直接换题了，Writeup整理的时候我把上午的题目也整理了进去。">
+<meta property="og:locale" content="cn-zh">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569067733587.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569068145289.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569068807374.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569068882181.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569068920551.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569068982493.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569069194027.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569069500854.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569069874719.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569058030089.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569058499875.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569058650785.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569065476811.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569066431815.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569076474882.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569076737486.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569076797263.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569077339151.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569077390108.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569081225235.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569081454141.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569136757380.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569136879541.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569139451057.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569139669317.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569139719838.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569139780803.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569139924480.png">
+<meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569141879728.png">
+<meta property="og:updated_time" content="2019-09-22T08:48:37.659Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深思杯线上预选赛Writeup">
+<meta name="twitter:description" content="上午比赛的时候，平台被ddos攻击，导致上午比赛推迟到了下午，但是上午的时候也下载下来了几道题，做了出来，但是下午的时候直接换题了，Writeup整理的时候我把上午的题目也整理了进去。">
+<meta name="twitter:image" content="http://flag0.com/img/images/深思杯Writeup/1569067733587.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:flag0.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2019/09/22/深思杯预选赛Writeup/" title="深思杯线上预选赛Writeup" itemprop="url">深思杯线上预选赛Writeup</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2019-09-22T08:48:37.000Z" itemprop="datePublished"> 发表于 2019-09-22</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#上午场"><span class="toc-number">1.</span> <span class="toc-text">上午场</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-pingping"><span class="toc-number">1.1.</span> <span class="toc-text">Misc-pingping</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-out-jpg"><span class="toc-number">1.2.</span> <span class="toc-text">Misc-out.jpg</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crypto-RSA"><span class="toc-number">1.3.</span> <span class="toc-text">Crypto-RSA</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正式比赛"><span class="toc-number">2.</span> <span class="toc-text">正式比赛</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-只有你能看到的注入"><span class="toc-number">2.1.</span> <span class="toc-text">Web-只有你能看到的注入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#sqlmap"><span class="toc-number">2.1.1.</span> <span class="toc-text">sqlmap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手工注入"><span class="toc-number">2.1.2.</span> <span class="toc-text">手工注入</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-WEBX"><span class="toc-number">2.2.</span> <span class="toc-text">Web-WEBX</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-瞅啥"><span class="toc-number">2.3.</span> <span class="toc-text">Misc-瞅啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-misc1"><span class="toc-number">2.4.</span> <span class="toc-text">Misc-misc1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crypto-easy-rsa"><span class="toc-number">2.5.</span> <span class="toc-text">Crypto-easy_rsa</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reverse-easy-re"><span class="toc-number">2.6.</span> <span class="toc-text">Reverse-easy_re</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>上午比赛的时候，平台被ddos攻击，导致上午比赛推迟到了下午，但是上午的时候也下载下来了几道题，做了出来，但是下午的时候直接换题了，Writeup整理的时候我把上午的题目也整理了进去。</p>
+<a id="more"></a>
+<h2 id="上午场"><a href="#上午场" class="headerlink" title="上午场"></a>上午场</h2><h3 id="Misc-pingping"><a href="#Misc-pingping" class="headerlink" title="Misc-pingping"></a>Misc-pingping</h3><p>用wireshark打开，根据题目，我们需要追踪ping，也就是icmp包</p>
+<p><img src="\img\images\深思杯Writeup\1569067733587.png" alt="1569067733587"></p>
+<p>在过滤器中直接输入icmp，可以看到info中的ttl时间不一，刚开始以为flag字符串就存在于其中，后来发现这是一个zip压缩包的数据，flag.txt在压缩包中。</p>
+<p>用tshark提取出icmp包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tshark -r flag2.pcapng -Y &quot;icmp&quot; &gt; icmp.txt</span><br></pre></td></tr></table></figure>
+<p>然后余下的操作用python脚本来完成(此处有一个坑点就是，ttl=0时，需要将其转换成00，因为在十六进制中0要单独占一个字节)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line">f = open(<span class="string">"icmp.txt"</span>).readlines()</span><br><span class="line">z = open(<span class="string">"zip.zip"</span>,<span class="string">"wb"</span>)</span><br><span class="line">flag = <span class="string">""</span>.encode()</span><br><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> f:</span><br><span class="line">    ttl = c.rindex(<span class="string">"="</span>)</span><br><span class="line">    flag_char =  chr(int(c[ttl+<span class="number">1</span>:].replace(<span class="string">"\n"</span>,<span class="string">""</span>)))</span><br><span class="line">    <span class="keyword">if</span> flag_char == <span class="string">'0'</span>:</span><br><span class="line">        flag_char = <span class="string">'00'</span></span><br><span class="line">    flag += flag_char</span><br><span class="line"></span><br><span class="line">z.write(flag)</span><br><span class="line">z.close()</span><br></pre></td></tr></table></figure>
+<p>完成后打开压缩包即可看到flag</p>
+<p><img src="\img\images\深思杯Writeup\1569068145289.png" alt="1569068145289"></p>
+<h3 id="Misc-out-jpg"><a href="#Misc-out-jpg" class="headerlink" title="Misc-out.jpg"></a>Misc-out.jpg</h3><p>使用binwalk查看文件</p>
+<p><img src="\img\images\深思杯Writeup\1569068807374.png" alt="1569068807374"></p>
+<p>发现图片里隐藏了另外一张图片</p>
+<p>这里-e参数并不能提取，不清楚原因，使用dd命令提取</p>
+<p><img src="\img\images\深思杯Writeup\1569068882181.png" alt="1569068882181"></p>
+<p>提取后可以正常打开文件</p>
+<p><img src="\img\images\深思杯Writeup\1569068920551.png" alt="1569068920551"></p>
+<p>使用Stegsolve.jar打开图片</p>
+<p><img src="\img\images\深思杯Writeup\1569068982493.png" alt="1569068982493"></p>
+<p>发现二维码，扫码出来社会主义核心价值观编码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">诚信自由法治爱国爱国诚信民主民主诚信自由平等敬业友善平等友善平等友善法治友善爱国法治爱国爱国诚信民主民主诚信自由平等爱国平等敬业友善自由诚信自由法治爱国爱国友善平等民主诚信自由自由诚信民主友善自由诚信民主诚信富强友善爱国公正友善平等富强敬业民主友善爱国友善敬业友善平等友善公正爱国民主公正公正公正诚信文明公正民主公正法治文明富强公正敬业法治和谐文明富强公正公正公正友善公正公正民主公正法治法治诚信民主和谐敬业和谐自由公正平等和谐文明和谐平等公正和谐公正和谐和谐平等公正文明和谐民主和谐自由和谐爱国和谐平等公正民主和谐文明和谐富强和谐公正和谐法治公正自由和谐和谐公正自由和谐爱国和谐和谐公正文明和谐自由和谐平等公正文明和谐富强和谐自由和谐法治和谐民主公正文明法治诚信和谐</span><br></pre></td></tr></table></figure>
+<p>这里使用在线解码<code>https://z.duoluosb.com/</code></p>
+<p><img src="\img\images\深思杯Writeup\1569069194027.png" alt="1569069194027"></p>
+<h3 id="Crypto-RSA"><a href="#Crypto-RSA" class="headerlink" title="Crypto-RSA"></a>Crypto-RSA</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">n= 544187306850902797629107353619267427694837163600853983242783</span><br><span class="line">e= 39293</span><br><span class="line">c= 439254895818320413408827022398053685867343267971712332011972</span><br><span class="line">m=???</span><br></pre></td></tr></table></figure>
+<p>大因数分解n</p>
+<p>这里使用在线网站<code>http://factordb.com/</code>进行分解，这里比较奇怪分解出来是三个</p>
+<p><img src="\img\images\深思杯Writeup\1569069500854.png" alt="1569069500854"></p>
+<p>修改下脚本，正常是<code>p*q</code>这里用<code>p1 * p2 * p3</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">n= <span class="number">544187306850902797629107353619267427694837163600853983242783</span></span><br><span class="line">e= <span class="number">39293</span></span><br><span class="line">c= <span class="number">439254895818320413408827022398053685867343267971712332011972</span></span><br><span class="line"></span><br><span class="line">p = [<span class="number">694415063702720454699679</span>, <span class="number">67724172605733871</span>, <span class="number">11571390939636959887</span>]</span><br><span class="line">phi = (p[<span class="number">0</span>] - <span class="number">1</span>) * (p[<span class="number">1</span>] - <span class="number">1</span>) * (p[<span class="number">2</span>] - <span class="number">1</span>)</span><br><span class="line">d = inverse(e, phi)</span><br><span class="line">m = pow(c, d, n)</span><br><span class="line">print(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\深思杯Writeup\1569069874719.png" alt="1569069874719"></p>
+<p>运行输出flag</p>
+<h2 id="正式比赛"><a href="#正式比赛" class="headerlink" title="正式比赛"></a>正式比赛</h2><h3 id="Web-只有你能看到的注入"><a href="#Web-只有你能看到的注入" class="headerlink" title="Web-只有你能看到的注入"></a>Web-只有你能看到的注入</h3><p>拿了个三血</p>
+<h4 id="sqlmap"><a href="#sqlmap" class="headerlink" title="sqlmap"></a>sqlmap</h4><p>注册登陆后，用burpsuite抓包，sqlmap<img src="\img\images\深思杯Writeup\1569058030089.png" alt="1569058030089"></p>
+<p>注入点就是登陆后的输入框</p>
+<p><img src="\img\images\深思杯Writeup\1569058499875.png" alt="1569058499875"></p>
+<p>然后sqlmap一把梭，根据直接<code>load_file()</code>读题目给出的文件。</p>
+<p><img src="\img\images\深思杯Writeup\1569058650785.png" alt="1569058650785"></p>
+<h4 id="手工注入"><a href="#手工注入" class="headerlink" title="手工注入"></a>手工注入</h4><p>这里是insert into注入</p>
+<p>payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag0&apos;+ascii(substr(load_file(&apos;/ctf/flag&apos;),1,1))+&apos;1</span><br></pre></td></tr></table></figure>
+<p>会把回显的ascii码显示到页面上</p>
+<p><img src="\img\images\深思杯Writeup\1569065476811.png" alt="1569065476811"></p>
+<h3 id="Web-WEBX"><a href="#Web-WEBX" class="headerlink" title="Web-WEBX"></a>Web-WEBX</h3><p>这个题目和2019西湖论剑breakout题目相似度非常高，大概思路是通过投稿页面xss，然后通过提交建议页面把包含xss payload的页面提交，提交建议页面同样有一个md5截断验证，绕过后提交xss payload，xss payload中构造admin.php页面注入(感觉这里有脑洞)，将注入成功的值访问带到服务器上。</p>
+<p>可能就是因为这个注入，比赛期间并没有人做出这道题，而我是卡在了怎么绕xss这里。</p>
+<p><strong>题目hint</strong></p>
+<p><code>xss(iframe)+sqli(/admin.php?id=)=flag</code></p>
+<p><strong>比赛运维赛后给出的xss payload(不包含绕过)</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iframe=<span class="built_in">document</span>.createElement(<span class="string">"iframe"</span>);iframe.src=<span class="string">"/admin.php?id=-999 union select 1,2,flagg from flag"</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>md5截断验证脚本</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">md5</span><span class="params">(key)</span>:</span></span><br><span class="line">    m = hashlib.md5()</span><br><span class="line">    m.update(key.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">    <span class="keyword">return</span> m.hexdigest()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1000000000</span>):</span><br><span class="line">    <span class="keyword">if</span> md5(str(i))[<span class="number">0</span>:<span class="number">6</span>] == <span class="string">'ba4aee'</span>:</span><br><span class="line">        print(i)</span><br><span class="line">        <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\深思杯Writeup\1569066431815.png" alt="1569066431815"></p>
+<p>环境在比赛结束后几分钟就关掉了，一点也不友好，导致赛后也没有复现。</p>
+<h3 id="Misc-瞅啥"><a href="#Misc-瞅啥" class="headerlink" title="Misc-瞅啥"></a>Misc-瞅啥</h3><p>用binwalk提取出压缩包</p>
+<p><img src="\img\images\深思杯Writeup\1569076474882.png" alt="1569076474882"></p>
+<p>发现压缩包需要密码</p>
+<p>用winhex修改rabbit.png的高度</p>
+<p><img src="\img\images\深思杯Writeup\1569076737486.png" alt="1569076737486"></p>
+<p>可以看到密码</p>
+<p><img src="\img\images\深思杯Writeup\1569076797263.png" alt="1569076797263"></p>
+<p>该密码就是压缩包的密码</p>
+<p>打开docx</p>
+<p>ctrl + a 右键菜单-&gt;文字 去掉隐藏文字勾选</p>
+<p><img src="\img\images\深思杯Writeup\1569077339151.png" alt="1569077339151"></p>
+<p>出现flag</p>
+<p><img src="\img\images\深思杯Writeup\1569077390108.png" alt="1569077390108"></p>
+<h3 id="Misc-misc1"><a href="#Misc-misc1" class="headerlink" title="Misc-misc1"></a>Misc-misc1</h3><p>用wireshark打开流量包，在过滤器中输入http</p>
+<p><img src="\img\images\深思杯Writeup\1569081225235.png" alt="1569081225235"></p>
+<p>发现是盲注数据包</p>
+<p>用tshark提取http协议的数据包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tshark -r misc.pcapng -Y &quot;http&quot; &gt; http.txt</span><br></pre></td></tr></table></figure>
+<p>通过分析流量包可以发现，flag被盲注了出来</p>
+<p>将提取出来的数据包文件，写python脚本来分析出盲注数据每一位的正确的ASCII码，并在最后将其转换成字符</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line">f = open(<span class="string">"http.txt"</span>,<span class="string">"r"</span>)</span><br><span class="line">lines = f.readlines()</span><br><span class="line">s = open(<span class="string">"c.txt"</span>,<span class="string">"w"</span>)</span><br><span class="line">datas = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">    <span class="keyword">if</span>(<span class="string">"flag"</span> <span class="keyword">in</span> line):</span><br><span class="line">        t = urllib.parse.unquote(line)</span><br><span class="line">        a = re.search(<span class="string">r"limit 0,1\),(.+?),1\)\)=(.+?)#"</span>,t)</span><br><span class="line">        key = int(a.group(<span class="number">1</span>))</span><br><span class="line">        value = int(a.group(<span class="number">2</span>))</span><br><span class="line">        datas[key]=value</span><br><span class="line">flag = <span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> datas.values():</span><br><span class="line">    flag += chr(value)</span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure>
+<p>这里使用字典的方式来判断正确的字符ascii码，每一位的最后一个尝试的就是正确的flag，利用字典key不重复的特性，来达到保留每一位最后一个值的目的</p>
+<p>运行脚本，输出flag</p>
+<p><img src="\img\images\深思杯Writeup\1569081454141.png" alt="1569081454141"></p>
+<h3 id="Crypto-easy-rsa"><a href="#Crypto-easy-rsa" class="headerlink" title="Crypto-easy_rsa"></a>Crypto-easy_rsa</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">n=0xEFF76062D52A7D4927DF587FBBC293CF9A622F56E854055D6A30DCF77C9B7591</span><br><span class="line">e=0x10001</span><br><span class="line">c=0x6cd55a2bbb49dfd2831e34b76cb5bdfad34418a4be96180b618581e9b6319f86</span><br></pre></td></tr></table></figure>
+<p>进行十六进制转十进制后，用在线大数分解即可，和上午思路一样，只不过多了一个十六进制转十进制</p>
+<p>十六进制转十进制</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; n = &quot;0xEFF76062D52A7D4927DF587FBBC293CF9A622F56E854055D6A30DCF77C9B7591&quot;</span><br><span class="line">&gt;&gt;&gt; int(n,16)</span><br><span class="line">108539847268573990275234024354672437246525085076605516960320005722741589898641L</span><br></pre></td></tr></table></figure>
+<p>用在线网站进行大数分解</p>
+<p><img src="\img\images\深思杯Writeup\1569136757380.png" alt="1569136757380"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">n = <span class="string">"0xEFF76062D52A7D4927DF587FBBC293CF9A622F56E854055D6A30DCF77C9B7591"</span></span><br><span class="line">e = <span class="string">"0x10001"</span></span><br><span class="line">c = <span class="string">"0x6cd55a2bbb49dfd2831e34b76cb5bdfad34418a4be96180b618581e9b6319f86"</span></span><br><span class="line"></span><br><span class="line">n = int(n,<span class="number">16</span>)</span><br><span class="line">e = int(e,<span class="number">16</span>)</span><br><span class="line">c = int(c,<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">p = [<span class="number">325593180411801742356727264127253758939</span>,<span class="number">333360321402603178263879595968004169219</span>]</span><br><span class="line"></span><br><span class="line">phi = (p[<span class="number">0</span>] - <span class="number">1</span>) * (p[<span class="number">1</span>] - <span class="number">1</span>)</span><br><span class="line">d = inverse(e, phi)</span><br><span class="line">m = pow(c, d, n)</span><br><span class="line">print(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
+<p>运行结果</p>
+<p><img src="\img\images\深思杯Writeup\1569136879541.png" alt="1569136879541"></p>
+<h3 id="Reverse-easy-re"><a href="#Reverse-easy-re" class="headerlink" title="Reverse-easy_re"></a>Reverse-easy_re</h3><p>感谢崂山校区的小伙伴的帮助，让我这个re小萌新也有机会可以复现题目</p>
+<p>首先用ida打开<code>re1.exe</code></p>
+<p>用<code>View-&gt;Open subviews-&gt;Strings</code>搜索所有字符串(或者按Shift+F12)</p>
+<p><img src="\img\images\深思杯Writeup\1569139451057.png" alt="1569139451057"></p>
+<p>发现这里有个假的flag，不必理会</p>
+<p><img src="\img\images\深思杯Writeup\1569139669317.png" alt="1569139669317"></p>
+<p>双击right，按x交叉引用，找到程序中的位置</p>
+<p><img src="\img\images\深思杯Writeup\1569139719838.png" alt="1569139719838"></p>
+<p>找到其位置，按F5查看生成的伪代码</p>
+<p><img src="\img\images\深思杯Writeup\1569139780803.png" alt="1569139780803"></p>
+<p>发现其对存储用户输入数据的数组<code>byte_40336C</code>进行了+1与6异或的操作，并且最后和<code>unk_402124</code>中的数据进行比较</p>
+<p><img src="\img\images\深思杯Writeup\1569139924480.png" alt="1569139924480"></p>
+<p>根据其写出对应代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line">flag_list = [<span class="number">0x78</span>,<span class="number">0x49</span>,<span class="number">0x72</span>,<span class="number">0x43</span>,<span class="number">0x6A</span>,<span class="number">0x7E</span>,<span class="number">0x3C</span>,<span class="number">0x72</span>,<span class="number">0x7C</span>,<span class="number">0x32</span>,<span class="number">0x74</span>,<span class="number">0x57</span>,<span class="number">0x73</span>,<span class="number">0x76</span>,<span class="number">0x33</span>,<span class="number">0x50</span>,<span class="number">0x74</span>,<span class="number">0x49</span>,<span class="number">0x7F</span>,<span class="number">0x7A</span>,<span class="number">0x6E</span>,<span class="number">0x64</span>,<span class="number">0x6B</span>,<span class="number">0x61</span>]</span><br><span class="line">flag_list.reverse()</span><br><span class="line">flag = <span class="string">""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> flag_list:</span><br><span class="line">    c = (c ^ <span class="number">6</span>) <span class="number">-1</span></span><br><span class="line">    flag += chr(c)</span><br><span class="line"></span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure>
+<p>成功输出flag</p>
+<p><img src="\img\images\深思杯Writeup\1569141879728.png" alt="1569141879728"></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Writeup/">Writeup</a><a href="/tags/山东省大学生信息安全竞赛/">山东省大学生信息安全竞赛</a><a href="/tags/深思杯/">深思杯</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://flag0.com/2019/09/22/深思杯预选赛Writeup/" data-title="深思杯线上预选赛Writeup | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2019/09/20/php弱类型/"  title="php弱类型、强类型总结">
+ <strong>下一篇：</strong><br/> 
+ <span>php弱类型、强类型总结
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#上午场"><span class="toc-number">1.</span> <span class="toc-text">上午场</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-pingping"><span class="toc-number">1.1.</span> <span class="toc-text">Misc-pingping</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-out-jpg"><span class="toc-number">1.2.</span> <span class="toc-text">Misc-out.jpg</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crypto-RSA"><span class="toc-number">1.3.</span> <span class="toc-text">Crypto-RSA</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正式比赛"><span class="toc-number">2.</span> <span class="toc-text">正式比赛</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-只有你能看到的注入"><span class="toc-number">2.1.</span> <span class="toc-text">Web-只有你能看到的注入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#sqlmap"><span class="toc-number">2.1.1.</span> <span class="toc-text">sqlmap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手工注入"><span class="toc-number">2.1.2.</span> <span class="toc-text">手工注入</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-WEBX"><span class="toc-number">2.2.</span> <span class="toc-text">Web-WEBX</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-瞅啥"><span class="toc-number">2.3.</span> <span class="toc-text">Misc-瞅啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-misc1"><span class="toc-number">2.4.</span> <span class="toc-text">Misc-misc1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crypto-easy-rsa"><span class="toc-number">2.5.</span> <span class="toc-text">Crypto-easy_rsa</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reverse-easy-re"><span class="toc-number">2.6.</span> <span class="toc-text">Reverse-easy_re</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>19</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>16</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/redis/" title="redis">redis<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.cnblogs.com/test404" target="_blank" title="胖虎">胖虎</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://p0desta.com" target="_blank" title="p0desta">p0desta</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.test407.cn" target="_blank" title="薯片博客">薯片博客</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://alem0n.github.io" target="_blank" title="lem0n">lem0n</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Rise and rise again until lambs become lions <br/>
+			Everyone can cook, but only those who dare to try can become the real chef.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/flag0" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:root@flag0.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2019 
+		
+		<a href="/about" target="_blank" title="GetFlag">GetFlag</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
