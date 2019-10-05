@@ -48,7 +48,7 @@
 <meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569139780803.png">
 <meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569139924480.png">
 <meta property="og:image" content="http://flag0.com/img/images/深思杯Writeup/1569141879728.png">
-<meta property="og:updated_time" content="2019-09-22T08:48:37.659Z">
+<meta property="og:updated_time" content="2019-09-28T15:32:44.109Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深思杯线上预选赛Writeup">
 <meta name="twitter:description" content="上午比赛的时候，平台被ddos攻击，导致上午比赛推迟到了下午，但是上午的时候也下载下来了几道题，做了出来，但是下午的时候直接换题了，Writeup整理的时候我把上午的题目也整理了进去。">
@@ -76,7 +76,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -115,14 +115,14 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2019-09-22T08:48:37.000Z" itemprop="datePublished"> Published 2019-09-22</time>
+    <time datetime="2019-09-22T08:48:37.000Z" itemprop="datePublished"> 发表于 2019-09-22</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目录</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#上午场"><span class="toc-number">1.</span> <span class="toc-text">上午场</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-pingping"><span class="toc-number">1.1.</span> <span class="toc-text">Misc-pingping</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-out-jpg"><span class="toc-number">1.2.</span> <span class="toc-text">Misc-out.jpg</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crypto-RSA"><span class="toc-number">1.3.</span> <span class="toc-text">Crypto-RSA</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正式比赛"><span class="toc-number">2.</span> <span class="toc-text">正式比赛</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-只有你能看到的注入"><span class="toc-number">2.1.</span> <span class="toc-text">Web-只有你能看到的注入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#sqlmap"><span class="toc-number">2.1.1.</span> <span class="toc-text">sqlmap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手工注入"><span class="toc-number">2.1.2.</span> <span class="toc-text">手工注入</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-WEBX"><span class="toc-number">2.2.</span> <span class="toc-text">Web-WEBX</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-瞅啥"><span class="toc-number">2.3.</span> <span class="toc-text">Misc-瞅啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-misc1"><span class="toc-number">2.4.</span> <span class="toc-text">Misc-misc1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crypto-easy-rsa"><span class="toc-number">2.5.</span> <span class="toc-text">Crypto-easy_rsa</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reverse-easy-re"><span class="toc-number">2.6.</span> <span class="toc-text">Reverse-easy_re</span></a></li></ol></li></ol>
 		
@@ -177,6 +177,8 @@
 <p><code>xss(iframe)+sqli(/admin.php?id=)=flag</code></p>
 <p><strong>比赛运维赛后给出的xss payload(不包含绕过)</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iframe=<span class="built_in">document</span>.createElement(<span class="string">"iframe"</span>);iframe.src=<span class="string">"/admin.php?id=-999 union select 1,2,flagg from flag"</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>包含绕过的xss payload</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;svg&gt;<span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined">eval&amp;#40String.fromCharCode&amp;#40 97,108,101,114,116,40,57,41,59&amp;#41&amp;#41;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
 <p><strong>md5截断验证脚本</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">md5</span><span class="params">(key)</span>:</span></span><br><span class="line">    m = hashlib.md5()</span><br><span class="line">    m.update(key.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">    <span class="keyword">return</span> m.hexdigest()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1000000000</span>):</span><br><span class="line">    <span class="keyword">if</span> md5(str(i))[<span class="number">0</span>:<span class="number">6</span>] == <span class="string">'ba4aee'</span>:</span><br><span class="line">        print(i)</span><br><span class="line">        <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
 <p><img src="\img\images\深思杯Writeup\1569066431815.png" alt="1569066431815"></p>
@@ -289,17 +291,17 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目录</strong>
  
  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#上午场"><span class="toc-number">1.</span> <span class="toc-text">上午场</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-pingping"><span class="toc-number">1.1.</span> <span class="toc-text">Misc-pingping</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-out-jpg"><span class="toc-number">1.2.</span> <span class="toc-text">Misc-out.jpg</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crypto-RSA"><span class="toc-number">1.3.</span> <span class="toc-text">Crypto-RSA</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正式比赛"><span class="toc-number">2.</span> <span class="toc-text">正式比赛</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-只有你能看到的注入"><span class="toc-number">2.1.</span> <span class="toc-text">Web-只有你能看到的注入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#sqlmap"><span class="toc-number">2.1.1.</span> <span class="toc-text">sqlmap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手工注入"><span class="toc-number">2.1.2.</span> <span class="toc-text">手工注入</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-WEBX"><span class="toc-number">2.2.</span> <span class="toc-text">Web-WEBX</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-瞅啥"><span class="toc-number">2.3.</span> <span class="toc-text">Misc-瞅啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-misc1"><span class="toc-number">2.4.</span> <span class="toc-text">Misc-misc1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crypto-easy-rsa"><span class="toc-number">2.5.</span> <span class="toc-text">Crypto-easy_rsa</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reverse-easy-re"><span class="toc-number">2.6.</span> <span class="toc-text">Reverse-easy_re</span></a></li></ol></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -308,7 +310,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>21</sup></a></li>
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>22</sup></a></li>
 		  
 		
 		  
@@ -329,11 +331,11 @@
 			
 		
 			
-				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>4</sup></a></li>
+				<li><a href="/tags/python/" title="python">python<sup>4</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/python/" title="python">python<sup>4</sup></a></li>
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>4</sup></a></li>
 			
 		
 			
@@ -345,7 +347,11 @@
 			
 		
 			
-				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>2</sup></a></li>
+				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
 			
 		
 			
@@ -353,11 +359,7 @@
 			
 		
 			
-				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>2</sup></a></li>
 			
 		
 			
@@ -369,23 +371,15 @@
 			
 		
 			
-				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
 			
 		
 			
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
 			
 		
 			
@@ -402,6 +396,14 @@
 		
 			
 				<li><a href="/tags/dockerfile/" title="dockerfile">dockerfile<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -650,7 +652,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
