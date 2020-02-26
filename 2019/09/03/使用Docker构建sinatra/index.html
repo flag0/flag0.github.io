@@ -1,7 +1,7 @@
 
  <!DOCTYPE HTML>
 <html lang="cn-zh">
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   
     <title>使用Dcoker构建Web应用程序sinatra | GetFlag&#39;s Blog</title>
@@ -41,7 +41,7 @@
     
     <link rel="stylesheet" href="/css/style.css">
 </head>
-
+</html>
   <body>
     <header>
       
@@ -51,7 +51,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -90,14 +90,14 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2019-09-03T13:32:01.000Z" itemprop="datePublished"> Published 2019-09-03</time>
+    <time datetime="2019-09-03T13:32:01.000Z" itemprop="datePublished"> 发表于 2019-09-03</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目录</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Docker构建Web应用程序sinatra"><span class="toc-number">1.</span> <span class="toc-text">使用Docker构建Web应用程序sinatra</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#构建Sinatra应用程序镜像"><span class="toc-number">1.1.</span> <span class="toc-text">构建Sinatra应用程序镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建Sinatra容器"><span class="toc-number">1.2.</span> <span class="toc-text">创建Sinatra容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#拓展Sinatra应用程序来使用Redis"><span class="toc-number">1.3.</span> <span class="toc-text">拓展Sinatra应用程序来使用Redis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将Sinatra应用程序连接到Redis容器"><span class="toc-number">1.4.</span> <span class="toc-text">将Sinatra应用程序连接到Redis容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#中途遇到的问题-避免踩坑"><span class="toc-number">1.5.</span> <span class="toc-text">中途遇到的问题(避免踩坑):</span></a></li></ol></li></ol>
 		
@@ -189,7 +189,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">![QQ图片20190901000907](\img\images\C:/Users/GetFlag/Desktop/QQ图片20190901000907.png)curl -i http://localhost:32781/json</span><br><span class="line">HTTP/1.1 200 OK </span><br><span class="line">Content-Type: text/html;charset=utf-8</span><br><span class="line">Content-Length: 41</span><br><span class="line">X-Xss-Protection: 1; mode=block</span><br><span class="line">X-Content-Type-Options: nosniff</span><br><span class="line">X-Frame-Options: SAMEORIGIN</span><br><span class="line">Server: WEBrick/1.4.2 (Ruby/2.5.1/2018-03-29)</span><br><span class="line">Date: Tue, 03 Sep 2019 12:43:47 GMT</span><br><span class="line">Connection: Keep-Alive</span><br><span class="line"></span><br><span class="line">&quot;[&#123;\&quot;name\&quot;:\&quot;Foo\&quot;,\&quot;status\&quot;:\&quot;Bar\&quot;&#125;]&quot;</span><br></pre></td></tr></table></figure>
 <p>安装成功！</p>
 <h4 id="中途遇到的问题-避免踩坑"><a href="#中途遇到的问题-避免踩坑" class="headerlink" title="中途遇到的问题(避免踩坑):"></a>中途遇到的问题(避免踩坑):</h4><p> <strong>1.构建flag0/sinatra时，提示 <code>rack requires Ruby version &gt;= 2.2.2</code></strong></p>
-<p>   <img src="\img\images\使用Dcoker构建sinatra\QQ图片20190901000907.png" alt=""></p>
+<p>   <img src="\img\images\使用Dcoker构建sinatra\QQ图片20190901000907.png" alt></p>
 <p>   原因在于按照《第一本Docker书》上的Dockerfile来生成镜像，其中<code>FROM ubuntu:14.04</code>使用了低版本的ubuntu镜像导致了该问题，使用18.08可以解决该问题</p>
 <p><strong>2.构建redis容器时，连接后执行命令提示<code>(error) DENIED Redis is running in protected mode because protected mode is enabled</code></strong></p>
 <p><img src="\img\images\使用Dcoker构建sinatra\1567516369515.png" alt="1567516369515"></p>
@@ -260,17 +260,17 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目录</strong>
  
  <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Docker构建Web应用程序sinatra"><span class="toc-number">1.</span> <span class="toc-text">使用Docker构建Web应用程序sinatra</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#构建Sinatra应用程序镜像"><span class="toc-number">1.1.</span> <span class="toc-text">构建Sinatra应用程序镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建Sinatra容器"><span class="toc-number">1.2.</span> <span class="toc-text">创建Sinatra容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#拓展Sinatra应用程序来使用Redis"><span class="toc-number">1.3.</span> <span class="toc-text">拓展Sinatra应用程序来使用Redis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将Sinatra应用程序连接到Redis容器"><span class="toc-number">1.4.</span> <span class="toc-text">将Sinatra应用程序连接到Redis容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#中途遇到的问题-避免踩坑"><span class="toc-number">1.5.</span> <span class="toc-text">中途遇到的问题(避免踩坑):</span></a></li></ol></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -283,7 +283,7 @@
 		  
 		
 		  
-			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>16</sup></a></li>
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>17</sup></a></li>
 		  
 		
 		</ul>
@@ -300,7 +300,7 @@
 			
 		
 			
-				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>4</sup></a></li>
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>5</sup></a></li>
 			
 		
 			
@@ -313,10 +313,6 @@
 		
 			
 				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>3</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>2</sup></a></li>
 			
 		
 			
@@ -340,11 +336,23 @@
 			
 		
 			
-				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+				<li><a href="/tags/PE/" title="PE">PE<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
 			
 		
 			
@@ -360,19 +368,11 @@
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -639,7 +639,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

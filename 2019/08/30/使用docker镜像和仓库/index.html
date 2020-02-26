@@ -1,7 +1,7 @@
 
  <!DOCTYPE HTML>
 <html lang="cn-zh">
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   
     <title>Docker学习笔记:使用docker镜像和仓库 | GetFlag&#39;s Blog</title>
@@ -39,7 +39,7 @@
     
     <link rel="stylesheet" href="/css/style.css">
 </head>
-
+</html>
   <body>
     <header>
       
@@ -49,7 +49,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -88,14 +88,14 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2019-08-29T16:00:00.000Z" itemprop="datePublished"> Published 2019-08-30</time>
+    <time datetime="2019-08-29T16:00:00.000Z" itemprop="datePublished"> 发表于 2019-08-30</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目录</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用docker镜像和仓库"><span class="toc-number">1.</span> <span class="toc-text">使用docker镜像和仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#列出镜像"><span class="toc-number">1.1.</span> <span class="toc-text">列出镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拉取镜像"><span class="toc-number">1.2.</span> <span class="toc-text">拉取镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查找镜像"><span class="toc-number">1.3.</span> <span class="toc-text">查找镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建镜像"><span class="toc-number">1.4.</span> <span class="toc-text">构建镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建Docker-Hub账号"><span class="toc-number">1.5.</span> <span class="toc-text">创建Docker Hub账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用commit-命令创建镜像"><span class="toc-number">1.6.</span> <span class="toc-text">使用commit 命令创建镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用Dockerfile构建镜像"><span class="toc-number">1.7.</span> <span class="toc-text">用Dockerfile构建镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于Dockerfile构建新镜像"><span class="toc-number">1.8.</span> <span class="toc-text">基于Dockerfile构建新镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#指令失败时会怎样"><span class="toc-number">1.9.</span> <span class="toc-text">指令失败时会怎样</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dockefile和构建缓存"><span class="toc-number">1.10.</span> <span class="toc-text">Dockefile和构建缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于构建缓存的Dockerfile模板"><span class="toc-number">1.11.</span> <span class="toc-text">基于构建缓存的Dockerfile模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看新镜像"><span class="toc-number">1.12.</span> <span class="toc-text">查看新镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从新镜像中启动容器"><span class="toc-number">1.13.</span> <span class="toc-text">从新镜像中启动容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将镜像推送到docker-hub"><span class="toc-number">1.14.</span> <span class="toc-text">将镜像推送到docker hub</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除镜像"><span class="toc-number">1.15.</span> <span class="toc-text">删除镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从容器中运行Registry"><span class="toc-number">1.16.</span> <span class="toc-text">从容器中运行Registry</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#运行基于容器的Registry"><span class="toc-number">1.16.1.</span> <span class="toc-text">运行基于容器的Registry</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#测试新Registry"><span class="toc-number">1.16.2.</span> <span class="toc-text">测试新Registry</span></a></li></ol></li></ol></li></ol>
 		
@@ -362,18 +362,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2019/08/31/代码空白区添加shellcode/" title="代码空白区添加shellcode">
+ <a href="/2019/09/01/Dockerfile指令/" title="docker学习笔记:dockerfile详解">
   <strong>上一篇：</strong><br/>
   <span>
-  代码空白区添加shellcode</span>
+  docker学习笔记:dockerfile详解</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2018/11/19/湖湘杯2018复赛Web-Writeup/"  title="湖湘杯2018复赛Web Writeup">
+<a href="/2019/02/28/一个hackerone的有趣的漏洞的复现Writeup/"  title="一个hackerone的有趣的漏洞的复现Writeup">
  <strong>下一篇：</strong><br/> 
- <span>湖湘杯2018复赛Web Writeup
+ <span>一个hackerone的有趣的漏洞的复现Writeup
 </span>
 </a>
 </div>
@@ -385,17 +385,17 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目录</strong>
  
  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用docker镜像和仓库"><span class="toc-number">1.</span> <span class="toc-text">使用docker镜像和仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#列出镜像"><span class="toc-number">1.1.</span> <span class="toc-text">列出镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拉取镜像"><span class="toc-number">1.2.</span> <span class="toc-text">拉取镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查找镜像"><span class="toc-number">1.3.</span> <span class="toc-text">查找镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建镜像"><span class="toc-number">1.4.</span> <span class="toc-text">构建镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建Docker-Hub账号"><span class="toc-number">1.5.</span> <span class="toc-text">创建Docker Hub账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用commit-命令创建镜像"><span class="toc-number">1.6.</span> <span class="toc-text">使用commit 命令创建镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用Dockerfile构建镜像"><span class="toc-number">1.7.</span> <span class="toc-text">用Dockerfile构建镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于Dockerfile构建新镜像"><span class="toc-number">1.8.</span> <span class="toc-text">基于Dockerfile构建新镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#指令失败时会怎样"><span class="toc-number">1.9.</span> <span class="toc-text">指令失败时会怎样</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dockefile和构建缓存"><span class="toc-number">1.10.</span> <span class="toc-text">Dockefile和构建缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于构建缓存的Dockerfile模板"><span class="toc-number">1.11.</span> <span class="toc-text">基于构建缓存的Dockerfile模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看新镜像"><span class="toc-number">1.12.</span> <span class="toc-text">查看新镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从新镜像中启动容器"><span class="toc-number">1.13.</span> <span class="toc-text">从新镜像中启动容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将镜像推送到docker-hub"><span class="toc-number">1.14.</span> <span class="toc-text">将镜像推送到docker hub</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除镜像"><span class="toc-number">1.15.</span> <span class="toc-text">删除镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从容器中运行Registry"><span class="toc-number">1.16.</span> <span class="toc-text">从容器中运行Registry</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#运行基于容器的Registry"><span class="toc-number">1.16.1.</span> <span class="toc-text">运行基于容器的Registry</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#测试新Registry"><span class="toc-number">1.16.2.</span> <span class="toc-text">测试新Registry</span></a></li></ol></li></ol></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -408,7 +408,7 @@
 		  
 		
 		  
-			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>16</sup></a></li>
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>17</sup></a></li>
 		  
 		
 		</ul>
@@ -425,7 +425,7 @@
 			
 		
 			
-				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>4</sup></a></li>
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>5</sup></a></li>
 			
 		
 			
@@ -438,10 +438,6 @@
 		
 			
 				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>3</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>2</sup></a></li>
 			
 		
 			
@@ -465,11 +461,23 @@
 			
 		
 			
-				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+				<li><a href="/tags/PE/" title="PE">PE<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
 			
 		
 			
@@ -485,19 +493,11 @@
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -764,7 +764,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

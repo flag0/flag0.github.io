@@ -1,7 +1,7 @@
 
  <!DOCTYPE HTML>
 <html lang="cn-zh">
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   
     <title>第七届山东省信息安全竞赛Writeup | GetFlag&#39;s Blog</title>
@@ -55,7 +55,7 @@
     
     <link rel="stylesheet" href="/css/style.css">
 </head>
-
+</html>
   <body>
     <header>
       
@@ -65,7 +65,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -104,14 +104,14 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-11-08T14:00:03.000Z" itemprop="datePublished"> Published 2018-11-08</time>
+    <time datetime="2018-11-08T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-11-08</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目录</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-铜牌-1-babyWeb"><span class="toc-number">1.</span> <span class="toc-text">Web-铜牌-1:babyWeb</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-铜牌-3-babyWeb2"><span class="toc-number">2.</span> <span class="toc-text">Web-铜牌-3:babyWeb2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-银牌1-easy-flask"><span class="toc-number">3.</span> <span class="toc-text">Web-银牌1-easy_flask</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Forensic-日志分析"><span class="toc-number">4.</span> <span class="toc-text">Forensic-日志分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Forensic-weblogic"><span class="toc-number">5.</span> <span class="toc-text">Forensic-weblogic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Forensic-特殊后门"><span class="toc-number">6.</span> <span class="toc-text">Forensic-特殊后门</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Forensic-PC木马"><span class="toc-number">7.</span> <span class="toc-text">Forensic-PC木马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stego-啊哒"><span class="toc-number">8.</span> <span class="toc-text">Stego-啊哒</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crypto-affine"><span class="toc-number">9.</span> <span class="toc-text">Crypto-affine</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-basic"><span class="toc-number">10.</span> <span class="toc-text">Misc-basic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-进制转换"><span class="toc-number">11.</span> <span class="toc-text">Misc-进制转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-Crack-it"><span class="toc-number">12.</span> <span class="toc-text">Misc-Crack it</span></a></li></ol>
 		
@@ -128,7 +128,7 @@
 <p>ps:冒号和ip之间要有空格</p>
 <p>然后会提示不是管理员</p>
 <p>将cookie处的<code>admin=0</code>修改为<code>admin=1</code>即可</p>
-<p><img src="\img\images\科来杯Writeup\20181107235501.jpg" alt=""></p>
+<p><img src="\img\images\科来杯Writeup\20181107235501.jpg" alt></p>
 <p>此处拓展下知识点，在比赛后想要复现赛题，使用<code>$_SERVER[&#39;REMOTE_ADDR&#39;];</code>进行获取ip，但发现尝试各种方式并不能伪造成功，在问了大表哥后，发现<code>ReMOTE_ADDR</code>是安全的获取ip的方式，并不是题目中考察的，现对题目中考察ip伪造的获取ip函数进行简单整理</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$_SERVER[<span class="string">"HTTP_CLIENT_IP"</span>];<span class="comment">//可通过Client-IP伪造</span></span><br><span class="line">$_SERVER[<span class="string">"HTTP_X_FORWARDED_FOR"</span>];<span class="comment">//可通过X_Forward_For伪造</span></span><br><span class="line">$_SERVER[<span class="string">"HTTP_X_REMOTE_IP"</span>];<span class="comment">//可通过X-Remote-IP伪造</span></span><br><span class="line">$_SERVER[<span class="string">"HTTP_X_ORIGINATING_IP"</span>];<span class="comment">//可通过X-Originating-IP伪造</span></span><br><span class="line">$_SERVER[<span class="string">"HTTP_X_REMOTE_ADDR"</span>];<span class="comment">//可通过X-Remote-Addr伪造</span></span><br></pre></td></tr></table></figure>
 <h3 id="Web-铜牌-3-babyWeb2"><a href="#Web-铜牌-3-babyWeb2" class="headerlink" title="Web-铜牌-3:babyWeb2"></a>Web-铜牌-3:babyWeb2</h3><p>这个题考点在变量覆盖、php弱类型和条件竞争，在比赛的时候只绕过了变量覆盖和弱类型</p>
@@ -138,17 +138,17 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://47.105.148.65:29002/?id=key[99]=240610708</span><br></pre></td></tr></table></figure>
 <p><code>aabg7XSs</code>的md5为<code>0e087386482136013740957780965295</code></p>
 <p>php弱类型漏洞会将md5以0开头的，当作和<code>QNKCDZO</code>的md5是相等的</p>
-<p><img src="\img\images\科来杯Writeup\20181108000123.jpg" alt=""></p>
+<p><img src="\img\images\科来杯Writeup\20181108000123.jpg" alt></p>
 <p>绕过上面的代码后，会出现一个文件上传页面，让输入<code>filename</code>和<code>contain</code>这里存在条件竞争</p>
 <p>复现后端源码</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$filename = @$_GET[<span class="string">'filename'</span>];</span><br><span class="line">$content = @$_GET[<span class="string">'content'</span>];</span><br><span class="line">$ip = $_SERVER[<span class="string">'REMOTE_ADDR'</span>];</span><br><span class="line">$path = <span class="string">"./uploads/"</span> . Sha1($ip);</span><br><span class="line"><span class="keyword">if</span>(!is_dir($path))&#123;</span><br><span class="line">        mkdir($path,<span class="number">0777</span>,<span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($filename) &amp;&amp; <span class="keyword">isset</span>($content) &amp;&amp; $filename != <span class="string">""</span> &amp;&amp; $content != <span class="string">""</span>)</span><br><span class="line">&#123;</span><br><span class="line">        $url = <span class="string">"http://"</span>.gethostbyname(<span class="string">''</span>). str_replace(<span class="string">"."</span>,<span class="string">""</span>,$path) . <span class="string">"/"</span> . $filename;</span><br><span class="line">        $urltext = str_replace(<span class="string">"."</span>,<span class="string">""</span>,$path) . <span class="string">"/"</span> . $filename;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Flag is here,come on~ &lt;a href='$url'&gt;$urltext&lt;/a&gt;"</span>;</span><br><span class="line"></span><br><span class="line">        file_put_contents($path . <span class="string">"/"</span> . $filename,<span class="string">"flag&#123;fa8d57d013fda75ad1e58e59b94b45c3&#125;"</span>);</span><br><span class="line">        sleep(<span class="number">1</span>);</span><br><span class="line">        file_put_contents($path . <span class="string">"/"</span> . $filename,<span class="string">"Too slow!"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 <p>这里采用手动上传写入文件，并且用一个脚本不停访问的方式来getflag</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    flag = requests.get(<span class="string">"http://47.105.148.65:29002/uploads/1daf2370065175025c3cba123c53a12da8a93a5f/test.php"</span>).text</span><br><span class="line">    print(flag)</span><br></pre></td></tr></table></figure>
-<p><img src="\img\images\科来杯Writeup\20181108001026.jpg" alt=""></p>
+<p><img src="\img\images\科来杯Writeup\20181108001026.jpg" alt></p>
 <h3 id="Web-银牌1-easy-flask"><a href="#Web-银牌1-easy-flask" class="headerlink" title="Web-银牌1-easy_flask"></a>Web-银牌1-easy_flask</h3><p>这个题考察点在sqli + ssti</p>
 <p>比赛中没做出来，但是复现成功后一想，应该算是ssti中比较简单的题，sql注入和ssti均未有任何过滤，但是用sql注入联合查询的返回结果来进行ssti注入攻击的模式是第一次见</p>
 <p>刚开始添加用户和输入的数据</p>
-<p><img src="\img\images\科来杯Writeup\20181108001430.jpg" alt=""></p>
+<p><img src="\img\images\科来杯Writeup\20181108001430.jpg" alt></p>
 <p>提交后，提示添加成功，然后在<code>Search Comments</code>中输入刚才的用户名，来提交查询，查询结果会出现在<code>Show Comments</code>中</p>
 <p>在查询阶段存在注入</p>
 <p><img src="\img\images\科来杯Writeup\1541607466905.png" alt="1541607466905"></p>
@@ -171,22 +171,22 @@
 <p><code>hostname</code>命令是查看主机名的命令，从流量来看，是一个暴力破解getshell的过程</p>
 <p>直接在过滤器中查找hostname</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http contains &quot;hostname&quot;</span><br></pre></td></tr></table></figure>
-<p><img src="\img\images\科来杯Writeup\20181104231920.jpg" alt=""></p>
+<p><img src="\img\images\科来杯Writeup\20181104231920.jpg" alt></p>
 <p>追踪http流</p>
-<p><img src="\img\images\科来杯Writeup\20181104232033.jpg" alt=""></p>
+<p><img src="\img\images\科来杯Writeup\20181104232033.jpg" alt></p>
 <p>可以看到这里执行了<code>hostname</code>命令</p>
 <p>往下看可以看到结果</p>
-<p><img src="\img\images\科来杯Writeup\20181104232055.jpg" alt=""></p>
+<p><img src="\img\images\科来杯Writeup\20181104232055.jpg" alt></p>
 <h3 id="Forensic-特殊后门"><a href="#Forensic-特殊后门" class="headerlink" title="Forensic-特殊后门"></a>Forensic-特殊后门</h3><p>题目提示是不只有http协议后门，有可能是icmp、dns。。。。(好几种协议)</p>
 <p>这里直接搜索flag，切换各种协议搜索</p>
 <p>最终定位到了icmp协议</p>
-<p><img src="\img\images\科来杯Writeup\20181104232804.jpg" alt=""></p>
+<p><img src="\img\images\科来杯Writeup\20181104232804.jpg" alt></p>
 <p>直接点开，发现提示flag is here</p>
-<p><img src="\img\images\科来杯Writeup\20181104232842.jpg" alt=""></p>
+<p><img src="\img\images\科来杯Writeup\20181104232842.jpg" alt></p>
 <p>然后过滤icmp包</p>
-<p><img src="\img\images\科来杯Writeup\20181104232945.jpg" alt=""></p>
+<p><img src="\img\images\科来杯Writeup\20181104232945.jpg" alt></p>
 <p>依次点开在数据包相同的位置有flag字符</p>
-<p><img src="\img\images\科来杯Writeup\20181104232916.jpg" alt=""></p>
+<p><img src="\img\images\科来杯Writeup\20181104232916.jpg" alt></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;Icmp_backdoor_can_transfer-some_infomation&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="Forensic-PC木马"><a href="#Forensic-PC木马" class="headerlink" title="Forensic-PC木马"></a>Forensic-PC木马</h3><p>CS是根据真实APT案例中的马改写的，做了简单的反VM虚拟机，反调试，进程检测，12小时的sleep。。。<br>一个思路是使用resource hacker查看资源，会发现其中有一个EXE，是内嵌模块，提取出来，皆可以在虚拟机中运行了，使用火绒剑就能抓到外连CC服务器的连接</p>
 <p><img src="\img\images\科来杯Writeup\1541659886672.png" alt="1541659886672"></p>
@@ -195,7 +195,7 @@
 <p>在火绒剑中加载查看网络信息即可</p>
 <p><img src="\img\images\科来杯Writeup\1541660114437.png" alt="1541660114437"></p>
 <h3 id="Stego-啊哒"><a href="#Stego-啊哒" class="headerlink" title="Stego-啊哒"></a>Stego-啊哒</h3><p>本来以为是伪加密和修复压缩包，纠结了很长时间，比赛结束后交流发现原来是在<code>属性-&gt;详细信息-&gt;照相机型号</code>的位置有一串十六进制编码，直接转换成字符串就是压缩包的密码</p>
-<p><img src="\img\images\科来杯Writeup\20181104233628.jpg" alt=""></p>
+<p><img src="\img\images\科来杯Writeup\20181104233628.jpg" alt></p>
 <p>转换完后的字符串为</p>
 <p><code>sdnisc_2018</code></p>
 <p>即为压缩包的密码</p>
@@ -204,7 +204,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">flag = <span class="string">"szzyfimhyzd"</span></span><br><span class="line"></span><br><span class="line">flaglist = []</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> flag:</span><br><span class="line">    flaglist.append(ord(i)<span class="number">-97</span>)</span><br><span class="line"></span><br><span class="line">flags = <span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> flaglist:</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">26</span>):</span><br><span class="line">        c = (<span class="number">17</span> * j - <span class="number">8</span>) % <span class="number">26</span></span><br><span class="line">        <span class="keyword">if</span>(c == i):</span><br><span class="line">            flags += chr(j+<span class="number">97</span>)</span><br><span class="line">print(flags)</span><br></pre></td></tr></table></figure>
 <h3 id="Misc-basic"><a href="#Misc-basic" class="headerlink" title="Misc-basic"></a>Misc-basic</h3><p>修改宽读为150，高度为900，然后生成的图片旋转水平翻转即可</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">pic = Image.new(<span class="string">"RGB"</span>,(<span class="number">150</span>,<span class="number">900</span>))</span><br><span class="line">f = open(<span class="string">'basic.txt'</span>,<span class="string">'r'</span>)</span><br><span class="line">imlist = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> f.readlines():</span><br><span class="line">    i = re.sub(<span class="string">'[( )\n]'</span>,<span class="string">''</span>,i)</span><br><span class="line">    imlist.append(i)</span><br><span class="line"></span><br><span class="line">i=<span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">150</span>):</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">900</span>):</span><br><span class="line">        s = imlist[i].split(<span class="string">','</span>)</span><br><span class="line">        pic.putpixel([x,y],(int(s[<span class="number">0</span>]),int(s[<span class="number">1</span>]),int(s[<span class="number">2</span>])))</span><br><span class="line">        i+=<span class="number">1</span></span><br><span class="line">        <span class="keyword">print</span> <span class="number">135000</span>-i</span><br><span class="line">pic.show()</span><br><span class="line">pic.save(<span class="string">"flag.png"</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="\img\images\科来杯Writeup\flag.png" alt=""></p>
+<p><img src="\img\images\科来杯Writeup\flag.png" alt></p>
 <h3 id="Misc-进制转换"><a href="#Misc-进制转换" class="headerlink" title="Misc-进制转换"></a>Misc-进制转换</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d87 x65 x6c x63 o157 d109 o145 b100000 d116 b1101111 o40 x6b b1100101 b1101100 o141 d105 x62 d101 b1101001 d46 o40 d71 x69 d118 x65 x20 b1111001 o157 b1110101 d32 o141 d32 d102 o154 x61 x67 b100000 o141 d115 b100000 b1100001 d32 x67 o151 x66 d116 b101110 b100000 d32 d102 d108 d97 o147 d123 x31 b1100101 b110100 d98 d102 b111000 d49 b1100001 d54 b110011 x39 o64 o144 o145 d53 x61 b1100010 b1100011 o60 d48 o65 b1100001 x63 b110110 d101 o63 b111001 d97 d51 o70 d55 b1100010 d125 x20 b101110 x20 b1001000 d97 d118 o145 x20 d97 o40 d103 d111 d111 x64 d32 o164 b1101001 x6d o145 x7e</span><br></pre></td></tr></table></figure>
 <p>将其转换为十进制然后转换为字符拼接即可</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line">f = open(<span class="string">"text.txt"</span>).read()</span><br><span class="line">listf =f.split(<span class="string">" "</span>)</span><br><span class="line">flag = <span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> listf:</span><br><span class="line">    <span class="keyword">if</span> <span class="string">"d"</span> <span class="keyword">in</span> i[<span class="number">0</span>:<span class="number">1</span>]:</span><br><span class="line">        flag += chr(int(i.replace(<span class="string">"d"</span>,<span class="string">""</span>)))</span><br><span class="line">    <span class="keyword">if</span> <span class="string">"x"</span> <span class="keyword">in</span> i[<span class="number">0</span>:<span class="number">1</span>]:</span><br><span class="line">        flag += chr(int(i.replace(<span class="string">"x"</span>,<span class="string">""</span>),<span class="number">16</span>))</span><br><span class="line">    <span class="keyword">if</span> <span class="string">"b"</span> <span class="keyword">in</span> i[<span class="number">0</span>:<span class="number">1</span>]:</span><br><span class="line">        flag += chr(int(i.replace(<span class="string">"b"</span>,<span class="string">""</span>),<span class="number">2</span>))</span><br><span class="line">    <span class="keyword">if</span> <span class="string">"o"</span> <span class="keyword">in</span> i[<span class="number">0</span>:<span class="number">1</span>]:</span><br><span class="line">        flag += chr(int(i.replace(<span class="string">"o"</span>,<span class="string">""</span>),<span class="number">8</span>))</span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure>
@@ -281,17 +281,17 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目录</strong>
  
  <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-铜牌-1-babyWeb"><span class="toc-number">1.</span> <span class="toc-text">Web-铜牌-1:babyWeb</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-铜牌-3-babyWeb2"><span class="toc-number">2.</span> <span class="toc-text">Web-铜牌-3:babyWeb2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-银牌1-easy-flask"><span class="toc-number">3.</span> <span class="toc-text">Web-银牌1-easy_flask</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Forensic-日志分析"><span class="toc-number">4.</span> <span class="toc-text">Forensic-日志分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Forensic-weblogic"><span class="toc-number">5.</span> <span class="toc-text">Forensic-weblogic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Forensic-特殊后门"><span class="toc-number">6.</span> <span class="toc-text">Forensic-特殊后门</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Forensic-PC木马"><span class="toc-number">7.</span> <span class="toc-text">Forensic-PC木马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stego-啊哒"><span class="toc-number">8.</span> <span class="toc-text">Stego-啊哒</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crypto-affine"><span class="toc-number">9.</span> <span class="toc-text">Crypto-affine</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-basic"><span class="toc-number">10.</span> <span class="toc-text">Misc-basic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-进制转换"><span class="toc-number">11.</span> <span class="toc-text">Misc-进制转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Misc-Crack-it"><span class="toc-number">12.</span> <span class="toc-text">Misc-Crack it</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -304,7 +304,7 @@
 		  
 		
 		  
-			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>16</sup></a></li>
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>17</sup></a></li>
 		  
 		
 		</ul>
@@ -321,7 +321,7 @@
 			
 		
 			
-				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>4</sup></a></li>
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>5</sup></a></li>
 			
 		
 			
@@ -334,10 +334,6 @@
 		
 			
 				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>3</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>2</sup></a></li>
 			
 		
 			
@@ -361,11 +357,23 @@
 			
 		
 			
-				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+				<li><a href="/tags/PE/" title="PE">PE<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
 			
 		
 			
@@ -381,19 +389,11 @@
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -660,7 +660,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

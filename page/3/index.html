@@ -1,7 +1,7 @@
 
  <!DOCTYPE HTML>
 <html lang="cn-zh">
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   
     <title>GetFlag&#39;s Blog</title>
@@ -34,7 +34,7 @@
     
     <link rel="stylesheet" href="/css/style.css">
 </head>
-
+</html>
   <body>
     <header>
       
@@ -44,7 +44,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -78,6 +78,137 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2019/02/28/一个hackerone的有趣的漏洞的复现Writeup/" title="一个hackerone的有趣的漏洞的复现Writeup" itemprop="url">一个hackerone的有趣的漏洞的复现Writeup</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		
+  <p class="article-time">
+    <time datetime="2019-02-28T11:50:59.000Z" itemprop="datePublished"> 发表于 2019-02-28</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <a id="more"></a>
+<p>扫描目录发现git源码泄露，用githack把源码拖下来后，开始审计</p>
+<h4 id="代码审计"><a href="#代码审计" class="headerlink" title="代码审计"></a>代码审计</h4><p>首先看下目录结构</p>
+<blockquote>
+<p>phpmailer                用于发送电子邮件的PHP函数包<br>captcha.php             生成验证码<br>chgemail.php             修改邮箱<br>class.mail.php            发送邮箱方法<br>class.user.php            用户相关操作<br>class.zcaptcha.php         验证码相关<br>functions.php<br>index.php                    获取flag<br>init.php                 配置文件<br>login.php                登陆<br>register.php              注册用户<br>style.css<br>switch.php            切换用户<br>verify.php              验证邮箱</p>
+</blockquote>
+<p>首先看<strong>index.php</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">require_once</span>(<span class="string">'init.php'</span>);</span><br><span class="line">header(<span class="string">"Content-type: text/html; charset=utf-8"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>($_SESSION[<span class="string">'username'</span>]))&#123;</span><br><span class="line">	header(<span class="string">'location: ./login.php'</span>);</span><br><span class="line">	<span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line">$userObj = <span class="keyword">new</span> zUser();<span class="comment">//实例化ZUser类</span></span><br><span class="line">$user = zUserFile::get_attrs($_SESSION[<span class="string">'username'</span>]);<span class="comment">//获取当前用户信息</span></span><br><span class="line">$flag = <span class="string">""</span>;</span><br><span class="line"><span class="keyword">if</span>($userObj-&gt;is_admin($_SESSION[<span class="string">'username'</span>]) &amp;&amp; file_exists(FLAGFILE))&#123;<span class="comment">//判断如果是admin用户时输出flag</span></span><br><span class="line">	$flag = <span class="string">"WELL DONE! "</span>.file_get_contents(FLAGFILE);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>发现如果是admin用户，会直接输出flag，接着查看<code>is_admin</code>函数的实现</p>
+<p><strong>class.user.php is_admin</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">is_admin</span><span class="params">($username)</span></span>&#123;<span class="comment">//判断是否是管理员</span></span><br><span class="line">	<span class="keyword">if</span>(!zUserFile::validate_username($username))&#123;<span class="comment">//验证用户名格式</span></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	$user = zUserFile::get_attrs($username);<span class="comment">//获取user用户信息数组</span></span><br><span class="line">	<span class="keyword">if</span>($user[<span class="string">'is_admin'</span>] === <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据代码可以看出来，当用户信息的<code>is_admin</code>为1时，即判断为admin用户，也就是说我们要想办法登陆到管理员用户才可以获取flag，继续向下审计</p>
+<p><strong>switch.php 切换用户功能</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$username = <span class="keyword">isset</span>($_GET[<span class="string">'username'</span>])?trim($_GET[<span class="string">'username'</span>]):<span class="string">''</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>($username != <span class="keyword">false</span> &amp;&amp; zUserFile::is_exists($username))&#123;<span class="comment">//判断用户名为真并且存在</span></span><br><span class="line">	$to_user = zUserFile::get_attrs($username);</span><br><span class="line">	<span class="keyword">if</span>($user[<span class="string">'email_verify'</span>] === <span class="number">1</span> &amp;&amp; $to_user[<span class="string">'email_verify'</span>] === <span class="number">1</span> &amp;&amp; $user[<span class="string">'email'</span>] === $to_user[<span class="string">'email'</span>])&#123;<span class="comment">//邮箱相等且验证通过</span></span><br><span class="line">		$userObj-&gt;login2($username);</span><br><span class="line">		header(<span class="string">'Location: ./'</span>);</span><br><span class="line">		<span class="keyword">exit</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里对进行了邮箱是否被验证，邮箱是否相等进行了判断</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$user[<span class="string">'email_verify'</span>] === <span class="number">1</span> &amp;&amp; $to_user[<span class="string">'email_verify'</span>] === <span class="number">1</span> &amp;&amp; $user[<span class="string">'email'</span>]</span><br></pre></td></tr></table></figure>
+<p>我们继续看下条件满足后的登陆部分</p>
+<p><strong>class.user.php login2</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">login2</span><span class="params">($username)</span></span>&#123;<span class="comment">//登陆2</span></span><br><span class="line">        $username = trim($username);</span><br><span class="line">        <span class="keyword">if</span>(!zUserFile::validate_username($username))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        $_SESSION[<span class="string">'username'</span>] = $username;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>login2这里只要是通过了判断用户名格式就可以切换用户，也就是说，要进行切换的两个用户，只要完成邮箱验证，并且邮箱相同就可以切换，显然这里存在逻辑漏洞，我们可以想办法去把邮箱换成管理员的邮箱，并且设法去完成验证就可以拿到flag了。</p>
+<p>继续看修改绑定邮箱功能</p>
+<p><strong>chgemail.php 修改绑定邮箱</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>]))&#123;</span><br><span class="line">	<span class="keyword">if</span>(!chktoken())&#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">'INVALID REQUEST'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	$email = <span class="keyword">isset</span>($_POST[<span class="string">'email'</span>])?trim($_POST[<span class="string">'email'</span>]):<span class="string">''</span>;</span><br><span class="line">	<span class="keyword">if</span>($userObj-&gt;chg_email($_SESSION[<span class="string">'username'</span>], $email))<span class="comment">//修改绑定邮箱</span></span><br><span class="line">		<span class="keyword">die</span>(<span class="string">'SUCCESS'</span>);</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="keyword">die</span>(<span class="string">'FAILED'</span>);</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里可以随意切换绑定邮箱</p>
+<p><strong>class.user.php chg_email</strong>切换绑定邮箱</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">chg_email</span><span class="params">($username, $email)</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(!zUserFile::is_exists($username))&#123;<span class="comment">//判断用户名是否存在</span></span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>($email == <span class="keyword">false</span> || !zUserFile::validate_email($email))&#123;<span class="comment">//当邮箱为空，或者检测邮箱不存在时</span></span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		$user = zUserFile::get_attrs($username);<span class="comment">//获得当前用户的所有信息</span></span><br><span class="line">		$old_email = $user[<span class="string">'email'</span>];<span class="comment">//获取当前邮箱</span></span><br><span class="line">		$emails = zUserFile::get_emails();<span class="comment">//获取邮箱数组</span></span><br><span class="line">		<span class="keyword">if</span>(<span class="keyword">isset</span>($emails[$old_email]))&#123;</span><br><span class="line">			$emails[$old_email] = array_diff($emails[$old_email], <span class="keyword">array</span>($username));<span class="comment">//返回所有在emails里面但是没有在username里面的差值</span></span><br><span class="line">			<span class="keyword">if</span>($emails[$old_email] == <span class="keyword">false</span>)&#123;</span><br><span class="line">				<span class="keyword">unset</span>($emails[$old_email]);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		zUserFile::update_attr($username, <span class="string">'email_verify'</span>, <span class="number">0</span>);<span class="comment">//设置验证参数为未验证</span></span><br><span class="line">		zUserFile::update_attr($username, <span class="string">'email'</span>, $email);<span class="comment">//设置邮箱</span></span><br><span class="line">		zUserFile::update_attr($username, <span class="string">'token'</span>, <span class="string">''</span>);<span class="comment">//清空token</span></span><br><span class="line">		$us = @is_array($emails[$email])?$emails[$email]:<span class="keyword">array</span>();</span><br><span class="line">		$emails[$email] = array_merge($us, <span class="keyword">array</span>($username));<span class="comment">//将邮箱和用户名数组合并</span></span><br><span class="line">		<span class="keyword">return</span> zUserFile::update_emails($emails);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里切换了邮箱之后，会将<code>email_verify</code>置0，也就是转为未验证的状态，需要完成验证，才可以进行切换，继续向下看验证邮箱功能。</p>
+<p><strong>verify.php 邮件验证</strong></p>
+<p>发送部分没有什么好看的，我们直接看验证部分。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'token'</span>]) &amp;&amp; <span class="keyword">isset</span>($_GET[<span class="string">'username'</span>]))&#123;</span><br><span class="line">	$token = <span class="keyword">isset</span>($_GET[<span class="string">'token'</span>])?trim($_GET[<span class="string">'token'</span>]):<span class="string">''</span>;</span><br><span class="line">	$username = <span class="keyword">isset</span>($_GET[<span class="string">'username'</span>])?trim($_GET[<span class="string">'username'</span>]):<span class="string">''</span>;</span><br><span class="line">	<span class="keyword">if</span>($token == <span class="keyword">false</span> || $username == <span class="keyword">false</span>)&#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">'INVALID INPUT'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>($userObj-&gt;verify_email($username, $token))&#123;</span><br><span class="line">		$userObj-&gt;login($username);</span><br><span class="line">		header(<span class="string">'location: ./'</span>);</span><br><span class="line">		<span class="keyword">exit</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">die</span>(<span class="string">'INVALID TOKEN OR USERNAME'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里进行了简单的非空判断后，就直接调用<code>verify_email</code>进行了验证</p>
+<p><strong>class.user.php 邮件验证</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">verify_email</span><span class="params">($username, $token)</span></span>&#123;<span class="comment">//绑定邮箱</span></span><br><span class="line">	<span class="keyword">if</span>(!zUserFile::is_exists($username))&#123;<span class="comment">//判断用户名是否存在</span></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	$token = trim($token);</span><br><span class="line">	<span class="keyword">if</span>($token == <span class="keyword">false</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	$user = zUserFile::get_attrs($username);<span class="comment">//获得用户信息数组</span></span><br><span class="line">	$real_token = $user[<span class="string">"token"</span>];<span class="comment">//获得token</span></span><br><span class="line">	<span class="keyword">if</span>(md5($real_token) !== md5($token))&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	sleep(<span class="number">3</span>);<span class="comment">//提高选手成功率</span></span><br><span class="line">       zUserFile::update_attr($username, <span class="string">'token'</span>, <span class="string">''</span>);<span class="comment">//清空token</span></span><br><span class="line">	zUserFile::update_attr($username, <span class="string">'email_verify'</span>, <span class="number">1</span>);<span class="comment">//email检测成功</span></span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>sleep(3)是出题人为了提高选手做题成功率，加的，在git下来的代码里面是没有的，这也是坑点之一，正是这个sleep导致了条件竞争的产生。</p>
+<p>这里验证了邮箱，将<code>email_verify</code>置1，而正是此处是我们做题的关键。</p>
+<p><strong>攻击思路</strong></p>
+<ol>
+<li>注册用户绑定自己邮箱</li>
+<li>获取校验链接</li>
+<li>请求校验链接</li>
+<li>在请求校验链接的同时，修改绑定邮箱为管理员邮箱如果能够在代码执行“校验成功”和“更新账户绑定邮箱状态”步骤之间成功修改邮箱，就能直接将邮箱状态设置为已校验(条件竞争/时间竞争)</li>
+</ol>
+<h4 id="实际操作"><a href="#实际操作" class="headerlink" title="实际操作"></a>实际操作</h4><p><strong>注册用户(注册时填写自己的邮箱)</strong></p>
+<p><img src="\img\images\yige\1569426736718.png" alt="1569426736718"></p>
+<p><strong>验证邮箱</strong></p>
+<p><img src="\img\images\yige\1569426787604.png" alt="1569426787604"></p>
+<p>下面的页面会往邮箱发送一封含有token的邮件</p>
+<p><img src="\img\images\yige\1569426859249.png" alt="1569426859249"><br>发送成功<br><img src="\img\images\yige\/1569426873110.png" alt="1569426873110"></p>
+<p>查看邮件，如果收不到邮件可以去看一下垃圾箱</p>
+<p><img src="\img\images\yige\1569426938482.png" alt="1569426938482"></p>
+<p>这里的域名是没法访问的，需要手动替换成该题目的地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://114.55.36.69:8023/verify.php?token=wr9eF2779NGcAbOke7qqYjxFb8Hl59z9&amp;username=GetFlag</span><br></pre></td></tr></table></figure>
+<p><strong>换绑邮箱</strong></p>
+<p><img src="\img\images\yige\1569427043221.png" alt="1569427043221"></p>
+<p>进入换绑邮箱页面，我们通过这里将邮箱换为管理员邮箱<a href="mailto:`ambulong@vulnspy.com" target="_blank" rel="noopener">`ambulong@vulnspy.com</a>`(管理员邮箱在注册页面出现过)</p>
+<p><strong>条件竞争</strong></p>
+<p>需要的东西都准备好了，现在开始利用时间差，进行条件竞争攻击，以达到我们要将邮箱换绑为管理员邮箱并且让其成为已验证的状态。</p>
+<p><img src="\img\images\yige\1569427793881.png" alt="1569427793881"></p>
+<p>这里一定要用两个不同的浏览器，否则在<code>verify.php</code> sleep的时候，<code>chgemail.php</code>也会sleep，导致攻击失败。</p>
+<p>先访问验证邮箱的url，在其sleep过程中，迅速点击修改绑定邮箱页面的submit。</p>
+<p><img src="\img\images\yige\1569427928150.png" alt="1569427928150"></p>
+<p>该状态为条件竞争成功的状态，已经验证邮箱成功不会在出现<code>SEND_EMAIL...</code>的链接</p>
+<p><strong>切换用户</strong></p>
+<p>此时进行切换用户操作，点击<code>SWITCH ACCOUNTS</code></p>
+<p><img src="\img\images\yige\1569428020917.png" alt="1569428020917"></p>
+<p>在打开的切换用户页面中点击admin</p>
+<p><img src="\img\images\yige\1569428067250.png" alt="1569428067250"></p>
+<p>即可完成切换，跳转回主页，拿到flag</p>
+<p><img src="\img\images\yige\1569428117730.png" alt="1569428117730"></p>
+<blockquote>
+<p>文章首发于i春秋，版权所有，禁止转载！</p>
+</blockquote>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Writeup/">Writeup</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2018/11/19/湖湘杯2018复赛Web-Writeup/" title="湖湘杯2018复赛Web Writeup" itemprop="url">湖湘杯2018复赛Web Writeup</a>
   </h1>
   <p class="article-author">By
@@ -85,7 +216,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-11-18T16:00:00.000Z" itemprop="datePublished"> Published 2018-11-19</time>
+    <time datetime="2018-11-18T16:00:00.000Z" itemprop="datePublished"> 发表于 2018-11-19</time>
     
   </p>
 </header>
@@ -146,7 +277,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-11-10T17:30:00.000Z" itemprop="datePublished"> Published 2018-11-11</time>
+    <time datetime="2018-11-10T17:30:00.000Z" itemprop="datePublished"> 发表于 2018-11-11</time>
     
   </p>
 </header>
@@ -207,7 +338,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-11-08T14:00:03.000Z" itemprop="datePublished"> Published 2018-11-08</time>
+    <time datetime="2018-11-08T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-11-08</time>
     
   </p>
 </header>
@@ -268,7 +399,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-09-14T16:00:00.000Z" itemprop="datePublished"> Published 2018-09-15</time>
+    <time datetime="2018-09-14T16:00:00.000Z" itemprop="datePublished"> 发表于 2018-09-15</time>
     
   </p>
 </header>
@@ -329,7 +460,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-08-30T10:00:00.000Z" itemprop="datePublished"> Published 2018-08-30</time>
+    <time datetime="2018-08-30T10:00:00.000Z" itemprop="datePublished"> 发表于 2018-08-30</time>
     
   </p>
 </header>
@@ -390,7 +521,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-08-15T14:00:03.000Z" itemprop="datePublished"> Published 2018-08-15</time>
+    <time datetime="2018-08-15T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-08-15</time>
     
   </p>
 </header>
@@ -452,7 +583,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-08-12T09:15:03.000Z" itemprop="datePublished"> Published 2018-08-12</time>
+    <time datetime="2018-08-12T09:15:03.000Z" itemprop="datePublished"> 发表于 2018-08-12</time>
     
   </p>
 </header>
@@ -513,7 +644,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-07-26T14:00:03.000Z" itemprop="datePublished"> Published 2018-07-26</time>
+    <time datetime="2018-07-26T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-07-26</time>
     
   </p>
 </header>
@@ -574,7 +705,7 @@
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2018-04-20T10:00:03.000Z" itemprop="datePublished"> Published 2018-04-20</time>
+    <time datetime="2018-04-20T10:00:03.000Z" itemprop="datePublished"> 发表于 2018-04-20</time>
     
   </p>
 </header>
@@ -622,77 +753,16 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2018/04/17/《汇编语言》-第三版-实验7/" title="《汇编语言》(第三版)实验7 寻址方式在结构化数据访问中的应用" itemprop="url">《汇编语言》(第三版)实验7 寻址方式在结构化数据访问中的应用</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
-		
-  <p class="article-time">
-    <time datetime="2018-04-17T02:48:03.000Z" itemprop="datePublished"> Published 2018-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>很能考验对寻址的理解，挺不错的一道题目</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2018/04/17/《汇编语言》-第三版-实验7/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/汇编/">汇编</a><a href="/tags/学习笔记/">学习笔记</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -705,7 +775,7 @@
 		  
 		
 		  
-			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>16</sup></a></li>
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>17</sup></a></li>
 		  
 		
 		</ul>
@@ -722,7 +792,7 @@
 			
 		
 			
-				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>4</sup></a></li>
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>5</sup></a></li>
 			
 		
 			
@@ -735,10 +805,6 @@
 		
 			
 				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>3</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>2</sup></a></li>
 			
 		
 			
@@ -762,11 +828,23 @@
 			
 		
 			
-				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+				<li><a href="/tags/PE/" title="PE">PE<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
 			
 		
 			
@@ -782,19 +860,11 @@
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -984,7 +1054,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

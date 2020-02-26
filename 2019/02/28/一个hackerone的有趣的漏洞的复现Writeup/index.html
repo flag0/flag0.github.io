@@ -1,7 +1,7 @@
 
  <!DOCTYPE HTML>
 <html lang="cn-zh">
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   
     <title>一个hackerone的有趣的漏洞的复现Writeup | GetFlag&#39;s Blog</title>
@@ -11,13 +11,13 @@
     
 
     
-    <meta name="description" content="这道题是安恒杯18年5月份月赛的一道原题，我在做“安恒杯”Web 安全测试大赛测试赛的时候遇到了它。">
-<meta name="keywords" content="安恒杯Web安全测试大赛">
+    <meta name="description" content="扫描目录发现git源码泄露，用githack把源码拖下来后，开始审计 代码审计首先看下目录结构  phpmailer                用于发送电子邮件的PHP函数包captcha.php             生成验证码chgemail.php             修改邮箱class.mail.php            发送邮箱方法class.user.php">
+<meta name="keywords" content="Writeup">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一个hackerone的有趣的漏洞的复现Writeup">
-<meta property="og:url" content="http://flag0.com/2019/09/27/一个hackerone的有趣的漏洞的复现Writeup/index.html">
+<meta property="og:url" content="http://flag0.com/2019/02/28/一个hackerone的有趣的漏洞的复现Writeup/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
-<meta property="og:description" content="这道题是安恒杯18年5月份月赛的一道原题，我在做“安恒杯”Web 安全测试大赛测试赛的时候遇到了它。">
+<meta property="og:description" content="扫描目录发现git源码泄露，用githack把源码拖下来后，开始审计 代码审计首先看下目录结构  phpmailer                用于发送电子邮件的PHP函数包captcha.php             生成验证码chgemail.php             修改邮箱class.mail.php            发送邮箱方法class.user.php">
 <meta property="og:locale" content="cn-zh">
 <meta property="og:image" content="http://flag0.com/img/images/yige/1569426736718.png">
 <meta property="og:image" content="http://flag0.com/img/images/yige/1569426787604.png">
@@ -30,10 +30,10 @@
 <meta property="og:image" content="http://flag0.com/img/images/yige/1569428020917.png">
 <meta property="og:image" content="http://flag0.com/img/images/yige/1569428067250.png">
 <meta property="og:image" content="http://flag0.com/img/images/yige/1569428117730.png">
-<meta property="og:updated_time" content="2019-09-27T11:50:59.814Z">
+<meta property="og:updated_time" content="2020-02-26T03:43:23.521Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一个hackerone的有趣的漏洞的复现Writeup">
-<meta name="twitter:description" content="这道题是安恒杯18年5月份月赛的一道原题，我在做“安恒杯”Web 安全测试大赛测试赛的时候遇到了它。">
+<meta name="twitter:description" content="扫描目录发现git源码泄露，用githack把源码拖下来后，开始审计 代码审计首先看下目录结构  phpmailer                用于发送电子邮件的PHP函数包captcha.php             生成验证码chgemail.php             修改邮箱class.mail.php            发送邮箱方法class.user.php">
 <meta name="twitter:image" content="http://flag0.com/img/images/yige/1569426736718.png">
 
     
@@ -48,7 +48,7 @@
     
     <link rel="stylesheet" href="/css/style.css">
 </head>
-
+</html>
   <body>
     <header>
       
@@ -58,7 +58,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -90,28 +90,27 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2019/09/27/一个hackerone的有趣的漏洞的复现Writeup/" title="一个hackerone的有趣的漏洞的复现Writeup" itemprop="url">一个hackerone的有趣的漏洞的复现Writeup</a>
+      <a href="/2019/02/28/一个hackerone的有趣的漏洞的复现Writeup/" title="一个hackerone的有趣的漏洞的复现Writeup" itemprop="url">一个hackerone的有趣的漏洞的复现Writeup</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2019-09-27T11:50:59.000Z" itemprop="datePublished"> Published 2019-09-27</time>
+    <time datetime="2019-02-28T11:50:59.000Z" itemprop="datePublished"> 发表于 2019-02-28</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目录</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码审计"><span class="toc-number">1.</span> <span class="toc-text">代码审计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实际操作"><span class="toc-number">2.</span> <span class="toc-text">实际操作</span></a></li></ol>
 		
 		</div>
 		
-		<p>这道题是安恒杯18年5月份月赛的一道原题，我在做“安恒杯”Web 安全测试大赛测试赛的时候遇到了它。</p>
-<a id="more"></a>
+		<a id="more"></a>
 <p>扫描目录发现git源码泄露，用githack把源码拖下来后，开始审计</p>
 <h4 id="代码审计"><a href="#代码审计" class="headerlink" title="代码审计"></a>代码审计</h4><p>首先看下目录结构</p>
 <blockquote>
@@ -180,6 +179,9 @@
 <p><img src="\img\images\yige\1569428067250.png" alt="1569428067250"></p>
 <p>即可完成切换，跳转回主页，拿到flag</p>
 <p><img src="\img\images\yige\1569428117730.png" alt="1569428117730"></p>
+<blockquote>
+<p>文章首发于i春秋，版权所有，禁止转载！</p>
+</blockquote>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -193,7 +195,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/安恒杯Web安全测试大赛/">安恒杯Web安全测试大赛</a>
+  <span></span> <a href="/tags/Writeup/">Writeup</a>
   </div>
 
 </div>
@@ -202,7 +204,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://flag0.com/2019/09/27/一个hackerone的有趣的漏洞的复现Writeup/" data-title="一个hackerone的有趣的漏洞的复现Writeup | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  <div data-url="http://flag0.com/2019/02/28/一个hackerone的有趣的漏洞的复现Writeup/" data-title="一个hackerone的有趣的漏洞的复现Writeup | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -216,18 +218,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2019/09/27/2019安恒杯Web安全测试大赛练习赛Writeup/" title="2019安恒杯Web安全测试大赛练习赛Writeup">
+ <a href="/2019/08/30/使用docker镜像和仓库/" title="Docker学习笔记:使用docker镜像和仓库">
   <strong>上一篇：</strong><br/>
   <span>
-  2019安恒杯Web安全测试大赛练习赛Writeup</span>
+  Docker学习笔记:使用docker镜像和仓库</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2019/09/22/深思杯预选赛Writeup/"  title="深思杯线上预选赛Writeup">
+<a href="/2018/11/19/湖湘杯2018复赛Web-Writeup/"  title="湖湘杯2018复赛Web Writeup">
  <strong>下一篇：</strong><br/> 
- <span>深思杯线上预选赛Writeup
+ <span>湖湘杯2018复赛Web Writeup
 </span>
 </a>
 </div>
@@ -239,17 +241,17 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目录</strong>
  
  <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码审计"><span class="toc-number">1.</span> <span class="toc-text">代码审计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实际操作"><span class="toc-number">2.</span> <span class="toc-text">实际操作</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -262,7 +264,7 @@
 		  
 		
 		  
-			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>16</sup></a></li>
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>17</sup></a></li>
 		  
 		
 		</ul>
@@ -279,7 +281,7 @@
 			
 		
 			
-				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>4</sup></a></li>
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>5</sup></a></li>
 			
 		
 			
@@ -292,10 +294,6 @@
 		
 			
 				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>3</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>2</sup></a></li>
 			
 		
 			
@@ -319,11 +317,23 @@
 			
 		
 			
-				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+				<li><a href="/tags/PE/" title="PE">PE<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
 			
 		
 			
@@ -339,19 +349,11 @@
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -618,7 +620,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

@@ -1,7 +1,7 @@
 
  <!DOCTYPE HTML>
 <html lang="cn-zh">
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   
     <title>代码空白区添加shellcode | GetFlag&#39;s Blog</title>
@@ -15,7 +15,7 @@
 <meta name="keywords" content="shellcode,PE">
 <meta property="og:type" content="article">
 <meta property="og:title" content="代码空白区添加shellcode">
-<meta property="og:url" content="http://flag0.com/2019/08/31/代码空白区添加shellcode/index.html">
+<meta property="og:url" content="http://flag0.com/2020/02/26/代码空白区添加shellcode/index.html">
 <meta property="og:site_name" content="GetFlag&#39;s Blog">
 <meta property="og:description" content="本篇文章主要实现为记事本添加 空白弹窗，后续有时间写的话可以去写简单的文件感染的文章。 手动和编程实现，在代码空白区添加shellcode 、在数据空白区添加shellcode">
 <meta property="og:locale" content="cn-zh">
@@ -24,7 +24,7 @@
 <meta property="og:image" content="http://flag0.com/img/images/代码空白区添加shellcode/1561454221052.png">
 <meta property="og:image" content="http://flag0.com/img/images/代码空白区添加shellcode/1561453842765.png">
 <meta property="og:image" content="http://flag0.com/img/images/代码空白区添加shellcode/1561458172003.png">
-<meta property="og:updated_time" content="2019-08-31T12:54:04.511Z">
+<meta property="og:updated_time" content="2020-02-26T03:42:58.898Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="代码空白区添加shellcode">
 <meta name="twitter:description" content="本篇文章主要实现为记事本添加 空白弹窗，后续有时间写的话可以去写简单的文件感染的文章。 手动和编程实现，在代码空白区添加shellcode 、在数据空白区添加shellcode">
@@ -42,7 +42,7 @@
     
     <link rel="stylesheet" href="/css/style.css">
 </head>
-
+</html>
   <body>
     <header>
       
@@ -52,7 +52,7 @@
 				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -84,21 +84,21 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2019/08/31/代码空白区添加shellcode/" title="代码空白区添加shellcode" itemprop="url">代码空白区添加shellcode</a>
+      <a href="/2020/02/26/代码空白区添加shellcode/" title="代码空白区添加shellcode" itemprop="url">代码空白区添加shellcode</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
 		
   <p class="article-time">
-    <time datetime="2019-08-31T12:54:04.000Z" itemprop="datePublished"> Published 2019-08-31</time>
+    <time datetime="2020-02-26T12:54:04.000Z" itemprop="datePublished"> 发表于 2020-02-26</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目录</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码空白区添加shellcode"><span class="toc-number">1.</span> <span class="toc-text">代码空白区添加shellcode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#手动添加shellcode"><span class="toc-number">2.</span> <span class="toc-text">手动添加shellcode</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#寻找代码节空白区"><span class="toc-number">2.1.</span> <span class="toc-text">寻找代码节空白区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取MessageBox地址，构造ShellCode代码"><span class="toc-number">2.2.</span> <span class="toc-text">获取MessageBox地址，构造ShellCode代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算修正E8-与-E9-后面的参数"><span class="toc-number">2.3.</span> <span class="toc-text">计算修正E8 与 E9 后面的参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算并修改OEP"><span class="toc-number">2.4.</span> <span class="toc-text">计算并修改OEP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用代码添加shellcode"><span class="toc-number">3.</span> <span class="toc-text">使用代码添加shellcode</span></a></li></ol>
 		
@@ -135,7 +135,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">IMAGE_OPTIONAL_HEADER32(可选PE头)</span><br><span class="line">AddressEntryPint:0000739D		(程序开始执行的位置)</span><br><span class="line">ImageBase:		 01000000       (内存基地址)</span><br><span class="line">SectionAlignmeng:00001000		(内存对齐单位)</span><br><span class="line">FileAlignment:	 00000200		(文件对齐单位)</span><br><span class="line"></span><br><span class="line">IMAGE_SECTION_HEADER(节表)</span><br><span class="line">VirtualSize:	 00007748		(对齐前的长度)</span><br><span class="line">VirtualAddress:	 00001000	 	(内存中的偏移)</span><br><span class="line">SizeOfRawData:	 00007800		(对齐后的长度)</span><br><span class="line">PointerToRawData:00000400		(文件中的偏移)</span><br><span class="line">Characteristics: 60000020		(节区属性)</span><br></pre></td></tr></table></figure>
 <p>代码空白区的起始地址为：<code>PointerToRawData + VirtualSize</code>  即 <code>7748+400=7B48</code></p>
 <p>用<code>Uedit</code>打开记事本，找到空白区</p>
-<p><img src="\img\images\代码空白区添加shellcode\20190625120521.png" alt=""></p>
+<p><img src="\img\images\代码空白区添加shellcode\20190625120521.png" alt></p>
 <h3 id="获取MessageBox地址，构造ShellCode代码"><a href="#获取MessageBox地址，构造ShellCode代码" class="headerlink" title="获取MessageBox地址，构造ShellCode代码"></a>获取MessageBox地址，构造ShellCode代码</h3><p>用C++ 新建项目</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdafx.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"windows.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	MessageBox(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"Hello World!\n"</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>按F9在<code>MessageBox</code>前下断点,运行后<code>右键菜单-&gt;Go To Disassembly</code></p>
@@ -190,6 +190,9 @@
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AddShellCode.cpp : Defines the entry point for the console application.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdafx.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"windows.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdlib.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FILEPATH_IN <span class="meta-string">"C:\\test.exe"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FILEPATH_OUT <span class="meta-string">"C:\\t.exe"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SHELLCODELENGTH 0X12</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MESSAGEBOXADDR 0x77D5050B</span></span><br><span class="line"></span><br><span class="line">BYTE shellCode[] = </span><br><span class="line">&#123;</span><br><span class="line">	<span class="number">0x6A</span>,<span class="number">0x00</span>,<span class="number">0x6A</span>,<span class="number">0x00</span>,<span class="number">0x6A</span>,<span class="number">0x00</span>,<span class="number">0x6A</span>,<span class="number">0x00</span>,</span><br><span class="line">	<span class="number">0xE8</span>,<span class="number">0x00</span>,<span class="number">0x00</span>,<span class="number">0x00</span>,<span class="number">0x00</span>,</span><br><span class="line">	<span class="number">0xE9</span>,<span class="number">0x00</span>,<span class="number">0x00</span>,<span class="number">0x00</span>,<span class="number">0x00</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FileLength</span><span class="params">(FILE* fp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fileSize = <span class="number">0</span>;</span><br><span class="line">    fseek(fp,<span class="number">0</span>,SEEK_END);</span><br><span class="line">    fileSize = ftell(fp);</span><br><span class="line">    fseek(fp,<span class="number">0</span>,SEEK_SET);  <span class="comment">//指针归位</span></span><br><span class="line">    <span class="keyword">return</span> fileSize;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">DWORD <span class="title">ReadPEFile</span><span class="params">(IN LPSTR lpszFile,OUT LPVOID* pFileBuffer)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	FILE* pFile = <span class="literal">NULL</span>;</span><br><span class="line">	DWORD fileSize = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//打开文件</span></span><br><span class="line">	pFile = fopen(lpszFile,<span class="string">"rb+"</span>);</span><br><span class="line">	<span class="keyword">if</span>(!pFile)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"无法打开EXE文件"</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//读取文件大小</span></span><br><span class="line">	fileSize = FileLength(pFile);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//分配缓冲区大小</span></span><br><span class="line">	*pFileBuffer = <span class="built_in">malloc</span>(fileSize);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(!pFileBuffer)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">" 分配空间失败！ "</span>);</span><br><span class="line">		fclose(pFile);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//将文件数据读取到缓冲区</span></span><br><span class="line">	<span class="keyword">size_t</span> n = fread(*pFileBuffer,fileSize,<span class="number">1</span>,pFile);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(!n)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"  读取数据失败！ "</span>);</span><br><span class="line">		<span class="built_in">free</span>(*pFileBuffer);</span><br><span class="line">		fclose(pFile);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//关闭文件</span></span><br><span class="line">	fclose(pFile);</span><br><span class="line">	<span class="keyword">return</span> fileSize;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function">VOID <span class="title">addShellCode</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	LPVOID pFileBuffer=<span class="literal">NULL</span>;</span><br><span class="line">	PIMAGE_DOS_HEADER pDosHeader = <span class="literal">NULL</span>;<span class="comment">//声明DOS头结构体变量</span></span><br><span class="line">	PIMAGE_NT_HEADERS pNTHeader = <span class="literal">NULL</span>;<span class="comment">//声明NT头结构体变量</span></span><br><span class="line">	PIMAGE_FILE_HEADER pPEHeader = <span class="literal">NULL</span>;<span class="comment">//声明PE头结构体变量</span></span><br><span class="line">	PIMAGE_OPTIONAL_HEADER32 pOptionHeader = <span class="literal">NULL</span>;<span class="comment">//声明可选PE头结构体变量</span></span><br><span class="line">	PIMAGE_SECTION_HEADER pSectionHeader = <span class="literal">NULL</span>;<span class="comment">//声明节表 结构体 变量</span></span><br><span class="line">	DWORD RVA_codeBegin = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//将exe文件读取入内存</span></span><br><span class="line">	<span class="keyword">size_t</span> size = ReadPEFile(FILEPATH_IN,&amp;pFileBuffer);</span><br><span class="line">    <span class="comment">//解析PE</span></span><br><span class="line">	pDosHeader = (PIMAGE_DOS_HEADER)pFileBuffer;<span class="comment">//Dos头</span></span><br><span class="line">	pNTHeader = (PIMAGE_NT_HEADERS)((DWORD)pFileBuffer+pDosHeader-&gt;e_lfanew);<span class="comment">//NT头</span></span><br><span class="line">	pPEHeader = (PIMAGE_FILE_HEADER)(((DWORD)pNTHeader) + <span class="number">4</span>);<span class="comment">//PE头</span></span><br><span class="line">	pOptionHeader = (PIMAGE_OPTIONAL_HEADER32)((DWORD)pPEHeader + IMAGE_SIZEOF_FILE_HEADER);<span class="comment">//可选PE头</span></span><br><span class="line">	pSectionHeader = (PIMAGE_SECTION_HEADER)((DWORD)pOptionHeader + pPEHeader-&gt;SizeOfOptionalHeader);<span class="comment">//节表</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//判断代码空闲区空间</span></span><br><span class="line">	<span class="keyword">if</span>((pSectionHeader-&gt;SizeOfRawData - pSectionHeader-&gt;Misc.VirtualSize) &lt; SHELLCODELENGTH)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"代码区空闲空间不足"</span>);</span><br><span class="line">		<span class="built_in">free</span>(pFileBuffer);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//添加shellcode代码</span></span><br><span class="line">	PBYTE codeBegin = (PBYTE)((DWORD)pFileBuffer+pSectionHeader-&gt;PointerToRawData +pSectionHeader-&gt;Misc.VirtualSize +<span class="number">8</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"codeBegin:%x\n"</span>,codeBegin);</span><br><span class="line">	<span class="built_in">memcpy</span>(codeBegin,shellCode,SHELLCODELENGTH);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//FOA-&gt;RVA</span></span><br><span class="line">	<span class="keyword">if</span>(pOptionHeader-&gt;SectionAlignment != pOptionHeader-&gt;FileAlignment)</span><br><span class="line">	&#123;</span><br><span class="line">		RVA_codeBegin = (DWORD)codeBegin - pSectionHeader-&gt;PointerToRawData + pSectionHeader-&gt;VirtualAddress + pOptionHeader-&gt;ImageBase - (DWORD)pFileBuffer;</span><br><span class="line">	&#125;<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		RVA_codeBegin = (DWORD)codeBegin - (DWORD)pFileBuffer;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	<span class="comment">//修正E8</span></span><br><span class="line">	DWORD callAddr = MESSAGEBOXADDR - (RVA_codeBegin+<span class="number">0xD</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"callAddr:%x\n"</span>,callAddr);</span><br><span class="line">	*(PDWORD)(codeBegin+<span class="number">0x9</span>) = callAddr;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//修正E9</span></span><br><span class="line">	DWORD jmpAddr = (pOptionHeader-&gt;ImageBase + pOptionHeader-&gt;AddressOfEntryPoint) - (RVA_codeBegin+<span class="number">0x12</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"ImageBase:%x\nAddressEntryPoint:%x\n"</span>,pOptionHeader-&gt;ImageBase,pOptionHeader-&gt;AddressOfEntryPoint);</span><br><span class="line">	*(PDWORD)(codeBegin+<span class="number">0xE</span>) = jmpAddr;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"jmpAddr:%x\n"</span>,jmpAddr);</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	<span class="comment">//修正OEP</span></span><br><span class="line">	pOptionHeader-&gt;AddressOfEntryPoint = RVA_codeBegin-pOptionHeader-&gt;ImageBase;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"OEP:%x\n"</span>,RVA_codeBegin-pOptionHeader-&gt;ImageBase);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//存入文件</span></span><br><span class="line">	FILE* fp = fopen(FILEPATH_OUT,<span class="string">"wb+"</span>);</span><br><span class="line">	fwrite(pFileBuffer,size,<span class="number">1</span>,fp);</span><br><span class="line">	fclose(fp);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	addShellCode();</span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>注意：每个系统的MessageBox的地址可能都不相同，替换代码中的MessageBox地址</p>
+<blockquote>
+<p>文章首发于i春秋，版权所有，禁止转载！</p>
+</blockquote>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -212,7 +215,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://flag0.com/2019/08/31/代码空白区添加shellcode/" data-title="代码空白区添加shellcode | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  <div data-url="http://flag0.com/2020/02/26/代码空白区添加shellcode/" data-title="代码空白区添加shellcode | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -225,19 +228,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2019/09/01/Dockerfile指令/" title="docker学习笔记:dockerfile详解">
-  <strong>上一篇：</strong><br/>
-  <span>
-  docker学习笔记:dockerfile详解</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2019/08/30/使用docker镜像和仓库/"  title="Docker学习笔记:使用docker镜像和仓库">
+<a href="/2020/02/26/移动PE导出表/"  title="移动PE导出表">
  <strong>下一篇：</strong><br/> 
- <span>Docker学习笔记:使用docker镜像和仓库
+ <span>移动PE导出表
 </span>
 </a>
 </div>
@@ -249,17 +244,17 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目录</strong>
  
  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码空白区添加shellcode"><span class="toc-number">1.</span> <span class="toc-text">代码空白区添加shellcode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#手动添加shellcode"><span class="toc-number">2.</span> <span class="toc-text">手动添加shellcode</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#寻找代码节空白区"><span class="toc-number">2.1.</span> <span class="toc-text">寻找代码节空白区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取MessageBox地址，构造ShellCode代码"><span class="toc-number">2.2.</span> <span class="toc-text">获取MessageBox地址，构造ShellCode代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算修正E8-与-E9-后面的参数"><span class="toc-number">2.3.</span> <span class="toc-text">计算修正E8 与 E9 后面的参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算并修改OEP"><span class="toc-number">2.4.</span> <span class="toc-text">计算并修改OEP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用代码添加shellcode"><span class="toc-number">3.</span> <span class="toc-text">使用代码添加shellcode</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -272,7 +267,7 @@
 		  
 		
 		  
-			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>16</sup></a></li>
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>17</sup></a></li>
 		  
 		
 		</ul>
@@ -289,7 +284,7 @@
 			
 		
 			
-				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>4</sup></a></li>
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>5</sup></a></li>
 			
 		
 			
@@ -302,10 +297,6 @@
 		
 			
 				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>3</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>2</sup></a></li>
 			
 		
 			
@@ -329,11 +320,23 @@
 			
 		
 			
-				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+				<li><a href="/tags/PE/" title="PE">PE<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
 			
 		
 			
@@ -349,19 +352,11 @@
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -628,7 +623,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
