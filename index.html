@@ -4,26 +4,26 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   
-    <title>GetFlag&#39;s Blog</title>
+    <title>flag0&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
-    <meta name="author" content="GetFlag">
+    <meta name="author" content="flag0">
     
 
     
     <meta name="description" content="个人博客,技术分享,生活记录">
 <meta property="og:type" content="website">
-<meta property="og:title" content="GetFlag&#39;s Blog">
+<meta property="og:title" content="flag0&#39;s Blog">
 <meta property="og:url" content="http://flag0.com/index.html">
-<meta property="og:site_name" content="GetFlag&#39;s Blog">
+<meta property="og:site_name" content="flag0&#39;s Blog">
 <meta property="og:description" content="个人博客,技术分享,生活记录">
 <meta property="og:locale" content="cn-zh">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="GetFlag&#39;s Blog">
+<meta name="twitter:title" content="flag0&#39;s Blog">
 <meta name="twitter:description" content="个人博客,技术分享,生活记录">
 
     
-    <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="flag0&#39;s Blog" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/favicon.ico">
@@ -41,7 +41,7 @@
 <div>
 		
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
+				<h1 class="site-name"><a href="/" title="flag0&#39;s Blog">flag0&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -82,7 +82,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
     <time datetime="2020-02-26T12:54:04.000Z" itemprop="datePublished"> 发表于 2020-02-26</time>
@@ -144,7 +144,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
     <time datetime="2020-02-26T12:54:04.000Z" itemprop="datePublished"> 发表于 2020-02-26</time>
@@ -154,46 +154,11 @@
     <div class="article-content">
         
         <h3 id="导出表"><a href="#导出表" class="headerlink" title="导出表"></a>导出表</h3><p>导出表一般多见于DLL和SYS文件，EXE在少部分情况下拥有导出表，导出表中存储了，当前DLL可供调用的函数的地址、函数名称，导出表的地址存储在数据目录项的第一个结构中。</p>
-<p><strong>IMAGE_SECTION_HEADER[0]</strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_DATA_DIRECTORY</span> &#123;</span></span><br><span class="line">    DWORD   VirtualAddress;<span class="comment">//导出表开始的地址 RVA</span></span><br><span class="line">    DWORD   Size;<span class="comment">//导出表大小				</span></span><br><span class="line">&#125;IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;</span><br></pre></td></tr></table></figure>
-<p>存储了导出表的地址(RVA)及其大小</p>
-<p><strong>导出表结构</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_EXPORT_DIRECTORY &#123;</span><br><span class="line">    DWORD   Characteristics;    // 未使用					</span><br><span class="line">    DWORD   TimeDateStamp;		// 时间戳					</span><br><span class="line">    WORD    MajorVersion;		// 未使用</span><br><span class="line">    WORD    MinorVersion;		// 未使用</span><br><span class="line">    DWORD   Name;				// 指向该导出表文件名字符串</span><br><span class="line">    DWORD   Base;				// 导出函数起始序号</span><br><span class="line">    DWORD   NumberOfFunctions;	// 所有导出函数的个数</span><br><span class="line">    DWORD   NumberOfNames;		// 以函数名字导出的函数个数</span><br><span class="line">    DWORD   AddressOfFunctions;     // 导出函数地址表RVA</span><br><span class="line">    DWORD   AddressOfNames;         // 导出函数名称表RVA</span><br><span class="line">    DWORD   AddressOfNameOrdinals;  // 导出函数序号表RVA</span><br><span class="line">&#125; IMAGE_EXPORT_DIRECTORY, *PIMAGE_EXPORT_DIRECTORY;</span><br></pre></td></tr></table></figure>
-<p>导出表中最重要的就是三张表，AddressOfFunctions、AddressOfNames、AddressOfNameOrdinals，分别存储了函数地址，函数名称，函数序号，这里有两种函数查找方式，分别是按照函数名称查找，还有按照序号查找。</p>
-<p>我们在移动的时候，要注意RVA和FOA的转换，RVA是在内存中拉伸后的偏移，需要我们转换成文件中的偏移FOA才可以在文件中进行复制和修改。</p>
-<p>导出函数名称表的移动是一个难点，导出函数名称表中存储了导出函数名称的偏移地址RVA，需要根据地址再进行访问函数名称。</p>
-<h3 id="移动导出表的步骤"><a href="#移动导出表的步骤" class="headerlink" title="移动导出表的步骤"></a>移动导出表的步骤</h3><ol>
-<li>在PE文件中新增一个节，并且新增对应的节表。</li>
-<li>复制：AddressOfFunction(size:NumberOfFunctions * 4) 到新增的节</li>
-<li>复制：AddressOfNameOrdinals(size:NumberOfNames * 2) 到新增的节中</li>
-<li>复制：AddressOfNames(szie:NumberOfNames * 4) 到新增的节中</li>
-<li>复制：AddressOfNames表中对应的所有地址，及其函数名，移动字符串时也需要注意大小\0结尾(每复制一个函数名就要计算偏移RVA添加到函数名称表的地址中)</li>
-<li>复制：导出表结构体 到新增的节中</li>
-<li>修改导出表结构中的对应AddressOfFunctions、AddressOfNameOrdinals、AddressOfNames 地址，其他的参数不影响运行。</li>
-<li>修复目录项中的VirtualAddress，指向新的导出表的地址</li>
-</ol>
-<p><strong>这里要梳理清楚在移动过程中的各个参数，在什么时候转换为FOA，什么时候转换为RVA</strong></p>
-<p>定位导出表的地址时，需要将IMAGE_SECTION_HEADER[0].VirtualAddress的RVA-&gt;FOA，以便于在文件中定位导出表的地址</p>
-<p>在移动导出表的AddressOfFunction、AddressOfNameOrdinals、AddressOfNames时，需要将RVA-&gt;FOA以便于在文件中复制</p>
-<p>在移动AddressOfNames中的地址指向的函数名字符串时，要将AddressOfNames中的地址RVA-&gt;FOA，并且在移动完后，修改AddressOfNames中存储的地址时，要FOA-&gt;RVA</p>
-<p>将导出表中的AddressOfFunctions、AddressOfNameOrdinals、AddressOfNames 地址修改为新复制的对应的地址时，要将新复制的对应的地址FOA-&gt;RVA</p>
-<p>修复数据目录项中的VirualAddress时，要将新复制的导出表的存储地址FOA-&gt;RVA</p>
-<h3 id="移动导出表"><a href="#移动导出表" class="headerlink" title="移动导出表"></a>移动导出表</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">DWORD <span class="title">RVATOFOA</span><span class="params">(DWORD RVA,LPVOID pFileBuffer)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	DWORD FOA = <span class="literal">NULL</span>;</span><br><span class="line">	PIMAGE_DOS_HEADER pDosHeader = <span class="literal">NULL</span>;</span><br><span class="line">	PIMAGE_NT_HEADERS pNtHeaders = <span class="literal">NULL</span>;</span><br><span class="line">	PIMAGE_FILE_HEADER pFileHeader = <span class="literal">NULL</span>;</span><br><span class="line">	PIMAGE_OPTIONAL_HEADER pOptionalHeader = <span class="literal">NULL</span>;</span><br><span class="line">	PIMAGE_SECTION_HEADER pSectionHeader = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	pDosHeader = (PIMAGE_DOS_HEADER)pFileBuffer;</span><br><span class="line">	pNtHeaders = (PIMAGE_NT_HEADERS)((DWORD)pDosHeader + pDosHeader-&gt;e_lfanew);</span><br><span class="line">	pFileHeader = (PIMAGE_FILE_HEADER)((DWORD)pNtHeaders + <span class="number">4</span>);</span><br><span class="line">	pOptionalHeader = (PIMAGE_OPTIONAL_HEADER)((DWORD)pFileHeader + IMAGE_SIZEOF_FILE_HEADER);</span><br><span class="line">	pSectionHeader = (PIMAGE_SECTION_HEADER)((DWORD)pOptionalHeader + pFileHeader-&gt;SizeOfOptionalHeader);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(RVA &lt;= pOptionalHeader-&gt;SizeOfHeaders)</span><br><span class="line">		<span class="keyword">return</span> RVA;</span><br><span class="line">	<span class="keyword">for</span>(;RVA &gt; (pSectionHeader-&gt;VirtualAddress + pSectionHeader-&gt;Misc.VirtualSize);pSectionHeader++);<span class="comment">//定位到所在节</span></span><br><span class="line">	FOA = RVA - pSectionHeader-&gt;VirtualAddress + pSectionHeader-&gt;PointerToRawData;</span><br><span class="line">	<span class="keyword">return</span> FOA;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">DWORD <span class="title">FOATORVA</span><span class="params">(DWORD FOA,LPVOID pFileBuffer)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	DWORD RVA = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	PIMAGE_DOS_HEADER pDosHeader = <span class="literal">NULL</span>;</span><br><span class="line">	PIMAGE_NT_HEADERS pNtHeaders = <span class="literal">NULL</span>;</span><br><span class="line">	PIMAGE_FILE_HEADER pFileHeader = <span class="literal">NULL</span>;</span><br><span class="line">	PIMAGE_OPTIONAL_HEADER pOptionalHeader = <span class="literal">NULL</span>;</span><br><span class="line">	PIMAGE_SECTION_HEADER pSectionHeader = <span class="literal">NULL</span>;</span><br><span class="line">    </span><br><span class="line">	pDosHeader = (PIMAGE_DOS_HEADER)pFileBuffer;</span><br><span class="line">	pNtHeaders = (PIMAGE_NT_HEADERS)((DWORD)pDosHeader + pDosHeader-&gt;e_lfanew);</span><br><span class="line">	pFileHeader = (PIMAGE_FILE_HEADER)((DWORD)pNtHeaders + <span class="number">4</span>);</span><br><span class="line">	pOptionalHeader = (PIMAGE_OPTIONAL_HEADER)((DWORD)pFileHeader + IMAGE_SIZEOF_FILE_HEADER);</span><br><span class="line">	pSectionHeader = (PIMAGE_SECTION_HEADER)((DWORD)pOptionalHeader + pFileHeader-&gt;SizeOfOptionalHeader);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(FOA &lt;= pOptionalHeader-&gt;SizeOfHeaders)</span><br><span class="line">		<span class="keyword">return</span> FOA;</span><br><span class="line">	<span class="keyword">for</span>(;FOA &gt; (pSectionHeader-&gt;VirtualAddress + pSectionHeader-&gt;Misc.VirtualSize);pSectionHeader++);<span class="comment">//定位到所在节</span></span><br><span class="line">	RVA = FOA - pSectionHeader-&gt;PointerToRawData + pSectionHeader-&gt;VirtualAddress ;</span><br><span class="line">	<span class="keyword">return</span> RVA;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">BOOL <span class="title">MoveExport</span><span class="params">(LPVOID pFileBuffer)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	PIMAGE_DOS_HEADER pDosHeader = <span class="literal">NULL</span>;<span class="comment">//DOS头</span></span><br><span class="line">	PIMAGE_NT_HEADERS pNtHeaders = <span class="literal">NULL</span>;<span class="comment">//NT头</span></span><br><span class="line">	PIMAGE_FILE_HEADER pFileHeader = <span class="literal">NULL</span>;<span class="comment">//标准PE头</span></span><br><span class="line">	PIMAGE_OPTIONAL_HEADER pOptionalHeader = <span class="literal">NULL</span>;<span class="comment">//拓展PE头</span></span><br><span class="line">	PIMAGE_SECTION_HEADER pSectionHeader = <span class="literal">NULL</span>;<span class="comment">//节表</span></span><br><span class="line">	PIMAGE_SECTION_HEADER pNewSec = <span class="literal">NULL</span>;<span class="comment">//新节表结构</span></span><br><span class="line">	PIMAGE_EXPORT_DIRECTORY pExportDirectory = <span class="literal">NULL</span>; <span class="comment">//导出表结构体</span></span><br><span class="line"></span><br><span class="line">	pDosHeader = (PIMAGE_DOS_HEADER)pFileBuffer;</span><br><span class="line">	pNtHeaders = (PIMAGE_NT_HEADERS)((DWORD)pDosHeader + pDosHeader-&gt;e_lfanew);</span><br><span class="line">	pFileHeader = (PIMAGE_FILE_HEADER)((DWORD)pNtHeaders + <span class="number">4</span>);</span><br><span class="line">	pOptionalHeader = (PIMAGE_OPTIONAL_HEADER)((DWORD)pFileHeader + IMAGE_SIZEOF_FILE_HEADER);</span><br><span class="line">	pSectionHeader = (PIMAGE_SECTION_HEADER)((DWORD)pOptionalHeader + pFileHeader-&gt;SizeOfOptionalHeader);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//判断是否有足够的空间添加节表</span></span><br><span class="line">	<span class="keyword">if</span> ((pOptionalHeader-&gt;SizeOfHeaders - ((DWORD)pSectionHeader - (DWORD)pFileBuffer + pFileHeader-&gt;NumberOfSections * <span class="number">40</span>)) &lt; <span class="number">80</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"空间不足"</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//新增节表结构</span></span><br><span class="line">	pNewSec = (PIMAGE_SECTION_HEADER)(pSectionHeader + pFileHeader-&gt;NumberOfSections);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//修改节表内容</span></span><br><span class="line">	<span class="built_in">memcpy</span>(pNewSec-&gt;Name,<span class="string">".export"</span>,<span class="number">8</span>);<span class="comment">//修改节表名</span></span><br><span class="line"></span><br><span class="line">	PIMAGE_SECTION_HEADER upSecHeader = (PIMAGE_SECTION_HEADER)(pSectionHeader + pFileHeader-&gt;NumberOfSections<span class="number">-1</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(upSecHeader-&gt;Misc.VirtualSize &gt; upSecHeader-&gt;SizeOfRawData)<span class="comment">//修改节表VrituallAddress</span></span><br><span class="line">	&#123;</span><br><span class="line">		pNewSec-&gt;VirtualAddress = upSecHeader-&gt;VirtualAddress + upSecHeader-&gt;Misc.VirtualSize;</span><br><span class="line">	&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		pNewSec-&gt;VirtualAddress = upSecHeader-&gt;VirtualAddress + upSecHeader-&gt;SizeOfRawData;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	pNewSec-&gt;SizeOfRawData = <span class="number">0x1000</span>;<span class="comment">//新增的节区的大小</span></span><br><span class="line">	pNewSec-&gt;PointerToRawData = upSecHeader-&gt;PointerToRawData + upSecHeader-&gt;SizeOfRawData;<span class="comment">//文件中的偏移</span></span><br><span class="line">	pNewSec-&gt;Characteristics = <span class="number">0x60000020</span>;<span class="comment">//修改属性(可执行)</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//在新增节表后增加40个字节的空白区</span></span><br><span class="line">	<span class="built_in">memset</span>(pNewSec+<span class="number">1</span>, <span class="number">0</span>, <span class="number">40</span>);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//修改NT头属性</span></span><br><span class="line">	</span><br><span class="line">	pFileHeader-&gt;NumberOfSections += <span class="number">1</span>;<span class="comment">//修改NumberOfSection数量</span></span><br><span class="line">	pOptionalHeader-&gt;SizeOfImage += <span class="number">0x1000</span>;<span class="comment">//修改SizeOfImage大小</span></span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	LPVOID NewBuffer = <span class="built_in">malloc</span>(pOptionalHeader-&gt;SizeOfImage);<span class="comment">//申请内存</span></span><br><span class="line">	<span class="built_in">memset</span>(NewBuffer, <span class="number">0</span>, pOptionalHeader-&gt;SizeOfImage);<span class="comment">//初始化内存</span></span><br><span class="line"></span><br><span class="line">	<span class="built_in">memcpy</span>(NewBuffer, pFileBuffer,pOptionalHeader-&gt;SizeOfImage);<span class="comment">//复制内存</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">//定位导出表</span></span><br><span class="line">	DWORD ExportFoa = <span class="literal">NULL</span>;<span class="comment">//导出表FOA</span></span><br><span class="line">	PDWORD AddressOfNames = <span class="literal">NULL</span>;<span class="comment">//导出函数名称表</span></span><br><span class="line">	LPVOID AddressOfFunctions = <span class="literal">NULL</span>;<span class="comment">//导出函数地址表</span></span><br><span class="line">	PWORD AddressOfNameOrdinals = <span class="literal">NULL</span>;<span class="comment">//导出函数序号表</span></span><br><span class="line"></span><br><span class="line">	DWORD AddressOfNamesFOA = <span class="literal">NULL</span>;<span class="comment">//导出函数名称表FOA</span></span><br><span class="line">	DWORD AddressOfFunctionsFOA = <span class="literal">NULL</span>;<span class="comment">//导出函数地址表FOA</span></span><br><span class="line">	DWORD AddressOfNameOrdinalsFOA = <span class="literal">NULL</span>;<span class="comment">//导出函数序号表FOA</span></span><br><span class="line"></span><br><span class="line">	ExportFoa = RVATOFOA(pOptionalHeader-&gt;DataDirectory[<span class="number">0</span>].VirtualAddress,pFileBuffer);<span class="comment">//获取导出表的地址FOA</span></span><br><span class="line"></span><br><span class="line">	pExportDirectory = (PIMAGE_EXPORT_DIRECTORY)((DWORD)pFileBuffer + ExportFoa);<span class="comment">//定位导出表</span></span><br><span class="line"></span><br><span class="line">	AddressOfNamesFOA = RVATOFOA(pExportDirectory-&gt;AddressOfNames,pFileBuffer);<span class="comment">//获取导出函数名称表FOA</span></span><br><span class="line">	AddressOfFunctionsFOA = RVATOFOA(pExportDirectory-&gt;AddressOfFunctions,pFileBuffer);<span class="comment">//获取到处函数地址表FOA</span></span><br><span class="line">	AddressOfNameOrdinalsFOA = RVATOFOA(pExportDirectory-&gt;AddressOfNameOrdinals,pFileBuffer);<span class="comment">//获取导出函数序号表FOA</span></span><br><span class="line"></span><br><span class="line">	AddressOfNames = (PDWORD)((DWORD)pFileBuffer + AddressOfNamesFOA);<span class="comment">//定位导出函数名称表</span></span><br><span class="line">	AddressOfFunctions = (LPVOID)((DWORD)pFileBuffer + AddressOfFunctionsFOA);<span class="comment">//定位导出函数地址表</span></span><br><span class="line">	AddressOfNameOrdinals = (PWORD)((DWORD)pFileBuffer + AddressOfNameOrdinalsFOA);<span class="comment">//定位导出函数序号表</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">////复制AddressOfFunctions表 </span></span><br><span class="line">	LPVOID pNewSecAddr = (LPVOID)((DWORD)NewBuffer+pNewSec-&gt;PointerToRawData);<span class="comment">//定位新节表的地址</span></span><br><span class="line">	<span class="built_in">memcpy</span>(pNewSecAddr,AddressOfFunctions,(pExportDirectory-&gt;NumberOfFunctions * <span class="number">4</span>));</span><br><span class="line"></span><br><span class="line">	<span class="comment">//复制AddressOfNameOrdinals表</span></span><br><span class="line">	pNewSecAddr =(LPVOID)((DWORD)pNewSecAddr + (pExportDirectory-&gt;NumberOfFunctions * <span class="number">4</span>));</span><br><span class="line">	<span class="built_in">memcpy</span>(pNewSecAddr,AddressOfNameOrdinals,(pExportDirectory-&gt;NumberOfNames * <span class="number">2</span>));</span><br><span class="line"></span><br><span class="line">	<span class="comment">//复制AddressOfNames</span></span><br><span class="line">	pNewSecAddr =(LPVOID)((DWORD)pNewSecAddr + (pExportDirectory-&gt;NumberOfNames * <span class="number">2</span>));</span><br><span class="line">	PDWORD NameAddr = (PDWORD)pNewSecAddr;<span class="comment">//这里存储一下函数地址名称表的地址，以便后边移动名称的时候修改相应地址</span></span><br><span class="line">	<span class="built_in">memcpy</span>(pNewSecAddr,AddressOfNames,(pExportDirectory-&gt;NumberOfNames * <span class="number">4</span>));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">//复制函数名称表中的名称 </span></span><br><span class="line">	pNewSecAddr =(LPVOID)((DWORD)pNewSecAddr + (pExportDirectory-&gt;NumberOfNames * <span class="number">4</span>));</span><br><span class="line">	<span class="comment">//每复制一个函数名就要计算偏移添加到名字表的地址里</span></span><br><span class="line"></span><br><span class="line">	DWORD NameAddOffset = (DWORD)pNewSecAddr - (DWORD)NewBuffer;<span class="comment">//函数名称偏移</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">size_t</span> i=<span class="number">0</span>;i &lt; pExportDirectory-&gt;NumberOfNames;i++,AddressOfNames++)</span><br><span class="line">	&#123;</span><br><span class="line">		DWORD NameOffset = (DWORD)*AddressOfNames;</span><br><span class="line">		PCHAR FName = (PCHAR)((DWORD)pFileBuffer + NameOffset);</span><br><span class="line">		<span class="keyword">size_t</span> l = <span class="number">0</span>;</span><br><span class="line">		</span><br><span class="line">		*NameAddr = FOATORVA(NameAddOffset,NewBuffer);<span class="comment">//复制函数名称偏移到地址中</span></span><br><span class="line">		NameAddr = (PDWORD)((DWORD)NameAddr + <span class="number">0x4</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">while</span>(FName[l] != <span class="string">'\0'</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			l += <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		NameAddOffset += (l+<span class="number">1</span>);</span><br><span class="line">		<span class="built_in">memcpy</span>(pNewSecAddr,FName,(l+<span class="number">1</span>));<span class="comment">//复制函数名字符串到地址中</span></span><br><span class="line"></span><br><span class="line">		pNewSecAddr =(LPVOID)((DWORD)pNewSecAddr + l+<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//复制IMAGE_EXPORT_DIRECTORY结构体</span></span><br><span class="line">	<span class="built_in">memcpy</span>(pNewSecAddr,pExportDirectory,pOptionalHeader-&gt;DataDirectory[<span class="number">0</span>].Size);</span><br><span class="line">	PIMAGE_EXPORT_DIRECTORY pNewExportDirectory = (PIMAGE_EXPORT_DIRECTORY)pNewSecAddr;<span class="comment">//地址赋值给新的导出表结构体</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//修改新的导出表的AddressOfFunctions、AddressOfNameOrdinals、AddressOfNames地址，这里需要FOA-&gt;RVA</span></span><br><span class="line">	pNewExportDirectory-&gt;AddressOfFunctions = FOATORVA(pNewSec-&gt;PointerToRawData,NewBuffer);</span><br><span class="line">	pNewExportDirectory-&gt;AddressOfNameOrdinals = FOATORVA(pNewSec-&gt;PointerToRawData + pExportDirectory-&gt;NumberOfFunctions * <span class="number">4</span>,NewBuffer);</span><br><span class="line">	pNewExportDirectory-&gt;AddressOfNames = FOATORVA(pNewSec-&gt;PointerToRawData + pExportDirectory-&gt;NumberOfFunctions * <span class="number">4</span> + pExportDirectory-&gt;NumberOfNames * <span class="number">2</span>,NewBuffer);</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//修复目录项中的值，指向新的导出表的地址RVA</span></span><br><span class="line">	pDosHeader = (PIMAGE_DOS_HEADER)NewBuffer;</span><br><span class="line">	pNtHeaders = (PIMAGE_NT_HEADERS)((DWORD)pDosHeader + pDosHeader-&gt;e_lfanew);</span><br><span class="line">	pFileHeader = (PIMAGE_FILE_HEADER)((DWORD)pNtHeaders + <span class="number">4</span>);</span><br><span class="line">	pOptionalHeader = (PIMAGE_OPTIONAL_HEADER)((DWORD)pFileHeader + IMAGE_SIZEOF_FILE_HEADER);</span><br><span class="line">	pSectionHeader = (PIMAGE_SECTION_HEADER)((DWORD)pOptionalHeader + pFileHeader-&gt;SizeOfOptionalHeader);</span><br><span class="line">	pOptionalHeader-&gt;DataDirectory[<span class="number">0</span>].VirtualAddress = FOATORVA((DWORD)pNewExportDirectory - (DWORD)NewBuffer,NewBuffer);</span><br><span class="line"></span><br><span class="line">	FILE* fp = fopen(<span class="string">"C:\\testD.dll"</span>,<span class="string">"wb+"</span>);</span><br><span class="line">	fwrite(NewBuffer,pOptionalHeader-&gt;SizeOfImage,<span class="number">1</span>,fp);</span><br><span class="line">	fclose(fp);</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>查看移动后的效果</strong></p>
-<p>用工具打开，可以看到节表添加成功</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20200225112435-208311.png" alt="1582601073918"></p>
-<p>导出表也可以正常解析</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20200225114210-346189.png" alt="1582602113756"></p>
-<p>用十六进制编辑器打开我们移动后的Dll文件进行查看，可以看到我们移动的各个位置如下</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20200225115745-262144.png" alt="1582602895748"></p>
-<p>在移动的过程中，如果遇到问题，也可以用十六进制编辑器打开我们移动后保存的文件，一步一步的对比调试。</p>
-<blockquote>
-<p>文章首发于i春秋，版权所有，禁止转载！</p>
-</blockquote>
-
         
         
         <p class="article-more-link">
+          
+            <a href="/2020/02/26/移动PE导出表/#more">Read More</a>
           
        </p>
     </div>
@@ -240,7 +205,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
     <time datetime="2019-10-31T02:12:29.000Z" itemprop="datePublished"> 发表于 2019-10-31</time>
@@ -301,7 +266,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
     <time datetime="2019-10-20T13:05:19.000Z" itemprop="datePublished"> 发表于 2019-10-20</time>
@@ -362,7 +327,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
     <time datetime="2019-10-06T13:30:18.000Z" itemprop="datePublished"> 发表于 2019-10-06</time>
@@ -423,7 +388,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
     <time datetime="2019-10-05T03:20:40.000Z" itemprop="datePublished"> 发表于 2019-10-05</time>
@@ -484,7 +449,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
     <time datetime="2019-09-27T15:06:27.000Z" itemprop="datePublished"> 发表于 2019-09-27</time>
@@ -545,7 +510,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
     <time datetime="2019-09-22T08:48:37.000Z" itemprop="datePublished"> 发表于 2019-09-22</time>
@@ -606,7 +571,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
     <time datetime="2019-09-20T15:57:55.000Z" itemprop="datePublished"> 发表于 2019-09-20</time>
@@ -667,7 +632,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
     <time datetime="2019-09-18T13:01:53.000Z" itemprop="datePublished"> 发表于 2019-09-18</time>
@@ -775,6 +740,10 @@
 			
 		
 			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
@@ -783,15 +752,11 @@
 			
 		
 			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
 			
 		
 			
@@ -811,10 +776,6 @@
 			
 		
 			
-				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
 			
 		
@@ -823,15 +784,19 @@
 			
 		
 			
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
+				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -841,6 +806,12 @@
   <div class="linkslist">
   <p class="asidetitle">友情链接</p>
     <ul>
+        
+          <li>
+            
+            	<a href="https://y-y-k.tk/" target="_blank" title="y-y-k">y-y-k</a>
+            
+          </li>
         
           <li>
             
@@ -920,7 +891,7 @@
 		<p class="copyright">
 		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2020 
 		
-		<a href="/about" target="_blank" title="GetFlag">GetFlag</a>
+		<a href="/about" target="_blank" title="flag0">flag0</a>
 		
 		
 		</p>

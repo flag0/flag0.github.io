@@ -4,32 +4,32 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   
-    <title>移动PE导出表 | GetFlag&#39;s Blog</title>
+    <title>移动PE导出表 | flag0&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
-    <meta name="author" content="GetFlag">
+    <meta name="author" content="flag0">
     
 
     
-    <meta name="description" content="导出表导出表一般多见于DLL和SYS文件，EXE在少部分情况下拥有导出表，导出表中存储了，当前DLL可供调用的函数的地址、函数名称，导出表的地址存储在数据目录项的第一个结构中。 IMAGE_SECTION_HEADER[0] 1234typedef struct _IMAGE_DATA_DIRECTORY &amp;#123;    DWORD   VirtualAddress;//导出表开始的地址 RV">
+    <meta name="description" content="导出表导出表一般多见于DLL和SYS文件，EXE在少部分情况下拥有导出表，导出表中存储了，当前DLL可供调用的函数的地址、函数名称，导出表的地址存储在数据目录项的第一个结构中。">
 <meta name="keywords" content="PE">
 <meta property="og:type" content="article">
 <meta property="og:title" content="移动PE导出表">
 <meta property="og:url" content="http://flag0.com/2020/02/26/移动PE导出表/index.html">
-<meta property="og:site_name" content="GetFlag&#39;s Blog">
-<meta property="og:description" content="导出表导出表一般多见于DLL和SYS文件，EXE在少部分情况下拥有导出表，导出表中存储了，当前DLL可供调用的函数的地址、函数名称，导出表的地址存储在数据目录项的第一个结构中。 IMAGE_SECTION_HEADER[0] 1234typedef struct _IMAGE_DATA_DIRECTORY &amp;#123;    DWORD   VirtualAddress;//导出表开始的地址 RV">
+<meta property="og:site_name" content="flag0&#39;s Blog">
+<meta property="og:description" content="导出表导出表一般多见于DLL和SYS文件，EXE在少部分情况下拥有导出表，导出表中存储了，当前DLL可供调用的函数的地址、函数名称，导出表的地址存储在数据目录项的第一个结构中。">
 <meta property="og:locale" content="cn-zh">
 <meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20200225112435-208311.png">
 <meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20200225114210-346189.png">
 <meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20200225115745-262144.png">
-<meta property="og:updated_time" content="2020-02-26T03:42:54.395Z">
+<meta property="og:updated_time" content="2020-03-15T08:17:16.282Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="移动PE导出表">
-<meta name="twitter:description" content="导出表导出表一般多见于DLL和SYS文件，EXE在少部分情况下拥有导出表，导出表中存储了，当前DLL可供调用的函数的地址、函数名称，导出表的地址存储在数据目录项的第一个结构中。 IMAGE_SECTION_HEADER[0] 1234typedef struct _IMAGE_DATA_DIRECTORY &amp;#123;    DWORD   VirtualAddress;//导出表开始的地址 RV">
+<meta name="twitter:description" content="导出表导出表一般多见于DLL和SYS文件，EXE在少部分情况下拥有导出表，导出表中存储了，当前DLL可供调用的函数的地址、函数名称，导出表的地址存储在数据目录项的第一个结构中。">
 <meta name="twitter:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20200225112435-208311.png">
 
     
-    <link rel="alternative" href="/atom.xml" title="GetFlag&#39;s Blog" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="flag0&#39;s Blog" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/favicon.ico">
@@ -47,7 +47,7 @@
 <div>
 		
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="GetFlag&#39;s Blog">GetFlag&#39;s Blog</a></h1>
+				<h1 class="site-name"><a href="/" title="flag0&#39;s Blog">flag0&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -86,7 +86,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="GetFlag" target="_blank" itemprop="author">GetFlag</a>
+		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
     <time datetime="2020-02-26T12:54:04.000Z" itemprop="datePublished"> 发表于 2020-02-26</time>
@@ -103,6 +103,7 @@
 		</div>
 		
 		<h3 id="导出表"><a href="#导出表" class="headerlink" title="导出表"></a>导出表</h3><p>导出表一般多见于DLL和SYS文件，EXE在少部分情况下拥有导出表，导出表中存储了，当前DLL可供调用的函数的地址、函数名称，导出表的地址存储在数据目录项的第一个结构中。</p>
+<a id="more"></a>
 <p><strong>IMAGE_SECTION_HEADER[0]</strong></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_DATA_DIRECTORY</span> &#123;</span></span><br><span class="line">    DWORD   VirtualAddress;<span class="comment">//导出表开始的地址 RVA</span></span><br><span class="line">    DWORD   Size;<span class="comment">//导出表大小				</span></span><br><span class="line">&#125;IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;</span><br></pre></td></tr></table></figure>
 <p>存储了导出表的地址(RVA)及其大小</p>
@@ -161,7 +162,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://flag0.com/2020/02/26/移动PE导出表/" data-title="移动PE导出表 | GetFlag&#39;s Blog" data-tsina="" class="share clearfix">
+	  <div data-url="http://flag0.com/2020/02/26/移动PE导出表/" data-title="移动PE导出表 | flag0&#39;s Blog" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -254,6 +255,10 @@
 			
 		
 			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
@@ -262,15 +267,11 @@
 			
 		
 			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
 			
 		
 			
@@ -290,10 +291,6 @@
 			
 		
 			
-				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
 			
 		
@@ -302,15 +299,19 @@
 			
 		
 			
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
+				<li><a href="/tags/php/" title="php">php<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -320,6 +321,12 @@
   <div class="linkslist">
   <p class="asidetitle">友情链接</p>
     <ul>
+        
+          <li>
+            
+            	<a href="https://y-y-k.tk/" target="_blank" title="y-y-k">y-y-k</a>
+            
+          </li>
         
           <li>
             
@@ -399,7 +406,7 @@
 		<p class="copyright">
 		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2020 
 		
-		<a href="/about" target="_blank" title="GetFlag">GetFlag</a>
+		<a href="/about" target="_blank" title="flag0">flag0</a>
 		
 		
 		</p>
