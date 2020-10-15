@@ -11,18 +11,18 @@
     
 
     
-    <meta name="description" content="假期去银川参加了Google 高职组夏令营，见到了好多高职组省一国一的大佬们，夏令营主体是一个创客比赛，要求需要用到TensorFlow框架，简单学习了一下。">
+    <meta name="description" content="假期去银川参加了Google 夏令营，夏令营主体是一个创客比赛，要求需要用到TensorFlow框架，简单学习了一下。">
 <meta name="keywords" content="python,TensorFlow,图像识别">
 <meta property="og:type" content="article">
 <meta property="og:title" content="TensorFlow框架的简单调用">
 <meta property="og:url" content="http://flag0.com/2018/07/26/TensorFlow框架的简单调用/index.html">
 <meta property="og:site_name" content="flag0&#39;s Blog">
-<meta property="og:description" content="假期去银川参加了Google 高职组夏令营，见到了好多高职组省一国一的大佬们，夏令营主体是一个创客比赛，要求需要用到TensorFlow框架，简单学习了一下。">
+<meta property="og:description" content="假期去银川参加了Google 夏令营，夏令营主体是一个创客比赛，要求需要用到TensorFlow框架，简单学习了一下。">
 <meta property="og:locale" content="cn-zh">
-<meta property="og:updated_time" content="2018-07-28T09:11:22.046Z">
+<meta property="og:updated_time" content="2020-10-15T10:15:05.120Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TensorFlow框架的简单调用">
-<meta name="twitter:description" content="假期去银川参加了Google 高职组夏令营，见到了好多高职组省一国一的大佬们，夏令营主体是一个创客比赛，要求需要用到TensorFlow框架，简单学习了一下。">
+<meta name="twitter:description" content="假期去银川参加了Google 夏令营，夏令营主体是一个创客比赛，要求需要用到TensorFlow框架，简单学习了一下。">
 
     
     <link rel="alternative" href="/atom.xml" title="flag0&#39;s Blog" type="application/atom+xml">
@@ -46,7 +46,7 @@
 				<h1 class="site-name"><a href="/" title="flag0&#39;s Blog">flag0&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -85,20 +85,20 @@
 		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
-    <time datetime="2018-07-26T14:00:03.000Z" itemprop="datePublished"> 发表于 2018-07-26</time>
+    <time datetime="2018-07-26T14:00:03.000Z" itemprop="datePublished"> Published 2018-07-26</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TensorFlow识别实现"><span class="toc-number">1.</span> <span class="toc-text">TensorFlow识别实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#record-py-生成数据集"><span class="toc-number">1.1.</span> <span class="toc-text">record.py 生成数据集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#model-py-生成模型"><span class="toc-number">1.2.</span> <span class="toc-text">model.py 生成模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#trains-py-训练数据"><span class="toc-number">1.3.</span> <span class="toc-text">trains.py 训练数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#evaluate-py-测试数据"><span class="toc-number">1.4.</span> <span class="toc-text">evaluate.py 测试数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#批量修改图片大小"><span class="toc-number">2.</span> <span class="toc-text">批量修改图片大小</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#增加样本容量脚本"><span class="toc-number">3.</span> <span class="toc-text">增加样本容量脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#批量剪切背景"><span class="toc-number">4.</span> <span class="toc-text">批量剪切背景</span></a></li></ol>
 		
 		</div>
 		
-		<p>假期去银川参加了Google 高职组夏令营，见到了好多高职组省一国一的大佬们，夏令营主体是一个创客比赛，要求需要用到TensorFlow框架，简单学习了一下。<br><a id="more"></a></p>
+		<p>假期去银川参加了Google 夏令营，夏令营主体是一个创客比赛，要求需要用到TensorFlow框架，简单学习了一下。<br><a id="more"></a></p>
 <h2 id="TensorFlow识别实现"><a href="#TensorFlow识别实现" class="headerlink" title="TensorFlow识别实现"></a>TensorFlow识别实现</h2><blockquote>
 <p>首先收集数据集，保存在不同的文件夹，然后运行 resizes.py,批量修改图片大小，如有需要可以运行write_pic.py，批量增加样本容量或运行shear.py 剪切背景,之后运行tecord.py生成训练集，运行model.py 生成模型，运行trains.py 训练数据，最后运行evaluate.py,放入测试集，进行图像的识别</p>
 </blockquote>
@@ -169,17 +169,17 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TensorFlow识别实现"><span class="toc-number">1.</span> <span class="toc-text">TensorFlow识别实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#record-py-生成数据集"><span class="toc-number">1.1.</span> <span class="toc-text">record.py 生成数据集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#model-py-生成模型"><span class="toc-number">1.2.</span> <span class="toc-text">model.py 生成模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#trains-py-训练数据"><span class="toc-number">1.3.</span> <span class="toc-text">trains.py 训练数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#evaluate-py-测试数据"><span class="toc-number">1.4.</span> <span class="toc-text">evaluate.py 测试数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#批量修改图片大小"><span class="toc-number">2.</span> <span class="toc-text">批量修改图片大小</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#增加样本容量脚本"><span class="toc-number">3.</span> <span class="toc-text">增加样本容量脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#批量剪切背景"><span class="toc-number">4.</span> <span class="toc-text">批量剪切背景</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
@@ -225,15 +225,15 @@
 			
 		
 			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
 			
 		
 			
@@ -249,11 +249,11 @@
 			
 		
 			
-				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
 			
 		
 			
@@ -273,7 +273,7 @@
 			
 		
 			
-				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
 			
 		
 			
@@ -560,7 +560,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

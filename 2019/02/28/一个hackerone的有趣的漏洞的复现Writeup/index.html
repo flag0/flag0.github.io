@@ -11,13 +11,13 @@
     
 
     
-    <meta name="description" content="扫描目录发现git源码泄露，用githack把源码拖下来后，开始审计 代码审计首先看下目录结构  phpmailer                用于发送电子邮件的PHP函数包captcha.php             生成验证码chgemail.php             修改邮箱class.mail.php            发送邮箱方法class.user.php">
+    <meta name="description" content="扫描目录发现git源码泄露，用githack把源码拖下来后，开始审计">
 <meta name="keywords" content="Writeup">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一个hackerone的有趣的漏洞的复现Writeup">
 <meta property="og:url" content="http://flag0.com/2019/02/28/一个hackerone的有趣的漏洞的复现Writeup/index.html">
 <meta property="og:site_name" content="flag0&#39;s Blog">
-<meta property="og:description" content="扫描目录发现git源码泄露，用githack把源码拖下来后，开始审计 代码审计首先看下目录结构  phpmailer                用于发送电子邮件的PHP函数包captcha.php             生成验证码chgemail.php             修改邮箱class.mail.php            发送邮箱方法class.user.php">
+<meta property="og:description" content="扫描目录发现git源码泄露，用githack把源码拖下来后，开始审计">
 <meta property="og:locale" content="cn-zh">
 <meta property="og:image" content="http://flag0.com/img/images/yige/1569426736718.png">
 <meta property="og:image" content="http://flag0.com/img/images/yige/1569426787604.png">
@@ -30,10 +30,10 @@
 <meta property="og:image" content="http://flag0.com/img/images/yige/1569428020917.png">
 <meta property="og:image" content="http://flag0.com/img/images/yige/1569428067250.png">
 <meta property="og:image" content="http://flag0.com/img/images/yige/1569428117730.png">
-<meta property="og:updated_time" content="2020-03-15T08:21:01.957Z">
+<meta property="og:updated_time" content="2020-08-01T02:11:58.449Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一个hackerone的有趣的漏洞的复现Writeup">
-<meta name="twitter:description" content="扫描目录发现git源码泄露，用githack把源码拖下来后，开始审计 代码审计首先看下目录结构  phpmailer                用于发送电子邮件的PHP函数包captcha.php             生成验证码chgemail.php             修改邮箱class.mail.php            发送邮箱方法class.user.php">
+<meta name="twitter:description" content="扫描目录发现git源码泄露，用githack把源码拖下来后，开始审计">
 <meta name="twitter:image" content="http://flag0.com/img/images/yige/1569426736718.png">
 
     
@@ -58,7 +58,7 @@
 				<h1 class="site-name"><a href="/" title="flag0&#39;s Blog">flag0&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -97,21 +97,21 @@
 		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
-    <time datetime="2019-02-28T11:50:59.000Z" itemprop="datePublished"> 发表于 2019-02-28</time>
+    <time datetime="2019-02-28T11:50:59.000Z" itemprop="datePublished"> Published 2019-02-28</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码审计"><span class="toc-number">1.</span> <span class="toc-text">代码审计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实际操作"><span class="toc-number">2.</span> <span class="toc-text">实际操作</span></a></li></ol>
 		
 		</div>
 		
-		<a id="more"></a>
-<p>扫描目录发现git源码泄露，用githack把源码拖下来后，开始审计</p>
+		<p>扫描目录发现git源码泄露，用githack把源码拖下来后，开始审计</p>
+<a id="more"></a>
 <h4 id="代码审计"><a href="#代码审计" class="headerlink" title="代码审计"></a>代码审计</h4><p>首先看下目录结构</p>
 <blockquote>
 <p>phpmailer                用于发送电子邮件的PHP函数包<br>captcha.php             生成验证码<br>chgemail.php             修改邮箱<br>class.mail.php            发送邮箱方法<br>class.user.php            用户相关操作<br>class.zcaptcha.php         验证码相关<br>functions.php<br>index.php                    获取flag<br>init.php                 配置文件<br>login.php                登陆<br>register.php              注册用户<br>style.css<br>switch.php            切换用户<br>verify.php              验证邮箱</p>
@@ -241,17 +241,17 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
  <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码审计"><span class="toc-number">1.</span> <span class="toc-text">代码审计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实际操作"><span class="toc-number">2.</span> <span class="toc-text">实际操作</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
@@ -297,15 +297,15 @@
 			
 		
 			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
 			
 		
 			
@@ -321,11 +321,11 @@
 			
 		
 			
-				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
 			
 		
 			
@@ -345,7 +345,7 @@
 			
 		
 			
-				<li><a href="/tags/jekyll/" title="jekyll">jekyll<sup>1</sup></a></li>
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
 			
 		
 			
@@ -632,7 +632,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
