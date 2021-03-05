@@ -44,7 +44,7 @@
 				<h1 class="site-name"><a href="/" title="flag0&#39;s Blog">flag0&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -78,6 +78,208 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2021/03/05/SUCTF2019AkiraHomework分析文档/" title="SUCTF2019Akira Homework分析文档" itemprop="url">SUCTF2019Akira Homework分析文档</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
+		
+  <p class="article-time">
+    <time datetime="2021-03-05T08:47:03.000Z" itemprop="datePublished"> 发表于 2021-03-05</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>[TOC]</p>
+<h1 id="程序流程"><a href="#程序流程" class="headerlink" title="程序流程"></a>程序流程</h1><p>该程序没有壳，有三处简单的反调试，patch掉后，通过输入的检测后，会有三段解密函数来还原出一个dll，通过文件映射向dll内传递flag的密文，在dll中进行aes解密，最终得到flag。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305142002-395864.png" alt="1614925201124"></p>
+<h1 id="逆向分析"><a href="#逆向分析" class="headerlink" title="逆向分析"></a>逆向分析</h1><h2 id="查看基础信息"><a href="#查看基础信息" class="headerlink" title="查看基础信息"></a>查看基础信息</h2><p>运行一下，查看其输出结果。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304205044-211813.png" alt="1614862244096"></p>
+<p>首先使用Exeinfo查壳，发现没有壳，是X64的程序。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304204616-546741.png" alt="1614861975162"></p>
+<p>用X64dbg打开发现有地址随机化，用CFF关闭地址随机化<code>OptionHandle-&gt;DllCharacteristics</code>，便于后续继续分析。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304205911-991614.png" alt="1614862750802"></p>
+<h2 id="反调试"><a href="#反调试" class="headerlink" title="反调试"></a>反调试</h2><h3 id="TLS反调试"><a href="#TLS反调试" class="headerlink" title="TLS反调试"></a>TLS反调试</h3><p>在main函数处下断点，运行后发现有弹框并退出进程，则判断有TLS反调试。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304210835-180429.png" alt="1614863314408"></p>
+<p>使用ida查看TLS函数处，发现有IsDebuggerPresent反调试和四个加密的数组。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304212454-217153.png" alt="1614864293475"></p>
+<p>手动Path掉反调试，继续分析，等待数组的内容解密后可以看到解密后的字符串。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210303093959-619250.png" alt="1614735598871"></p>
+<ul>
+<li>NtQueryInformationProcess 取进程信息函数，可以用于反调试(有调试端口，可以检测进程是否被调试)。</li>
+<li>ZwQueryInformationThread 获取线程信息，可以用于反调试。</li>
+<li>NtQueryApcThread apc队列</li>
+</ul>
+<blockquote>
+<p>APC注入可以让一个线程在它正常的执行路径运行之前执行一些其他的代码，每一个线程都有一个附加的APC队列，他们在线程处于可警告的时候才被处理（WaitForSingObjectEx,SleepEx)。</p>
+<p>异步过程调用,apc可以看成就是内核里的定时器，为了给自己一个在本函数返回后还能执行的一次机会,有很多操作是需要在函数返回后才能执行.类似于析构函数但不完全是。</p>
+</blockquote>
+<p>反反调试：跟进<code>IsDebuggerPresent</code>API中，进行如下修改即可。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305101243-228596.png" alt="1614910362383"></p>
+<h3 id="线程反调试1"><a href="#线程反调试1" class="headerlink" title="线程反调试1"></a>线程反调试1</h3><p>位置：mian函数-&gt;<code>beginthreadex</code>中的线程启动函数(140009180)-&gt; sub_140008B20。</p>
+<p>使用快照遍历进程获取进程的md5值与原有的md5值进行判断，当存在指定进程时则退出程序，这里可以判断为反调试。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305095447-665003.png" alt="img"></p>
+<p>反反调试方案：patch掉exit函数即可。</p>
+<h4 id="md5加密算法的识别"><a href="#md5加密算法的识别" class="headerlink" title="md5加密算法的识别"></a>md5加密算法的识别</h4><p>md5加密的两个特征：</p>
+<ol>
+<li>加密后的字符是32位。</li>
+<li>在md5函数中有查表相关的操作。</li>
+</ol>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304092126-864931.png" alt="1614820886234"></p>
+<p>md5对比值</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304092155-581006.png" alt="1614820914195"></p>
+<p>据此可以判断其为md5算法。</p>
+<h3 id="线程反调试2"><a href="#线程反调试2" class="headerlink" title="线程反调试2"></a>线程反调试2</h3><p>这里为线程启动函数中的第二个函数，里面全部都是进行反调试的代码，除了调用常见的<code>IsDebuggerPresent</code>和<code>CheckRemoteDebuggerPresent</code>来进行反调试，还调用了TLS解密后的函数<code>NtQueryInformationProcess</code>和<code>ZwQueryInformationThread</code>来进行DebugPort调试端口的判断。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305100614-230678.png" alt="1614909973818"></p>
+<p>反反调试：直接patch掉这个函数即可。</p>
+<h2 id="解密函数分析"><a href="#解密函数分析" class="headerlink" title="解密函数分析"></a>解密函数分析</h2><p>顺利进入到main函数，开始下一步的分析，进入<code>sub_140009C20</code>函数中。</p>
+<p>可以看到为全局变量<code>qword_140016178</code>，<code>qword_140016180</code> 申请堆空间的操作。</p>
+<p>跟进其中的<code>sub_1400086C0</code>函数内，发现了疑似函数参数内有编号0x10001~0x10003。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304220506-353340.png" alt="1614866705853"></p>
+<p>依次跟进这些函数中。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304220018-569291.png" alt="1614866417586"></p>
+<p>这里跟进函数中的虚表的第二项可以看到对应的虚函数的地址。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304171245-6918.png" alt="1614849163738"></p>
+<p>跳到对应的函数地址<code>sub_14000a8a0</code>去查看，发现有对原有数据进行异或的操作。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304220137-375438.png" alt="1614866496727"></p>
+<p>跟进去<code>byte_1400111A0</code>可以看到，其为一大段数据，长度为19456，这里可能藏有一个文件。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304220358-644892.png" alt="1614866637379"></p>
+<p>继续分析剩下的两个<code>sub_140008370</code>、<code>sub_1400083F0</code>发现其结构与<code>sub_14000a8a0</code>中一致，找到虚表中的虚函数地址依次跟进去。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304221025-530051.png" alt="1614867024753"></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304221118-307862.png" alt="1614867077718"></p>
+<p>发现其都对<code>byte_1400111A0</code>数组内的数据进行了变换的操作，同时由于if判断条件的不同，各对其中的一部分数据做变换，猜测其可能为解密的函数，并与之前传入的ID可能有所关联。</p>
+<p>退出去<code>sub_1400086C0</code>函数，回到<code>sub_140009C20</code>中，接着往下分析。</p>
+<p>可以看到创建事件对象的操作，结合上述解密函数里有SetEvent设置事件对象的操作，猜测这里是为了防止重复对数据进行变换。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304222503-941699.png" alt="1614867903314"></p>
+<p>接着往下跟进<code>sub_140008850</code>，可以看到这里获取函数地址的操作，而这几个函数的名称是在上面分析过的TLS函数中解密的。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304222748-601082.png" alt="1614868067713"></p>
+<p>此时第一个函数sub_140009c20分析完毕，再次回到main函数中。</p>
+<p>可以看到其有创建线程的操作，跟进其线程启动函数StatAddress中去。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304223003-556200.png" alt="1614868203054"></p>
+<p>跟进去后，依次对其中的函数来进行分析。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304223052-837020.png" alt="1614868251419"></p>
+<p>首先进入第一个函数<code>sub_140008B20</code>中去，进行分析。</p>
+<p>可以看到其中的sub_140008300的参数为我们之前分析过的解密函数的对应序号，而其参数v7在下面sub_140006C10函数中被当作参数使用，并且其中参数还有之前看到过的qword_140016178，可以判定其与我们之前分析的疑似的解密函数必有关联。</p>
+<p>跟进去sub_140008300函数中，发现其是将编号0x100001赋值给了a1+4的位置。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304223607-985651.png" alt="1614868567187"></p>
+<p>跟进去<code>sub_140006c10</code>，发现其中为解密函数调用的位置(虚表函数调用)，并且a3为传入参数。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305092503-140357.png" alt="1614907502663"></p>
+<h3 id="解密函数0x100001"><a href="#解密函数0x100001" class="headerlink" title="解密函数0x100001"></a>解密函数0x100001</h3><p>查看其传入的a3参数为106，联想之前解密函数的内容，可以判断其为解密函数的“密钥”</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305092634-320814.png" alt="1614907593190"></p>
+<h3 id="解密函数0x100002"><a href="#解密函数0x100002" class="headerlink" title="解密函数0x100002"></a>解密函数0x100002</h3><p>由于之前解密函数有三个，再次进入sub_140006c10后，按X查看交叉引用，发现其调用处也有三个。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305093018-388926.png" alt="1614907817714"></p>
+<p>跟进去后，发现sub_140008300和sub_140006c10其为成对出现的。</p>
+<p>分别取得其传入参数a3(密钥)的值。</p>
+<p>其中0x100002 =&gt; 0，根据之前解密函数内分析可知，其有一个是没有参数的，正好对应了起来。</p>
+<p>在运行此解密函数之前有个判断条件，读取了 <code>filePath:signature</code> 文件流，判断其内容为加密后和MD5值做比较。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305122453-2493.png" alt="1614918293068"></p>
+<p>其中字符串的xor解密可以编写ida Python脚本来进行解密。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">BEGIN = <span class="number">0x140015ee0</span></span><br><span class="line">len = <span class="number">0x16</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len):</span><br><span class="line">    tmp = Byte(BEGIN + i)</span><br><span class="line">    tmp = tmp ^ <span class="number">0x0c1</span></span><br><span class="line">    PatchByte(BEGIN+i, tmp)</span><br></pre></td></tr></table></figure>
+<p>对MD5值进行解密。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">sub_140007DD0(Buffer, v0, (__int64)v10);</span><br><span class="line">v8[<span class="number">0</span>] = <span class="number">0xFC</span>;</span><br><span class="line">v8[<span class="number">1</span>] = <span class="number">0xAE</span>;</span><br><span class="line">v8[<span class="number">2</span>] = <span class="number">0xEB</span>;</span><br><span class="line">v8[<span class="number">3</span>] = <span class="number">0x6E</span>;</span><br><span class="line">v8[<span class="number">4</span>] = <span class="number">0x34</span>;</span><br><span class="line">v8[<span class="number">5</span>] = <span class="number">0xB4</span>;</span><br><span class="line">v8[<span class="number">6</span>] = <span class="number">0x30</span>;</span><br><span class="line">v8[<span class="number">7</span>] = <span class="number">0x3E</span>;</span><br><span class="line">v8[<span class="number">8</span>] = <span class="number">0x99</span>;</span><br><span class="line">v8[<span class="number">9</span>] = <span class="number">0xB9</span>;</span><br><span class="line">v8[<span class="number">10</span>] = <span class="number">0x12</span>;</span><br><span class="line">v8[<span class="number">11</span>] = <span class="number">6</span>;</span><br><span class="line">v8[<span class="number">12</span>] = <span class="number">0xBD</span>;</span><br><span class="line">qmemcpy(v9, <span class="string">"2_+"</span>, <span class="keyword">sizeof</span>(v9));</span><br></pre></td></tr></table></figure>
+<p>FCAEEB6E34B4303E99B91206BD325F2B =&gt; <code>Overwatch</code></p>
+<p>可以通过以下方式写入文件流：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type Test.txt &gt;&gt; WinRev.exe:signature</span><br></pre></td></tr></table></figure>
+<p>把”Overwatch”字符串写入后就能通过检测。</p>
+<h3 id="解密函数0x100003"><a href="#解密函数0x100003" class="headerlink" title="解密函数0x100003"></a>解密函数0x100003</h3><p>继续寻找编号0x100003对应的密钥，可以看到在上方判断条件中有验证的函数<code>sub_140009200</code>，来验证输入。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305093625-70861.png" alt="1614908185009"></p>
+<p>跟进sub_140009200函数内，发现其对输入进行了加密验证，还原正确的输入。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305093841-364110.png" alt="1614908321097"></p>
+<h3 id="编写解密程序"><a href="#编写解密程序" class="headerlink" title="编写解密程序"></a>编写解密程序</h3><p>根据其算法编写对应的解密代码。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> v6[] = &#123; <span class="number">0x2F</span>,<span class="number">0x1F</span>,<span class="number">0x20</span>,<span class="number">0x2E</span>,<span class="number">0x34</span>,<span class="number">0x4</span>,<span class="number">0x37</span>,<span class="number">0x2D</span>,<span class="number">0x10</span>,<span class="number">0x39</span>,<span class="number">0x7C</span>,<span class="number">0x22</span>,<span class="number">0x7B</span>,<span class="number">0x75</span>,<span class="number">0x0A</span>,<span class="number">0x38</span>,<span class="number">0x39</span>,<span class="number">0x21</span>, <span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">char</span> v7[<span class="number">0x13</span>] = &#123; <span class="number">0</span> &#125;;</span><br><span class="line">    <span class="keyword">int</span> v5[] = &#123;<span class="number">1</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">char</span> v8[<span class="number">0x12</span>] = &#123;&#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; <span class="number">0x13</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        v6[i] ^= <span class="number">0x45</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> k = <span class="number">0</span>; k &lt; <span class="number">0x12</span>; k++)</span><br><span class="line">    &#123;</span><br><span class="line">        v7[<span class="number">6</span> * (k / <span class="number">6</span>) + v5[k % <span class="number">6</span>]] = v6[k];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; <span class="number">0x12</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        v8[i] = v7[i] ^ i;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%c"</span>, v8[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果为</p>
+<p>此结果就是我们的0x10003对应的密钥了。</p>
+<p>此时整理可得：</p>
+<ul>
+<li>sub_1400089E0 =&gt; 0x100001 key:106</li>
+<li>sub_140008A80=&gt; 0x100002  key:0</li>
+<li>sub_140008910 =&gt; 0x100003 key:<code>Akira_aut0_ch3ss_!</code></li>
+</ul>
+<p>继续在线程启动函数中向下分析可以发现有向apc队列添加函数的操作。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305101929-109856.png" alt="1614910768527"></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305102012-872858.png" alt="1614910809762"></p>
+<p>跟进去其添加的函数地址sub_140009850。</p>
+<p>可以看到其有WaitFormultipleObjects的操作，等待3个解密函数全部执行完成，之后创建了共享内存，并且申请了一段空间，将解密后的数据复制过去，并且对齐验证了PE标记，根据其创建事件时的字符串可以简单判断该加密后的文件为DLL文件，则可以猜测sub_140007D80中有LoadLibrary的操作。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305102945-804546.png" alt="img"></p>
+<p>查看导入表中的LoadLibrary，然后查看交叉引用，可以发现在sub_140007D80中却有引用。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305105623-279198.png" alt="1614912983070"></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305105654-54387.png" alt="1614913013372"></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305105711-386916.png" alt="1614913030721"></p>
+<p>由此基本可以判定sub_140007D80作为用调用DLL中的函数执行功能的操作，而被加密的数据正是DLL。</p>
+<p>根据以上信息编写解密代码，将DLL文件解密出来。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;io.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DLLSIZE 19456</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    FILE* pFile = fopen(<span class="string">"WinRev.exe"</span>, <span class="string">"rb+"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pFile == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//获取文件大小</span></span><br><span class="line">    DWORD dwFileLen = _filelength(_fileno(pFile));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (dwFileLen &lt;= <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    PBYTE pFileBuff = <span class="keyword">new</span> BYTE[dwFileLen];</span><br><span class="line">    ZeroMemory(pFileBuff,dwFileLen);</span><br><span class="line">    <span class="keyword">if</span> (pFileBuff == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fread(pFileBuff, <span class="number">1</span>, dwFileLen, pFile);</span><br><span class="line">    fclose(pFile);</span><br><span class="line"></span><br><span class="line">    PBYTE pDllBuff = <span class="keyword">new</span> BYTE[<span class="number">19456</span>];</span><br><span class="line">    ZeroMemory(pDllBuff, <span class="number">19456</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memcpy</span>(pDllBuff, pFileBuff + <span class="number">0xEFA0</span>, DLLSIZE);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//解密1001</span></span><br><span class="line">    DWORD pdwKey1001 = <span class="number">106</span> ^ <span class="number">0x33</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; DLLSIZE; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (i % <span class="number">3</span> == <span class="number">1</span>)</span><br><span class="line">            pDllBuff[i] ^= pdwKey1001; <span class="comment">//函数解密</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//解密1002</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; DLLSIZE; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (i % <span class="number">3</span> == <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            pDllBuff[i] = ((<span class="keyword">int</span>)(<span class="keyword">unsigned</span> __int8)pDllBuff[i] &gt;&gt; <span class="number">4</span>) | (<span class="number">16</span> * pDllBuff[i]);<span class="comment">//函数解密</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//解密1003</span></span><br><span class="line">    PCHAR pKey1003 = (PCHAR)<span class="string">"Akira_aut0_ch3ss_!"</span>;</span><br><span class="line">    DWORD dwKey1Len = <span class="built_in">strlen</span>(pKey1003);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; DLLSIZE; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!(i % <span class="number">3</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            pDllBuff[i] ^= pKey1003[i / <span class="number">3</span> % dwKey1Len];<span class="comment">//函数解密</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    FILE* pFileNew = fopen(<span class="string">"Test.DLL"</span>, <span class="string">"wb+"</span>);</span><br><span class="line">    fwrite(pDllBuff, <span class="number">1</span>, DLLSIZE, pFileNew);</span><br><span class="line">    fclose(pFileNew);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">delete</span> pFileBuff;</span><br><span class="line">    <span class="keyword">delete</span> pDllBuff;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="DLL分析"><a href="#DLL分析" class="headerlink" title="DLL分析"></a>DLL分析</h2><p>可以看到DLL就是最终解密的主阵地了，在DLL中打开了共享内存，读取到了密文来进行解密，其中的密钥为<code>Ak1i3aS3cre7K3y</code>。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305110903-396963.png" alt="1614913742712"></p>
+<h3 id="AES加密函数的识别"><a href="#AES加密函数的识别" class="headerlink" title="AES加密函数的识别"></a>AES加密函数的识别</h3><p>ida中使用FindCrypto插件可以进行识别，但是发现ida7.5中装不上该插件，所以这里使用HashCryptoDetector来进行识别。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305112123-195819.png" alt="1614914482020"></p>
+<p>通过CFF来进行FOA=&gt;VA的转换。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305112254-32845.png" alt="1614914574276"></p>
+<p>在Ida中按G键跳转过去，查看交叉引用，可以看到在函数sub_180001000中有对其的使用。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305112602-864756.png" alt="1614914761735"></p>
+<p>在函数180001000头部查看交叉引用，依次回溯可以最终确定到是在sub_180002800处进行的调用，根据其参数则可以判定sub_180002800为AES加密函数。</p>
+<p>回溯过程如下：1800041e0=&gt;sub_180001000=&gt;sub_1800013D0=&gt;sub_180002800</p>
+<h2 id="解密flag"><a href="#解密flag" class="headerlink" title="解密flag"></a>解密flag</h2><p>根据分析结果对其在共享内存中传递的密文使用密钥<code>Ak1i3aS3cre7K3y</code>进行解密。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Src[0] = 0x94;</span><br><span class="line">Src[1] = 0xBF;</span><br><span class="line">Src[2] = 0x7A;</span><br><span class="line">Src[3] = 0xC;</span><br><span class="line">Src[4] = 0xA4;</span><br><span class="line">Src[5] = 0x35;</span><br><span class="line">Src[6] = 0x50;</span><br><span class="line">Src[7] = 0xD1;</span><br><span class="line">Src[8] = 0xC2;</span><br><span class="line">Src[9] = 0x15;</span><br><span class="line">Src[10] = 0xEC;</span><br><span class="line">Src[11] = 0xEF;</span><br><span class="line">Src[12] = 0x9D;</span><br><span class="line">Src[13] = 0x9A;</span><br><span class="line">Src[14] = 0xAA;</span><br><span class="line">Src[15] = 0x56;</span><br><span class="line">memcpy(v7, Src, 0x10ui64);</span><br></pre></td></tr></table></figure>
+<p>将其转换为base64.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> base64</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>strCryptoText = <span class="string">b"\x94\xBF\x7A\x0C\xA4\x35\x50\xD1\xC2\x15\xEC\xEF\x9D\x9A\xAA\x56"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>base64.b64encode(strCrypto).decode()</span><br><span class="line"><span class="string">'lL96DKQ1UNHCFezvnZqqVg=='</span></span><br></pre></td></tr></table></figure>
+<p>在线解密得到flag值。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304182701-360917.png" alt="1614853619724"></p>
+<p>最后的flag值为<code>flag{Ak1rAWin!}</code></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><code>https://xz.aliyun.com/t/6042#toc-9</code></p>
+<p><code>https://blog.csdn.net/qq_41252520/article/details/100738585</code></p>
+<p><code>https://bbs.pediy.com/thread-255081.htm</code></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在解题过程中学习到了ida Python脚本的编写和加密函数的识别。</p>
+<p>有兴趣的小伙伴可以下载题目来进行复现。</p>
+<blockquote>
+<p>链接：<a href="https://pan.baidu.com/s/1sL45Tk-RLLEXKPjJ2woPSQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1sL45Tk-RLLEXKPjJ2woPSQ</a><br>提取码：ws05 </p>
+</blockquote>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Reverse/">Reverse</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2020/02/26/代码空白区添加shellcode/" title="代码空白区添加shellcode" itemprop="url">代码空白区添加shellcode</a>
   </h1>
   <p class="article-author">By
@@ -85,7 +287,7 @@
 		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
-    <time datetime="2020-02-26T12:54:04.000Z" itemprop="datePublished"> Published 2020-02-26</time>
+    <time datetime="2020-02-26T12:54:04.000Z" itemprop="datePublished"> 发表于 2020-02-26</time>
     
   </p>
 </header>
@@ -147,7 +349,7 @@
 		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
-    <time datetime="2020-02-26T12:54:04.000Z" itemprop="datePublished"> Published 2020-02-26</time>
+    <time datetime="2020-02-26T12:54:04.000Z" itemprop="datePublished"> 发表于 2020-02-26</time>
     
   </p>
 </header>
@@ -208,7 +410,7 @@
 		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
-    <time datetime="2019-10-31T02:12:29.000Z" itemprop="datePublished"> Published 2019-10-31</time>
+    <time datetime="2019-10-31T02:12:29.000Z" itemprop="datePublished"> 发表于 2019-10-31</time>
     
   </p>
 </header>
@@ -269,7 +471,7 @@
 		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
-    <time datetime="2019-10-20T13:05:19.000Z" itemprop="datePublished"> Published 2019-10-20</time>
+    <time datetime="2019-10-20T13:05:19.000Z" itemprop="datePublished"> 发表于 2019-10-20</time>
     
   </p>
 </header>
@@ -330,7 +532,7 @@
 		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
-    <time datetime="2019-10-06T13:30:18.000Z" itemprop="datePublished"> Published 2019-10-06</time>
+    <time datetime="2019-10-06T13:30:18.000Z" itemprop="datePublished"> 发表于 2019-10-06</time>
     
   </p>
 </header>
@@ -391,7 +593,7 @@
 		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
-    <time datetime="2019-10-05T03:20:40.000Z" itemprop="datePublished"> Published 2019-10-05</time>
+    <time datetime="2019-10-05T03:20:40.000Z" itemprop="datePublished"> 发表于 2019-10-05</time>
     
   </p>
 </header>
@@ -452,7 +654,7 @@
 		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
-    <time datetime="2019-09-27T15:06:27.000Z" itemprop="datePublished"> Published 2019-09-27</time>
+    <time datetime="2019-09-27T15:06:27.000Z" itemprop="datePublished"> 发表于 2019-09-27</time>
     
   </p>
 </header>
@@ -513,7 +715,7 @@
 		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
-    <time datetime="2019-09-22T08:48:37.000Z" itemprop="datePublished"> Published 2019-09-22</time>
+    <time datetime="2019-09-22T08:48:37.000Z" itemprop="datePublished"> 发表于 2019-09-22</time>
     
   </p>
 </header>
@@ -574,7 +776,7 @@
 		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
-    <time datetime="2019-09-20T15:57:55.000Z" itemprop="datePublished"> Published 2019-09-20</time>
+    <time datetime="2019-09-20T15:57:55.000Z" itemprop="datePublished"> 发表于 2019-09-20</time>
     
   </p>
 </header>
@@ -622,79 +824,16 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2019/09/18/redis非授权访问/" title="redis非授权访问" itemprop="url">redis非授权访问</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
-		
-  <p class="article-time">
-    <time datetime="2019-09-18T13:01:53.000Z" itemprop="datePublished"> Published 2019-09-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <blockquote>
-<p>Redis是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。从2010年3月15日起，Redis的开发工作由VMware主持。从2013年5月开始，Redis的开发由Pivotal赞助。默认使用配置为6379端口</p>
-</blockquote>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2019/09/18/redis非授权访问/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安全竞赛/">安全竞赛</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/redis/">redis</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -703,7 +842,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>25</sup></a></li>
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>26</sup></a></li>
 		  
 		
 		  
@@ -740,6 +879,10 @@
 			
 		
 			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
@@ -748,15 +891,11 @@
 			
 		
 			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
 			
 		
 			
@@ -772,7 +911,7 @@
 			
 		
 			
-				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
 			
 		
 			
@@ -784,7 +923,7 @@
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
 			
 		
 			
@@ -792,7 +931,7 @@
 			
 		
 			
-				<li><a href="/tags/nodejs/" title="nodejs">nodejs<sup>1</sup></a></li>
+				<li><a href="/tags/Reverse/" title="Reverse">Reverse<sup>1</sup></a></li>
 			
 		
 			
@@ -901,7 +1040,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2020 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2021 
 		
 		<a href="/about" target="_blank" title="flag0">flag0</a>
 		
@@ -1004,7 +1143,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
