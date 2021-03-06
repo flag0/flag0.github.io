@@ -11,13 +11,13 @@
     
 
     
-    <meta name="description" content="[TOC] 该程序没有壳，有三处简单的反调试，patch掉后，通过输入的检测后，会有三段解密函数来还原出一个dll，通过文件映射向dll内传递flag的密文，在dll中进行aes解密，最终得到flag。">
+    <meta name="description" content="该程序没有壳，有三处简单的反调试，patch掉后，通过输入的检测后，会有三段解密函数来还原出一个dll，通过文件映射向dll内传递flag的密文，在dll中进行aes解密，最终得到flag。">
 <meta name="keywords" content="Reverse">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SUCTF2019Akira Homework分析文档">
 <meta property="og:url" content="http://flag0.com/2021/03/05/SUCTF2019AkiraHomework分析文档/index.html">
 <meta property="og:site_name" content="flag0&#39;s Blog">
-<meta property="og:description" content="[TOC] 该程序没有壳，有三处简单的反调试，patch掉后，通过输入的检测后，会有三段解密函数来还原出一个dll，通过文件映射向dll内传递flag的密文，在dll中进行aes解密，最终得到flag。">
+<meta property="og:description" content="该程序没有壳，有三处简单的反调试，patch掉后，通过输入的检测后，会有三段解密函数来还原出一个dll，通过文件映射向dll内传递flag的密文，在dll中进行aes解密，最终得到flag。">
 <meta property="og:locale" content="cn-zh">
 <meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305142002-395864.png">
 <meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304205044-211813.png">
@@ -60,10 +60,10 @@
 <meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305112254-32845.png">
 <meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305112602-864756.png">
 <meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210304182701-360917.png">
-<meta property="og:updated_time" content="2021-03-05T09:03:07.174Z">
+<meta property="og:updated_time" content="2021-03-06T10:32:04.124Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SUCTF2019Akira Homework分析文档">
-<meta name="twitter:description" content="[TOC] 该程序没有壳，有三处简单的反调试，patch掉后，通过输入的检测后，会有三段解密函数来还原出一个dll，通过文件映射向dll内传递flag的密文，在dll中进行aes解密，最终得到flag。">
+<meta name="twitter:description" content="该程序没有壳，有三处简单的反调试，patch掉后，通过输入的检测后，会有三段解密函数来还原出一个dll，通过文件映射向dll内传递flag的密文，在dll中进行aes解密，最终得到flag。">
 <meta name="twitter:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305142002-395864.png">
 
     
@@ -88,7 +88,7 @@
 				<h1 class="site-name"><a href="/" title="flag0&#39;s Blog">flag0&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -127,21 +127,20 @@
 		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
-    <time datetime="2021-03-05T08:47:03.000Z" itemprop="datePublished"> Published 2021-03-05</time>
+    <time datetime="2021-03-05T08:47:03.000Z" itemprop="datePublished"> 发表于 2021-03-05</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目录</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#程序流程"><span class="toc-number">1.</span> <span class="toc-text">程序流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#逆向分析"><span class="toc-number">2.</span> <span class="toc-text">逆向分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#查看基础信息"><span class="toc-number">2.1.</span> <span class="toc-text">查看基础信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反调试"><span class="toc-number">2.2.</span> <span class="toc-text">反调试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TLS反调试"><span class="toc-number">2.2.1.</span> <span class="toc-text">TLS反调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程反调试1"><span class="toc-number">2.2.2.</span> <span class="toc-text">线程反调试1</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#md5加密算法的识别"><span class="toc-number">2.2.2.1.</span> <span class="toc-text">md5加密算法的识别</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程反调试2"><span class="toc-number">2.2.3.</span> <span class="toc-text">线程反调试2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解密函数分析"><span class="toc-number">2.3.</span> <span class="toc-text">解密函数分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解密函数0x100001"><span class="toc-number">2.3.1.</span> <span class="toc-text">解密函数0x100001</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密函数0x100002"><span class="toc-number">2.3.2.</span> <span class="toc-text">解密函数0x100002</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密函数0x100003"><span class="toc-number">2.3.3.</span> <span class="toc-text">解密函数0x100003</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编写解密程序"><span class="toc-number">2.3.4.</span> <span class="toc-text">编写解密程序</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DLL分析"><span class="toc-number">2.4.</span> <span class="toc-text">DLL分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AES加密函数的识别"><span class="toc-number">2.4.1.</span> <span class="toc-text">AES加密函数的识别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解密flag"><span class="toc-number">2.5.</span> <span class="toc-text">解密flag</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
 		
 		</div>
 		
-		<p>[TOC]</p>
-<p>该程序没有壳，有三处简单的反调试，patch掉后，通过输入的检测后，会有三段解密函数来还原出一个dll，通过文件映射向dll内传递flag的密文，在dll中进行aes解密，最终得到flag。</p>
+		<p>该程序没有壳，有三处简单的反调试，patch掉后，通过输入的检测后，会有三段解密函数来还原出一个dll，通过文件映射向dll内传递flag的密文，在dll中进行aes解密，最终得到flag。</p>
 <a id="more"></a>
 <h1 id="程序流程"><a href="#程序流程" class="headerlink" title="程序流程"></a>程序流程</h1><p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20210305142002-395864.png" alt="1614925201124"></p>
 <h1 id="逆向分析"><a href="#逆向分析" class="headerlink" title="逆向分析"></a>逆向分析</h1><h2 id="查看基础信息"><a href="#查看基础信息" class="headerlink" title="查看基础信息"></a>查看基础信息</h2><p>运行一下，查看其输出结果。</p>
@@ -280,7 +279,7 @@
 <p><code>https://blog.csdn.net/qq_41252520/article/details/100738585</code></p>
 <p><code>https://bbs.pediy.com/thread-255081.htm</code></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><blockquote>
-<p>自从19年12月份下定决心想要从Web转到逆向以来，经过一年的学习，终于有能力去做RE题的复现了，Orz，感谢科锐，人生苦短，逆向苦长，虽然花了很大的代价，但是感觉一切都是值得的，选择了自己真心喜欢的方向去努力下去，相信 操千曲而后能晓声，观千剑而后终能识器！漫漫成真路，我愿意用我的滴滴心血来浇筑！</p>
+<p>自从19年12月份下定决心想要从Web转到逆向以来，经过一年的学习，终于有能力去做RE题的复现了，感谢科锐，人生苦短，逆向苦长，虽然花了很大的代价，但是感觉一切都是值得的，选择了自己喜欢的方向去努力下去，相信操千曲而后能晓声，观千剑而后终能识器！</p>
 </blockquote>
 <p>在解题过程中学习到了ida Python脚本的编写和加密函数的识别。</p>
 <p>有兴趣的小伙伴可以下载题目来进行复现。</p>
@@ -338,17 +337,17 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目录</strong>
  
  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#程序流程"><span class="toc-number">1.</span> <span class="toc-text">程序流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#逆向分析"><span class="toc-number">2.</span> <span class="toc-text">逆向分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#查看基础信息"><span class="toc-number">2.1.</span> <span class="toc-text">查看基础信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反调试"><span class="toc-number">2.2.</span> <span class="toc-text">反调试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TLS反调试"><span class="toc-number">2.2.1.</span> <span class="toc-text">TLS反调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程反调试1"><span class="toc-number">2.2.2.</span> <span class="toc-text">线程反调试1</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#md5加密算法的识别"><span class="toc-number">2.2.2.1.</span> <span class="toc-text">md5加密算法的识别</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程反调试2"><span class="toc-number">2.2.3.</span> <span class="toc-text">线程反调试2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解密函数分析"><span class="toc-number">2.3.</span> <span class="toc-text">解密函数分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解密函数0x100001"><span class="toc-number">2.3.1.</span> <span class="toc-text">解密函数0x100001</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密函数0x100002"><span class="toc-number">2.3.2.</span> <span class="toc-text">解密函数0x100002</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密函数0x100003"><span class="toc-number">2.3.3.</span> <span class="toc-text">解密函数0x100003</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编写解密程序"><span class="toc-number">2.3.4.</span> <span class="toc-text">编写解密程序</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DLL分析"><span class="toc-number">2.4.</span> <span class="toc-text">DLL分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AES加密函数的识别"><span class="toc-number">2.4.1.</span> <span class="toc-text">AES加密函数的识别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解密flag"><span class="toc-number">2.5.</span> <span class="toc-text">解密flag</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -394,15 +393,15 @@
 			
 		
 			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
 			
 		
 			
@@ -426,14 +425,6 @@
 			
 		
 			
-				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
 			
 		
@@ -442,15 +433,23 @@
 			
 		
 			
-				<li><a href="/tags/Jenkins/" title="Jenkins">Jenkins<sup>1</sup></a></li>
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/msf/" title="msf">msf<sup>1</sup></a></li>
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Reverse/" title="Reverse">Reverse<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nodejs/" title="nodejs">nodejs<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -735,7 +734,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
