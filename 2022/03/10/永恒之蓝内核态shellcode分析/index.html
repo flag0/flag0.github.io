@@ -11,13 +11,13 @@
     
 
     
-    <meta name="description" content="在现有公开的永恒之蓝RCE的exp中并没有直接使用doublepulsar后门，而是采用了Ring0 shellcode和Ring3 shellcode结合的方式，通过Ring0 shellcode来执行用户自定义的Ring3 shellcode。 在公开的永恒之蓝RCE的exp中几乎都使用了同一个Ring0 shellcode，包括Metasploit中的ms17_010_eternalblue">
+    <meta name="description" content="在现有公开的永恒之蓝RCE的exp中并没有直接使用doublepulsar后门，而是采用了Ring0 shellcode和Ring3 shellcode结合的方式，通过Ring0 shellcode来执行用户自定义的Ring3 shellcode。">
 <meta name="keywords" content="shellcode">
 <meta property="og:type" content="article">
 <meta property="og:title" content="永恒之蓝内核态shellcode分析">
 <meta property="og:url" content="http://flag0.com/2022/03/10/永恒之蓝内核态shellcode分析/index.html">
 <meta property="og:site_name" content="flag0&#39;s Blog">
-<meta property="og:description" content="在现有公开的永恒之蓝RCE的exp中并没有直接使用doublepulsar后门，而是采用了Ring0 shellcode和Ring3 shellcode结合的方式，通过Ring0 shellcode来执行用户自定义的Ring3 shellcode。 在公开的永恒之蓝RCE的exp中几乎都使用了同一个Ring0 shellcode，包括Metasploit中的ms17_010_eternalblue">
+<meta property="og:description" content="在现有公开的永恒之蓝RCE的exp中并没有直接使用doublepulsar后门，而是采用了Ring0 shellcode和Ring3 shellcode结合的方式，通过Ring0 shellcode来执行用户自定义的Ring3 shellcode。">
 <meta property="og:locale" content="cn-zh">
 <meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210093211-775014.png">
 <meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210093531-631673.png">
@@ -104,10 +104,10 @@
 <meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220304174306-109197.png">
 <meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215141220-933829.png">
 <meta property="og:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215141526-974069.png">
-<meta property="og:updated_time" content="2022-04-10T09:26:06.487Z">
+<meta property="og:updated_time" content="2022-04-10T09:33:44.751Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="永恒之蓝内核态shellcode分析">
-<meta name="twitter:description" content="在现有公开的永恒之蓝RCE的exp中并没有直接使用doublepulsar后门，而是采用了Ring0 shellcode和Ring3 shellcode结合的方式，通过Ring0 shellcode来执行用户自定义的Ring3 shellcode。 在公开的永恒之蓝RCE的exp中几乎都使用了同一个Ring0 shellcode，包括Metasploit中的ms17_010_eternalblue">
+<meta name="twitter:description" content="在现有公开的永恒之蓝RCE的exp中并没有直接使用doublepulsar后门，而是采用了Ring0 shellcode和Ring3 shellcode结合的方式，通过Ring0 shellcode来执行用户自定义的Ring3 shellcode。">
 <meta name="twitter:image" content="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210093211-775014.png">
 
     
@@ -185,6 +185,7 @@
 		</div>
 		
 		<p>在现有公开的永恒之蓝RCE的exp中并没有直接使用doublepulsar后门，而是采用了Ring0 shellcode和Ring3 shellcode结合的方式，通过Ring0 shellcode来执行用户自定义的Ring3 shellcode。</p>
+<a id="more"></a>
 <p>在公开的永恒之蓝RCE的exp中几乎都使用了同一个Ring0 shellcode，包括Metasploit中的ms17_010_eternalblue.rb</p>
 <p><a href="https://github.com/worawit/MS17-010/blob/master/shellcode/eternalblue_kshellcode_x86.asm" target="_blank" rel="noopener">https://github.com/worawit/MS17-010/blob/master/shellcode/eternalblue_kshellcode_x86.asm</a></p>
 <p>同时公开的永恒之蓝exp中，除了zzz_exploit.py这种需要有权限的命名管道或者低权限的smb用户以外的远程RCE利用的exp都是不稳定的，会导致概率性的重启问题。</p>
@@ -526,15 +527,15 @@
 			
 		
 			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
 			
 		
 			
@@ -562,11 +563,15 @@
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
 			
 		
 			
@@ -575,10 +580,6 @@
 		
 			
 				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
 			
 		
 			

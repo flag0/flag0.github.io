@@ -92,244 +92,11 @@
     <div class="article-content">
         
         <p>在现有公开的永恒之蓝RCE的exp中并没有直接使用doublepulsar后门，而是采用了Ring0 shellcode和Ring3 shellcode结合的方式，通过Ring0 shellcode来执行用户自定义的Ring3 shellcode。</p>
-<p>在公开的永恒之蓝RCE的exp中几乎都使用了同一个Ring0 shellcode，包括Metasploit中的ms17_010_eternalblue.rb</p>
-<p><a href="https://github.com/worawit/MS17-010/blob/master/shellcode/eternalblue_kshellcode_x86.asm" target="_blank" rel="noopener">https://github.com/worawit/MS17-010/blob/master/shellcode/eternalblue_kshellcode_x86.asm</a></p>
-<p>同时公开的永恒之蓝exp中，除了zzz_exploit.py这种需要有权限的命名管道或者低权限的smb用户以外的远程RCE利用的exp都是不稳定的，会导致概率性的重启问题。</p>
-<p><strong>经过测试发现只保留exp中的部分Ring0 shellcode进行攻击，该exp是可以稳定执行的。</strong></p>
-<p>保留部分如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">shellcode =\</span><br><span class="line">        <span class="string">b"\x60\xE8\x00\x00\x00\x00\x5B\xE8\x23\x00\x00\x00\xB9\x76\x01\x00"</span>\</span><br><span class="line">        <span class="string">b"\x00\x0F\x32\x8D\x7B\x39\x39\xF8\x74\x11\x39\x45\x00\x74\x06\x89"</span>\</span><br><span class="line">        <span class="string">b"\x45\x00\x89\x55\x08\x89\xF8\x31\xD2\x61\xC2\x24\x00\x8D\xAB\x00"</span> \</span><br><span class="line">        <span class="string">b"\x10\x00\x00\xC1\xED\x0C\xC1\xE5\x0C\x83\xED\x50\xC3"</span></span><br></pre></td></tr></table></figure>
-<p>可以判定导致不稳定重启的原因存在于shellcode中，针对shellcode进行优化处理，有可能可以解决该问题。</p>
-<p>可以搜集到的关于exp中Ring0 shellcode的分析资料很少，想解决永恒之蓝exp的概率性重启问题，要针对shellcode进行优化，就必须了解exp中的Ring0 shellcode中的执行细节，所以就有了这篇文章的产生。</p>
-<h1 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h1><p>根据执行过程中所作事情的不同，将整个执行流程分为了四个阶段</p>
-<ol>
-<li>一阶段shellcode：操作MSR模式寄存器将二阶段的shellcode作为钩子函数来对sysenter或syscall下钩子。<ul>
-<li>X86 覆盖IA32_SYSENTER_EIP来hook SYSENTER。</li>
-<li>X64 覆盖IA32_LSTAR MSR 来hook SYSCALL。</li>
-</ul>
-</li>
-<li><p>二阶段shellcode：触发系统调用后还原syscall(sysenter)，遍历进程寻找lsass.exe或者spoolsv.exe进程，使用异步过程调用 (APC)将用户级 shellcode 注入进程中。</p>
-</li>
-<li><p>三阶段shellcode：执行KernelApcRoutine(该回调函数为KeInitializeApc的KernelRoutiune参数，原本用于销毁KAPC的函数地址，而现在用于执行自定义功能)。</p>
-<ul>
-<li>KernelApcRoutine：分配内存将存在于内核态的shellcode拷贝到用户态，遍历kernel32.dll中的CreateThread中的api地址用于存储。</li>
-</ul>
-</li>
-<li><p>四阶段shellcode：四阶段shellcode为三阶段中被从内核态拷贝到用户态的shellcode，在三阶段shellcode执行后会紧接着执行，用于执行之前存储的CreateThread创建线程，执行用户自定义的Ring3 shellcode。</p>
-<p> Ring0 shellcode相当于一个中转，通过APC注入的方式从漏洞利用成功后的内核态来执行用户态的shellcode。</p>
-</li>
-</ol>
-<p><strong>这里存在一个问题，在漏洞利用成功后，明明已经可以控制eip了，为什么还要进行syscall的hook呢？</strong></p>
-<p>原因在于，shellcode 代码在Ring0下执行时，IRQL是DISPATCH_LEVEL，在该级别下无法使用分页内存。</p>
-<p>内核态下执行ZwAllocateVirtualMemory函数可以在指定进程中保留一系列应用程序可以访问的虚拟地址，用于将存在于内核态下的shellcode copy到用户态中，该函数需要使用到PASSIVE_LEVEL中断请求级别，通过劫持syscall获取到的IRQL是PASSIVE_LEVEL。</p>
-<h1 id="详细分析"><a href="#详细分析" class="headerlink" title="详细分析"></a>详细分析</h1><h2 id="一阶段shellcode"><a href="#一阶段shellcode" class="headerlink" title="一阶段shellcode"></a>一阶段shellcode</h2><p>一阶段shellcode用于将二阶段的shellcode安装为sysenter或者syscall的钩子。</p>
-<p>在x86下是sysenter，在x64下是syscall。</p>
-<p><strong>MSR</strong></p>
-<p>MSR是模式指定寄存器，用于设置CPU 的工作环境和标示CPU 的工作状态，包括温度控制，性能监控等。</p>
-<p>rdmsr：读取ECX中的MSR寄存器地址的值，低32位存储到EAX中，高32位存储到EDX中。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210093211-775014.png" alt="1644456731132"></p>
-<p>wrmsr：向ECX中存储的MSR寄存器地址写入EAX:ECX的值，其中低32位存储在EAX中，高32位存储在EDX中。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210093531-631673.png" alt="1644456930667"></p>
-<p>从inter CPU手册中可以看到，X86架构下 MSR寄存器 在0x176的地址存储了 我们关注的SYSENTER_EIP_MSR值，通过对其修改可以达到hook sysenter的目的，在X64下其值为0xC0000082。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210092432-89257.png" alt="1644456184254"></p>
-<p>Ring0 shellcode通过这种方式将X86下的sysenter的地址替换为了自定义的函数地址，实现了钩子的安装。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220212105854-410742.png" alt="1644634732915"></p>
-<p>其中的set_ebp_data_address_fn函数，用于调整ebp栈底空间，在HAL heap中寻找了一块可用的空间来存储临时变量和作用后续的KAPC结构体的空间使用。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210114229-20892.png" alt="1644464548444"></p>
-<p>X86 sysenter hook：</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210100637-793809.png" alt="1644458796043"></p>
-<p>x64 syscall hook：</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210111825-961423.png" alt="1644463104830"></p>
-<h2 id="二阶段shellcode"><a href="#二阶段shellcode" class="headerlink" title="二阶段shellcode"></a>二阶段shellcode</h2><p>在发生系统调用时，syscall_hook 函数的代码会被执行。</p>
-<p>所以对syscall_hook函数下断点，等待一阶段shellcode执行完成后，发生系统调用时该函数就会被执行到。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215152730-472381.png" alt="1644910049384"></p>
-<h3 id="syscall-hook"><a href="#syscall-hook" class="headerlink" title="syscall_hook"></a>syscall_hook</h3><p>syscall_hook函数用于执行原有sysenter/syscall中的初始化代码，限制APC排队数量为1，恢复原有系统调用，函数内部调用了r3_to_r0_start进行了后续的APC注入的操作。</p>
-<h4 id="系统调用初始化"><a href="#系统调用初始化" class="headerlink" title="系统调用初始化"></a>系统调用初始化</h4><p>在二阶段shellcode开头的部分使用了sysenter/syscall中的前几行指令，用于执行原始系统调用。</p>
-<p><strong>X86架构下：</strong></p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210143221-334464.png" alt="1644474741005"></p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210144051-674023.png" alt="1644475250722"></p>
-<p><strong>X64架构下：</strong></p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210143433-532502.png" alt="1644474872533"></p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210142518-848783.png" alt="1644474317223"></p>
-<h4 id="限制APC排队数量"><a href="#限制APC排队数量" class="headerlink" title="限制APC排队数量"></a>限制APC排队数量</h4><p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220212105433-780625.png" alt="1644634472286"></p>
-<p><code>cmpxchg</code>为比较交换指令，操作数1与eax做比较：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xor eax,eax</span><br><span class="line">cmpxchg 操作数1，操作数2</span><br></pre></td></tr></table></figure>
-<p>如果相等，则 <code>操作数1 = 操作数2</code>，ZF = 1。</p>
-<p>如果不相等，则 <code>eax = 操作数1</code>，ZF = 0。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210154736-871420.png" alt="1644479255926"></p>
-<p>shellcode中的cmpxchg运算完成后，将ebp + 8，即ffdfffb8的值置1</p>
-<h4 id="恢复原有系统调用"><a href="#恢复原有系统调用" class="headerlink" title="恢复原有系统调用"></a>恢复原有系统调用</h4><p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210160044-479928.png" alt="1644480043793"></p>
-<p>去掉hook，还原回原地址，原有的sysenter跳转到的eip为<code>nt!KiFastCallEntry</code>。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210160431-953314.png" alt="1644480270173"></p>
-<p>在执行完成syscall_hook函数后会自动跳转到KiFastCallEntry/KiSystemCall64 还未执行代码的位置。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210145124-545547.png" alt="1644475883516"></p>
-<h3 id="r3-to-r0-start"><a href="#r3-to-r0-start" class="headerlink" title="r3_to_r0_start"></a>r3_to_r0_start</h3><h4 id="遍历内核首地址"><a href="#遍历内核首地址" class="headerlink" title="遍历内核首地址"></a>遍历内核首地址</h4><p>KiFastCallEnter函数属于内核中的导出函数，通过其可以定位到内核的首地址。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210161518-110842.png" alt="1644480917769"></p>
-<p>shellcode中从KiFastCallEnter所属的页为起始位置，按页为单位向前遍历，直到遍历到页开头为MZ标记为止。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210162331-295439.png" alt="1644481410753"></p>
-<h4 id="遍历指定进程"><a href="#遍历指定进程" class="headerlink" title="遍历指定进程"></a>遍历指定进程</h4><p>在遍历到内核首地址后，执行PsGetCurrentProcess获取进程的EPROCESS结构体，通过使用PsGetProcessImageFileName获取ImageFileName在EPROCESS中的偏移地址，来判断操作系统版本从而推算出EPROCESS.ThreadListHead的位置。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210171811-420351.png" alt="1644484690301"></p>
-<p>win_api_direct函数用于根据eax寄存器转入的API hash来寻找api的地址并执行。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220307095000-440089.png" alt="1644485579352"></p>
-<p><strong>动态分析执行流程</strong></p>
-<p>执行PsGetCurrentProcess获取进程的EPROCESS结构体。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210174029-251435.png" alt="1644486028292"></p>
-<p>执行PsGetProcessImageFileName获取EPROCESS.ImageFilename的地址，用它减去EPROCESS的首地址，得到偏移。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220210175059-733667.png" alt="1644486658257"></p>
-<p>通过ImageFilename在EPROCESS中的偏移判断操作系统版本，从而推算出EPROCESS.ThreadListHead的偏移地址。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211094350-185798.png" alt="1644543829518"></p>
-<p>验证一下，win7系统下ThreadListHead在EPROCESS中的偏移确实是0x188</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211094806-568280.png" alt="1644544085100"></p>
-<p>通过遍历EPROCESS.ThreadListHead的成员减去KPRC.KPRCB.CurrentThread(当前线程首地址)的方式来获取ThreadListEntry相对于ETHREAD结构体的偏移。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211102355-729910.png" alt="1644546234613"></p>
-<p>最后得到ThreadListEntry相对于ETHREAD结构体在Win7系统下的偏移是0x268。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211103601-362934.png" alt="1644546959762"></p>
-<p>从windbg中验证确为上述值。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211103736-369290.png" alt="1644547055457"></p>
-<p>在Windows内核中有一个活动进程链表AcvtivePeorecssList。它是一个双向链表，保存着系统中所有进程的EPROCESS结构，记录了当前进程正在哪些处理器上运行，shellcode通过其来进行进程遍历。</p>
-<p>获取<code>lsass.exe</code>进程或者<code>spoolsv.exe</code>。</p>
-<p>经过测试发现如果注入<code>lsass.exe</code>进程，在断开bind_tcp的shellcode连接时会导致系统重启，而在msf的ms17_010_eternalblue中只定向注入<code>spoolsv.exe</code>进程退出后不会导致该问题。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211115341-984033.png" alt="1644551620111"></p>
-<p>在EPROCESS结构体中，UniqueProcessId与ActiveProcessLinks字段是相邻的，shellcode使用PsGetProcessId获取UniqueProcessId字段，在其字段后0xA的位置存储着它的偏移，获取UniqueProcessId的偏移后就能够得到ActiveProcessLinks字段的偏移。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211112750-356338.png" alt="1644550070105"></p>
-<p>进行动态调试，观察执行过程。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211113947-551752.png" alt="1644550786213"></p>
-<p>获取到EPROCESS.ActiveProcessLinks的偏移值是0xb8。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211114003-458359.png" alt="1644550798022"></p>
-<p>根据</p>
-<p>获取EPROCESS.ActiveProcessLinks的偏移，通过其来遍历进程匹配进程名称来找到<code>lsass.exe</code>或者<code>spoolsv.exe</code>，因为注入<code>lsass.exe</code>进程存在断开bindtcp shellcode连接后操作系统重启的问题，所以在调试过程中将<code>lsass.exe</code>的hash改为了<code>spoolsv.exe</code>的，不再遍历<code>lsass.exe</code>进程。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211142108-272087.png" alt="1644560467682"></p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211142214-632751.png" alt="1644560533824"></p>
-<p>最终遍历到进程spoolsv.exe</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211142241-237667.png" alt="1644560560080"></p>
-<h4 id="遍历可用于注入的线程"><a href="#遍历可用于注入的线程" class="headerlink" title="遍历可用于注入的线程"></a>遍历可用于注入的线程</h4><p>通过注释可以看到，作者描述说</p>
-<p>寻找可以用于APC注入的线程，通常判断线程中是否可以被APC注入的方法是检查ETHREAD中的alertable字段。</p>
-<p>因为每个Windows版本的ETHREAD中的alertable偏移量不同，所以这种方式不太可靠。</p>
-<p><strong>尝试逐个线程插入APC队列然后检查KAPC成员的方式更加可靠。</strong></p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211162033-221840.png" alt="1644567631775"></p>
-<p>继续阅读shellcode中的注释，</p>
-<p>在Ring0 shellcode中要用到CreateThread来启动Ring0的用户自定义的shellcode。</p>
-<p>CreateThread函数需要使用非空的TEB.ActivationContextStackPointer，</p>
-<p>如果TEB.ActivationContextStackPointer是NULL，被注入的进程将因为访问违规而崩溃。</p>
-<p>(APC程序中不需要非空的TEB.ActivationContextStackPointer)</p>
-<p>当TEB.ActivationContextStackPointer为NULL时，KTRHEAD.Queue总是为NULL。</p>
-<p>精简掉注释后shellcode代码实现如下：</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211165427-604012.png" alt="1644569666448"></p>
-<p>Win7下在KTHREAD结构体中Queue和Teb的位置。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211163838-93419.png" alt="1644568718181"></p>
-<p>查看执行结果：</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211170921-852194.png" alt="1644570560440"></p>
-<p>可以看到其执行过后，遍历得到的线程的KTHREAD.queue不为0</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211171151-5736.png" alt="1644570709410"></p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211171221-698697.png" alt="1644570740436"></p>
-<h4 id="APC注入"><a href="#APC注入" class="headerlink" title="APC注入"></a>APC注入</h4><p>在遍历得到可以被注入的线程后，使用<code>KeInitializeApc</code>初始化KAPC结构体，使用<code>KeInsertQueueApc</code>注入到目标线程。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">KeInitializeApc(PKAPC,//KAPC指针</span><br><span class="line">                PKTHREAD,//目标线程</span><br><span class="line">                KAPC_ENVIRONMENT = OriginalApcEnvironment (0),//0 1 2 3 四种状态</span><br><span class="line">                PKKERNEL_ROUTINE = kernel_apc_routine,//销毁KAPC的函数地址</span><br><span class="line">                PKRUNDOWN_ROUTINE = NULL,</span><br><span class="line">                PKNORMAL_ROUTINE = userland_shellcode,//用户APC总入口或者内核APC函数</span><br><span class="line">                KPROCESSOR_MODE = UserMode (1),//要查看的用户apc队列还是内核APC队列</span><br><span class="line">                PVOID Context);//内核APC队列；NULL 用户APC：真正的APC函数</span><br><span class="line"></span><br><span class="line">BOOLEAN KeInsertQueueApc(PKAPC, SystemArgument1, SystemArgument2, 0);</span><br><span class="line">  //SystemArgument1 is second argument in usermode code</span><br><span class="line">  //SystemArgument1是usermode代码中的第二个参数</span><br><span class="line">  //SystemArgument2 是用户模式代码的第三个参数</span><br></pre></td></tr></table></figure>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211174821-239466.png" alt="1644572900451"></p>
-<p><strong>调试查看KeInitializeApc</strong></p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220212101503-998209.png" alt="1644632102731"></p>
-<p>这里context在通常的apc注入中这里是要执行的函数，<strong>而在这个shellcode里面作者使用了kernel_apc_routine这个参数放入了要执行的函数进行空间的分配和copy Ring3 shellcode，该函数一般用于销毁KAPC</strong></p>
-<p>可以看到context只是使用了栈底ebp的值，是无效的函数地址。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220211180051-772795.png" alt="1644573650863"></p>
-<p>KernelApcRoutine的地址为ffdff3d2。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220212102311-485165.png" alt="1644632561116"></p>
-<p>调用前的函数参数。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214162912-200372.png" alt="1644827351349"></p>
-<p>查看执行初始化前后KAPC值的变化。</p>
-<p>初始化前：</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220212102613-110989.png" alt="1644632773006"></p>
-<p>经过初始化后：</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220212102651-70058.png" alt="1644632811001"></p>
-<p><strong>调试查看KeInitializeApc</strong></p>
-<p>查看要注入的线程执行前的APC队列，这里我们主要查看线程的_KTHREAD.ApcState，通过其KAPC_STATE结构体就可以看到APC队列执行的情况。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220212104047-458618.png" alt="1644633646113"></p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220212103546-348731.png" alt="1644633322984"></p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220212103544-521198.png" alt="1644633344263"></p>
-<p>在注入前，正在等待执行的用户APC为0。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220212103720-189430.png" alt="1644633440179"></p>
-<p>查看执行后的APC队列，可以看到，正在等待的用户APC数量为1，并且在用户APC队列中看到了我们插入的KAPC结构体的地址。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220212103901-961900.png" alt="1644633541132"></p>
-<p>在shellcode中也对KAPC.UserApcPending进行了判断，如果其值不为1，则清除线程的KAPC队列重新选择线程进行插入。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214110340-404808.png" alt="1644807819959"></p>
-<p><strong>感觉这里shellcode写的有问题，UserApcPending是KAPC_STATE的成员。</strong></p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214110530-258880.png" alt="1644807929252"></p>
-<p>按照shellcode里写的逻辑，只能获取到KAPC.ApcListEntry中第一个成员 + 0xe偏移的值。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214111041-221711.png" alt="1644808240902"></p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214111139-692543.png" alt="1644808298404"></p>
-<p>如果想要获取到当前线程中的<code>KTHREAD.ApcState.UserApcPending</code>的值，要做如下修改(<strong>只针对于windows 7 x86</strong>)。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lea eax,dword ptr ds:[ebp + 0x10];get KAPC</span><br><span class="line">mov eax, [eax + 0x8];get KAPC.Thread</span><br><span class="line">mov eax, [eax + 0x40];get KTHREAD.ApcState</span><br><span class="line">mov eax, byte ptr [eax + 0x016];get KTHREAD.ApcState.UserApcPending</span><br></pre></td></tr></table></figure>
-<h2 id="三阶段shellcode"><a href="#三阶段shellcode" class="headerlink" title="三阶段shellcode"></a>三阶段shellcode</h2><p>在二阶段shellcode执行KeInitializeApc之前，对KeInitializeApc函数中的kernel_apc_routine参数下断点。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215154119-357822.png" alt="1644910877846"></p>
-<p>在执行完二阶段shellcode后，系统调用被执行，触发KiServiceExit函数，该函数执行了KiDeliveApc函数(负责执行APC函数)，通过KiDeliveApc我们的三阶段shellcode 被执行。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214160301-370536.png" alt="1644825780608"></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">; <span class="function">VOID <span class="title">KernelApcRoutine</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">;           IN PKAPC Apc,</span></span></span><br><span class="line"><span class="function"><span class="params">;           IN PKNORMAL_ROUTINE *NormalRoutine,</span></span></span><br><span class="line"><span class="function"><span class="params">;           IN PVOID *NormalContext,</span></span></span><br><span class="line"><span class="function"><span class="params">;           IN PVOID *SystemArgument1,</span></span></span><br><span class="line"><span class="function"><span class="params">;           IN PVOID *SystemArgument2)</span></span></span><br></pre></td></tr></table></figure>
-<h3 id="调整堆栈"><a href="#调整堆栈" class="headerlink" title="调整堆栈"></a>调整堆栈</h3><p>在函数开头，调整堆栈位置，保存当前eip到SystemArgument2函数中，去除掉栈中无用的PKAPC参数，保存寄存器环境，将取出的SystemArgument1和NormalRoutine参数压入栈中，其中SystemArgument1的位置用于存储寻找到的CreateThread API地址，最后调整ebp的位置。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214151720-943505.png" alt="1644823039132"></p>
-<p>存储调用前的返回地址到参数2的位置。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214161103-208755.png" alt="1644826261945"></p>
-<p>调整栈底指针ebp</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214163843-646688.png" alt="1644827922806"></p>
-<h3 id="分配内存拷贝Ring3-shellcode"><a href="#分配内存拷贝Ring3-shellcode" class="headerlink" title="分配内存拷贝Ring3 shellcode"></a>分配内存拷贝Ring3 shellcode</h3><p>调整完堆栈以后，调用ZwAllocateVirtualMemory分配一块Ring3的堆空间来将Ring0中存储的Ring3 用户自定义的shellcode拷贝到该空间中。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">NTSTATUS <span class="title">ZwAllocateVirtualMemory</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_    HANDLE    ProcessHandle,<span class="comment">//当前进程的句柄</span></span></span></span><br><span class="line"><span class="function"><span class="params">  _Inout_ PVOID     *BaseAddress,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="comment">//该变量将接收分配的页面区域的基地址。如果此参数的初始值为非NULL，则从指定的虚拟地址开始分配区域，</span></span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="comment">//向下舍入到下一个主机页面大小地址边界。如果此参数的初始值为NULL，操作系统将确定分配区域的位置。</span></span></span></span><br><span class="line"><span class="function"><span class="params">  _In_    ULONG_PTR ZeroBits,<span class="comment">//</span></span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="comment">//此值必须小于 21，并且仅在操作系统确定分配区域的位置时使用，例如BaseAddress为NULL时。</span></span></span></span><br><span class="line"><span class="function"><span class="params">  _Inout_ PSIZE_T   RegionSize,<span class="comment">//</span></span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="comment">//指向变量的指针，该变量将接收分配的页面区域的实际大小（以字节为单位）。</span></span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="comment">//此参数的初始值指定区域的大小（以字节为单位），并向上舍入到下一个主机页面大小边界。</span></span></span></span><br><span class="line"><span class="function"><span class="params">  _In_    ULONG     AllocationType,<span class="comment">//指定要执行的分配类型的标志。</span></span></span></span><br><span class="line"><span class="function"><span class="params">  _In_    ULONG     Protect<span class="comment">//指定权限</span></span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214164658-431509.png" alt="1644828418022"></p>
-<p>由于ZwAllocateVirtualMemory要求IRQL级别为PASSIVE_LEVEL，所以在调用函数前要对IRQL进行调整。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214165516-714263.png" alt="1644828915196"></p>
-<p><code>https://docs.microsoft.com/en-us/previous-versions/ff566416(v=vs.85)</code></p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214170013-56913.png" alt="1644829212066"></p>
-<p>在内核模式下FS[0]表示的KPCR结构体。</p>
-<blockquote>
-<ol>
-<li>每个CPU都有一个KPCR结构体(一个内核一个)</li>
-<li>KPCR中存储了CPU本身要用的一些重要数据：GDT、IDT以及线程相关的一些信息</li>
-</ol>
-</blockquote>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214170337-491736.png" alt="1644829416491"></p>
-<p>调整完后，接着构造ZwAllocateVirtualMemory函数的参数。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214173654-883818.png" alt="1644831414097"></p>
-<p>根据Protext参数的值可以看到，分配了一段可读可写可执行的空间。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214174957-585654.png" alt="1644832196872"></p>
-<p>可以看到BaseAddress中存储了分配的空间地址310000，成功分配地址。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214174104-400660.png" alt="1644831663296"></p>
-<p>接下来开始copy shellcode。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220214175727-704021.png" alt="1644832646216"></p>
-<p>在windbg中调试 copy的过程。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215093743-70254.png" alt="1644889062769"></p>
-<h3 id="获取CreateThread-API地址"><a href="#获取CreateThread-API地址" class="headerlink" title="获取CreateThread API地址"></a>获取CreateThread API地址</h3><p>在将存储在内核态的四阶段shellcode和用户自定义的shellcode拷贝到分配的空间中以后，开始获取CreateThread的API地址。</p>
-<p>采取传统的通过获取PEB表，遍历InMemoryOrderModuleList获取kernel32.dll后遍历导出表的方式来获取。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215100247-34245.png" alt="1644890566995"></p>
-<p>使用PsGetProcessPeb获取PEB结构体。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215101109-382443.png" alt="1644891068738"></p>
-<p>根据PEB遍历Kernel32.dll</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215105402-447764.png" alt="1644892269007"></p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215103202-291746.png" alt="1644892321475"></p>
-<p>遍历导出表获取CreateThread API的地址。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215110235-704159.png" alt="1644894155185"></p>
-<p>储存API地址到参数SystemArgument1中。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215110754-594175.png" alt="1644894474295"></p>
-<h2 id="四阶段shellcode"><a href="#四阶段shellcode" class="headerlink" title="四阶段shellcode"></a>四阶段shellcode</h2><p>对310000下执行断点，在三阶段shellcode执行完成后，g命令运行程序，就可以成功断下。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215110916-158923.png" alt="1644894555636"></p>
-<p>调用链如下：</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215112528-365229.png" alt="1644895528227"></p>
-<p>在四阶段shellcode中，构造调用参数，使用CreateThread API来创建线程执行Ring3 用户自定义的shellcode。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215111601-216413.png" alt="1644894947486"></p>
-<p>获取压入前的返回地址</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220307094301-913161.png" alt="1644896061792"></p>
-<p>获取CreateThread API的地址。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220304174259-514386.png" alt="1644896200699"></p>
-<p>获取用户自定义shellcode的地址。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220304174306-109197.png" alt="1644896337515"></p>
-<p>查看四阶段shellcode构造的CreateThread调用参数。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215141220-933829.png" alt="1644905539547"></p>
-<p>可以看到lpStartAddr参数中记录了要执行的用户自定义的shellcode地址。</p>
-<p><img src="http://flag0.oss-cn-qingdao.aliyuncs.com/flag0/20220215141526-974069.png" alt="1644905726329"></p>
-<p>成功执行用户自定义的Ring3 shellcode代码。</p>
-<p>至此，已经完成了整个漏洞利用成功后的Ring0 到Ring3 shellcode的引导过程。</p>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://www.cnblogs.com/onetrainee/p/11675225.html" target="_blank" rel="noopener">https://www.cnblogs.com/onetrainee/p/11675225.html</a></p>
-<p><a href="https://www.microsoft.com/security/blog/2017/06/30/exploring-the-crypt-analysis-of-the-wannacrypt-ransomware-smb-exploit-propagation/" target="_blank" rel="noopener">https://www.microsoft.com/security/blog/2017/06/30/exploring-the-crypt-analysis-of-the-wannacrypt-ransomware-smb-exploit-propagation/</a></p>
-<p><a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/ntifs/nf-ntifs-zwallocatevirtualmemory" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/ntifs/nf-ntifs-zwallocatevirtualmemory</a></p>
-<p>滴水中级 APC注入</p>
-
         
         
         <p class="article-more-link">
+          
+            <a href="/2022/03/10/永恒之蓝内核态shellcode分析/#more">Read More</a>
           
        </p>
     </div>
@@ -971,15 +738,15 @@
 			
 		
 			
-				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/汇编/" title="汇编">汇编<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AWD/" title="AWD">AWD<sup>2</sup></a></li>
 			
 		
 			
@@ -1007,11 +774,15 @@
 			
 		
 			
-				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
+				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/安恒杯Web安全测试大赛/" title="安恒杯Web安全测试大赛">安恒杯Web安全测试大赛<sup>1</sup></a></li>
+				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/攻击脚本/" title="攻击脚本">攻击脚本<sup>1</sup></a></li>
 			
 		
 			
@@ -1020,10 +791,6 @@
 		
 			
 				<li><a href="/tags/error/" title="error">error<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/流量混淆/" title="流量混淆">流量混淆<sup>1</sup></a></li>
 			
 		
 			
